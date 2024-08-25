@@ -1,0 +1,50 @@
+services:
+  # lobster_db:
+  #   image: postgres:12-alpine
+  #   container_name: lobster-postgres
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #   volumes:
+  #     - ./backend/db/postgres/postgres-data:/var/lib/postgresql/data
+  #   ports:
+  #     - 5433:5432
+  #   networks:
+  #     - lobster
+  #   restart: "on-failure"
+
+  entropy_core:
+    build: backend/core/.
+    image: lobster/core:latest
+    container_name: lobster-core
+    env_file: backend/core/env
+    environment:
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_DEFAULT_REGION=ap-south-1
+    volumes:
+      - ./backend/core:/app
+      - ./backend/logs:/core/logs
+    ports:
+      - 8001:8000
+    depends_on:
+      - lobster_db
+    networks:
+      - lobster
+    restart: "on-failure"
+
+  lobster_ui:
+    image: cliniq360/lobster-ui:2.18
+
+    container_name: lobster-ui
+    ports:
+      - "8002:80"
+    volumes:
+      - ./frontend/src:/app/src
+    networks:
+      - lobster
+    restart: "on-failure"
+
+networks:
+  lobster:
+    name: lobster-network
