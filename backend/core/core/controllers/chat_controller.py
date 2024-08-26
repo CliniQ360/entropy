@@ -1,6 +1,6 @@
 import autogen
 from autogen import Agent, AssistantAgent, ConversableAgent, UserProxyAgent
-from user_proxy_webagent import UserProxyWebAgent
+from core.utils.user_proxy_webagent import UserProxyWebAgent
 import asyncio
 
 config_list = [
