@@ -1,18 +1,4 @@
 services:
-  # entropy_db:
-  #   image: postgres:12-alpine
-  #   container_name: entropy-postgres
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #   volumes:
-  #     - ./backend/db/postgres/postgres-data:/var/lib/postgresql/data
-  #   ports:
-  #     - 5433:5432
-  #   networks:
-  #     - entropy
-  #   restart: "on-failure"
-
   entropy_core:
     build: backend/core/.
     image: entropy/core:latest
@@ -31,24 +17,34 @@ services:
       - entropy
     restart: "on-failure"
 
-  # entropy_ui:
-  #   build:
-  #     context: frontend
-  #     dockerfile: Dockerfile
-  #     # args:
-  #     #   REACT_APP_BACKEND_BASE_URL: ${REACT_APP_BACKEND_BASE_URL}
-  #     #   REACT_APP_ENV: ${REACT_APP_ENV}
-  #     #   REACT_APP_CODE_KEY: ${REACT_APP_CODE_KEY}
+  entropy_db:
+    image: postgres:16
+    container_name: entropy-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./db/postgres/postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - entropy
+    restart: "on-failure"
 
-  #   image: cliniq360/entropy-ui:0.1
-  #   container_name: entropy-ui
-  #   ports:
-  #     - "8082:80"
-  #   volumes:
-  #     - ./frontend/src:/app/src
-  #   networks:
-  #     - entropy
-  #   restart: "on-failure"
+  entropy_ui:
+    build: demo_ui/.
+    image: entropy/ui:latest
+    container_name: entropy-ui
+    environment:
+      - BASE_URL=ws://entropy_core:8000
+      - CORE_URL=http://entropy_core:8000
+    volumes:
+      - ./demo_ui:/app
+    ports:
+      - 8501:8501
+    networks:
+      - entropy
+    restart: "on-failure"
 
 networks:
   entropy:

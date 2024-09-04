@@ -6,7 +6,7 @@ from core.apis.routes.chat import chat_router
 app = FastAPI(
     title="CliniQ360 - Entropy",
     version="0.1 - Beta",
-    description="Healthcare finance assistant",
+    description="Agents using AutoGen",
     redoc_url="/documentation",
 )
 origins = ["*"]
