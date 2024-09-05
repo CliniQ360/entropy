@@ -4,10 +4,6 @@ services:
     image: entropy/core:latest
     container_name: entropy-core
     env_file: backend/core/env
-    environment:
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_DEFAULT_REGION=ap-south-1
     volumes:
       - ./backend/core:/app
       - ./backend/logs:/core/logs
@@ -18,7 +14,7 @@ services:
     restart: "on-failure"
 
   entropy_db:
-    image: postgres:16
+    image: postgres:12-alpine
     container_name: entropy-db
     environment:
       - POSTGRES_USER=postgres
