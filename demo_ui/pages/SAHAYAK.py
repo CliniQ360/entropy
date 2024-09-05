@@ -13,7 +13,7 @@ def connect_websocket(chat_id: str):
     # if "user_details" in st.session_state:
     #     api_url = f"{BASE_URL}/ws1/{chat_id}"
     # else:
-    api_url = f"{BASE_URL}/ws1/{chat_id}"
+    api_url = f"{BASE_URL}/fill_form_assisted/{chat_id}"
     print(f"{api_url=}")
     ws = websocket.create_connection(api_url)
     start_message = ws.recv()

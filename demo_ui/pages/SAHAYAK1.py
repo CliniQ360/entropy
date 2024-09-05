@@ -10,7 +10,7 @@ CORE_URL = os.environ["CORE_URL"]
 
 def connect_websocket(chat_id: str):
     print("Creating WebSocket session")
-    api_url = f"{BASE_URL}/ws/{chat_id}"
+    api_url = f"{BASE_URL}/fill_form/{chat_id}"
     print(f"{api_url=}")
     ws = websocket.create_connection(api_url)
     start_message = ws.recv()
