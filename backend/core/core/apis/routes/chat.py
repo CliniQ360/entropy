@@ -97,7 +97,7 @@ async def receive_from_client(autogen_chat: AutogenChat):
 #             await manager.disconnect(autogen_chat)
 #         except:
 #             pass
-@chat_router.websocket("/ws/{chat_id}")
+@chat_router.websocket("/fill_form/{chat_id}")
 async def websocket_endpoint(websocket: WebSocket, chat_id: str):
     # await websocket.accept()
     try:
@@ -127,7 +127,7 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str):
             pass
 
 
-@chat_router.websocket("/ws1/{chat_id}")
+@chat_router.websocket("/fill_form_assisted/{chat_id}")
 async def websocket_endpoint(websocket: WebSocket, chat_id: str):
     # await websocket.accept()
     try:
