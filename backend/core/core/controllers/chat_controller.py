@@ -7,18 +7,125 @@ from autogen import (
     GroupChat,
     GroupChatManager,
 )
+import instructor
 from core.utils.user_proxy_webagent import UserProxyWebAgent
 import asyncio
-from pydantic import BaseModel
 import json
+from typing import Optional, List, Union
 from core.crud.user_interaction_crud import CRUDUserInteractions
 from core.utils.openai_helper import openAI_vision_inference
+import time, os
+from openai import OpenAI
+from pydantic import BaseModel, Field
+from enum import Enum
 
 config_list = [
     {
         "model": "gpt-4o-2024-08-06",
     }
 ]
+config_list_v1 = [
+    {"model": "gpt-4o-2024-08-06", "model_client_cls": "InstructorModelClient"}
+]
+
+
+# class Gender(str, Enum):
+#     Male = "Male"
+#     Female = "Female"
+#     Others = "Others"
+
+
+# class EmploymentType(str, Enum):
+#     Salaried = "Salaried"
+#     SelfEmployment = "Self Employment"
+
+
+# class EndUse(str, Enum):
+#     ConsumerDurablePurchase = "ConsumerDurablePurchase"
+#     Education = "Education"
+#     Travel = "Travel"
+#     Health = "Health"
+#     Other = "Other"
+
+
+class UserDetails(BaseModel):
+    first_name: str = Field(None, description="First name of the user")
+    last_name: str = Field(None, description="Last name of the user")
+    date_of_birth: str = Field(
+        None, description="date of birth of the user in DD/MM/YYYY format"
+    )
+    # gender: Gender = Field(None, description="Gender of the user")
+    gender: str = Field(None, description="Gender of the user")
+    mobile_number: str = Field(None, description="Mobile number of the user")
+    email: str = Field(None, description="Email id of the user")
+    pan_number: str = Field(None, description="PAN card number for the user")
+    address_line_1: str = Field(
+        None, description="User address line 1 from the conversation"
+    )
+    address_line_2: str = Field(
+        None, description="User address line 2 from the conversation"
+    )
+    city: str = Field(None, description="User city name from the conversation")
+    state: str = Field(None, description="User state name from the conversation")
+    # employment_type: EmploymentType = Field(None, description="Type of employment")
+    employment_type: str = Field(None, description="Type of employment")
+    employer_name: str = Field(None, description="Name of the employer for the user")
+    official_email: str = Field(None, description="Official email id with the employer")
+    income: str = Field(None, description="Annual income of the user")
+    # end_use: EndUse = Field(
+    #     None, description="The reason user wanted to avail for loan"
+    # )
+    end_use: str = Field(None, description="The reason user wanted to avail for loan")
+    message: str = Field(None, description="Raw message to the user from agent")
+
+
+class InstructorModelClient:
+    """
+    An Instructor client to use with AutoGen.
+    """
+
+    def __init__(self, config, **kwargs):
+        print(f"InstructorClient config: {config}")
+
+    def create(self, params):
+        # Create a data response class
+        # adhering to AutoGen's ModelClientResponseProtocol
+
+        request_time = int(time.time())
+
+        client = instructor.from_openai(
+            OpenAI(
+                # base_url=my_url,
+                api_key=os.environ["OPENAI_API_KEY"],  # required, but unused
+            ),
+            mode=instructor.Mode.JSON,
+        )
+
+        # we are setting this here, for testing... some way to pass this would be better.
+        # response_model = None
+        response_model = UserDetails
+
+        # complete_response contains the full response Autogen needs
+        answer, complete_response = client.chat.completions.create_with_completion(
+            model="gpt-4o-2024-08-06",
+            messages=params["messages"],
+            response_model=response_model,
+            max_retries=4,
+        )
+
+        return complete_response
+
+    # these are to fill out the Class, and required by Autogen
+    def message_retrieval(self, response):
+        choices = response.choices
+        return [choice.message.content for choice in choices]
+
+    def cost(self, response) -> float:
+        return 0
+
+    @staticmethod
+    def get_usage(response):
+        return {}
 
 
 #############################################################################################
@@ -30,7 +137,6 @@ class AutogenChat:
         self.client_sent_queue = asyncio.Queue()
         self.client_receive_queue = asyncio.Queue()
         self.llm_config_assistant = {
-            "model": "gpt-4o-2024-08-06",
             "temperature": 0,
             "config_list": config_list,
             "seed": 42,
@@ -119,9 +225,12 @@ class AutogenChat:
             ],
         }
         self.llm_config_proxy = {
-            "model": "gpt-4o-2024-08-06",
             "temperature": 0,
             "config_list": config_list,
+        }
+        self.instructor_llm_config = {
+            "temperature": 0,
+            "config_list": config_list_v1,
         }
         self.assistant = autogen.AssistantAgent(
             name="assistant",
@@ -141,21 +250,19 @@ class AutogenChat:
         self.sahayak_agent = ConversableAgent(
             name="sahayak_agent",
             system_message="""You are a helpful assistant. Your goal is to help the user fill the load application form. To fill the form, you have to collect following details from user:
-            Personal Details: First Name, Last Name, Date of Birth, Gender, email address, mobile number.
+            Personal Details: First Name, Last Name, Date of Birth, Gender, email address, mobile number, PAN number.
             Address Details: Address Line 1, Address Line 2, City, State.
-            Professional Details: Type of employment, Employer name, Salary.
-            Prompt the user to provide all these details.
+            Professional Details: Type of employment, Employer name, Annual Salary,official email id.
+            Loan Details: Reason to avail for loan.
+            Ask the user to provide all these details.
             Once all the personal details are collected, store the information.
             Once all the address details are collected, store address information.
             Once all the required information is collected, show it to the user to verify once.
-            Return TERMINATE once everything is done.""",
-            llm_config=self.llm_config_assistant,
+            Respond to the user in JSON format specified.""",
+            llm_config=self.instructor_llm_config,
             human_input_mode="NEVER",
         )
-        self.function_executor_agent_prompt = """
-        This agent executes all functions for the group. 
-        Once required user details are collected from the user conversation, this agent executes the function to store the information to the JSON file.
-        """
+        self.sahayak_agent.register_model_client(model_client_cls=InstructorModelClient)
         # self.function_executor_agent = UserProxyAgent(
         #     name="function_executor_agent",
         #     system_message=self.function_executor_agent_prompt,
@@ -171,7 +278,9 @@ class AutogenChat:
         # )
         self.function_executor_agent = AssistantAgent(
             name="function_executor_agent",
-            system_message=self.function_executor_agent_prompt,
+            system_message="""This agent executes all functions for the group. 
+            Once required user details are collected from the user conversation, this agent executes the 
+            function to store the information to the JSON file.""",
             llm_config=self.llm_config_assistant,
         )
         self.function_executor_agent.register_function(
@@ -184,14 +293,22 @@ class AutogenChat:
         self.user_proxy = UserProxyWebAgent(
             name="user_proxy", human_input_mode="ALWAYS"
         )
+        self.agent_list = [
+            self.user_proxy,
+            self.sahayak_agent,
+            self.function_executor_agent,
+            # self.restructure_assistant,
+        ]
         self.groupchat = GroupChat(
-            agents=[
-                self.user_proxy,
-                self.function_executor_agent,
-                self.sahayak_agent,
-            ],
+            agents=self.agent_list,
             messages=[],
+            admin_name="sahayak_agent",
             max_round=50,
+            speaker_selection_method="auto",
+            select_speaker_message_template=f"""You are in a role play game. The following roles are available:
+                user_input, user_input_respond and function_executor.
+                Read the following conversation.
+                Then select the next role from {self.agent_list} to play. Only return the role.""",
         )
         self.manager = GroupChatManager(
             groupchat=self.groupchat,

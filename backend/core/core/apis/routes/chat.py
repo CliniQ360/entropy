@@ -112,7 +112,7 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str):
         #     data = f"Hi! Here are the user details: {user_metadata}. Start the conversation."
         # else:
         #     data = "Hi!"
-        data = "Hi!"
+        data = "Hello there! Thank you for visiting CliniQ360. I am user e-Sahayak and will help you fill the loan application form. Do you want to start?"
         future_calls = asyncio.gather(
             send_to_client(autogen_chat), receive_from_client(autogen_chat)
         )
