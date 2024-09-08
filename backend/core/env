@@ -1,2 +1,3 @@
-OPENAI_API_KEY=sk-proj-eyRmwxaT2HsjbPNPDryOT3BlbkFJtPYuHzf9iqpPwbl3kQlE
+OPENAI_API_KEY=
+GROQ_API_KEY=
 DB_URL="postgresql://postgres:postgres@entropy_db:5432/postgres"
