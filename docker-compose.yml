@@ -3,7 +3,7 @@ services:
     build: backend/core/.
     image: entropy/core:latest
     container_name: entropy-core
-    env_file: backend/core/env
+    env_file: backend/core/env_var
     volumes:
       - ./backend/core:/app
       - ./backend/logs:/core/logs
