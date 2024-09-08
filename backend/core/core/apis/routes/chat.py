@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket, APIRouter, WebSocketDisconnect, UploadFile, File
 from typing import List
-from core.controllers.chat_controller import AutogenChat, UserInteractions
-from core.crud.user_interaction_crud import CRUDUserInteractions
+from core.controllers.chat_controller import AutogenChat
+from core.controllers.user_interaction_controller import UserInteractions
 import asyncio
 import openai
 import os
@@ -76,7 +76,6 @@ async def receive_from_client(autogen_chat: AutogenChat):
 # async def websocket_endpoint(websocket: WebSocket, chat_id: str):
 #     # await websocket.accept()
 #     try:
-#         user_details = CRUDUserInteractions().read(interaction_id=chat_id)
 #         autogen_chat = AutogenChat(chat_id=chat_id, websocket=websocket)
 #         await manager.connect(autogen_chat)
 #         # data = await autogen_chat.websocket.receive_text()
@@ -102,7 +101,6 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str):
     # await websocket.accept()
     try:
         print(f"{chat_id=}")
-        # user_details = CRUDUserInteractions().read(interaction_id=chat_id)
         # print(f"{user_details=}")
         autogen_chat = AutogenChat(chat_id=chat_id, websocket=websocket)
         await manager.connect(autogen_chat)
@@ -112,7 +110,7 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str):
         #     data = f"Hi! Here are the user details: {user_metadata}. Start the conversation."
         # else:
         #     data = "Hi!"
-        data = "Hello there! Thank you for visiting CliniQ360. I am user e-Sahayak and will help you fill the loan application form. Do you want to start?"
+        data = f"Interaction_id: {chat_id}, message: Hello there! Thank you for visiting CliniQ360. I am user e-Sahayak and will help you fill the loan application form. Do you want to start?"
         future_calls = asyncio.gather(
             send_to_client(autogen_chat), receive_from_client(autogen_chat)
         )
@@ -131,7 +129,9 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str):
 async def websocket_endpoint(websocket: WebSocket, chat_id: str):
     # await websocket.accept()
     try:
-        user_details = CRUDUserInteractions().read(interaction_id=chat_id)
+        user_details = UserInteractions().get_interaction_details(
+            interaction_id=chat_id
+        )
         print(f"{user_details=}")
         autogen_chat = AutogenChat(chat_id=chat_id, websocket=websocket)
         await manager.connect(autogen_chat)
@@ -198,8 +198,8 @@ async def extract_user_details(chat_id: str, files: List[UploadFile]):
 @chat_router.post("/user_details/store/{chat_id}")
 async def store_user_details(chat_id: str, user_details: dict):
     try:
-        return CRUDUserInteractions().create(
-            **{"interaction_id": chat_id, "interaction_metadata": user_details}
+        return UserInteractions().create_interaction_details(
+            interaction_id=chat_id, user_details=user_details
         )
     except Exception as e:
         print("ERROR", str(e))
