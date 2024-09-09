@@ -78,7 +78,7 @@ class AutogenChat:
                             },
                             "dob": {
                                 "type": "string",
-                                "description": "User date of birth in DD/MM/YYYY format from the conversation",
+                                "description": "User date of birth in YYYY-MM-DD format from the conversation",
                             },
                             "addressL1": {
                                 "type": "string",
@@ -180,8 +180,7 @@ class AutogenChat:
             Professional Details: Type of employment, Employer name, Annual Salary,official email id.
             Loan Details: end_use to avail loan.
             Ask the user for all the details.
-            Once all the required information is collected, prompt the user to verify the collected information.
-            if user confirms the collected information, submit form by calling submit_form function."
+            Once all the required information is collected, prompt the user to verify the collected information and submit the form once confirmed by calling submit_form function.
             Respond to the user in JSON format specified.""",
             llm_config=self.instructor_llm_config,
             human_input_mode="NEVER",

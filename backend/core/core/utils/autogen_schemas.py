@@ -25,7 +25,7 @@ class UserDetails(BaseModel):
     interaction_id: str = Field(None, description="Unique id generated for each chat")
     firstName: str = Field(None, description="First name of the user")
     lastName: str = Field(None, description="Last name of the user")
-    dob: str = Field(None, description="date of birth of the user in DD/MM/YYYY format")
+    dob: str = Field(None, description="date of birth of the user in YYYY-MM-DD format")
     gender: Gender = Field(None, description="Gender of the user")
     contactNumber: str = Field(None, description="Mobile number of the user")
     email: str = Field(None, description="Email id of the user")

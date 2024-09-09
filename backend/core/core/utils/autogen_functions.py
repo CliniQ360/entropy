@@ -1,5 +1,5 @@
 from core.crud.user_interaction_crud import CRUDUserInteractions
-import os
+import os, json, time
 from commons.external_call import APIInterface
 
 
@@ -53,6 +53,8 @@ def submit_form(**kwargs):
     search_resp, search_resp_code = APIInterface().post_with_params(
         route=search_url, params={"user_id": "3"}
     )
+    print("Sleeping for 10 seconds")
+    time.sleep(10)
     txn_id = search_resp.get("txn_id")
     user_contact_number = kwargs.get("contactNumber")
     finvu_user_id = f"{user_contact_number}@finvu"
@@ -60,12 +62,21 @@ def submit_form(**kwargs):
     kwargs.update({"bureauConsent": True, "aa_id": finvu_user_id})
     submit_payload = {"loanForm": kwargs}
     print(f"{submit_payload=}")
+    json_payload = json.dumps(submit_payload)
     submit_resp, submit_resp_code = APIInterface().post_with_params(
-        route=submit_url, params={"txn_id": txn_id}, data=submit_payload
+        route=submit_url, params={"txn_id": txn_id}, data=json_payload
     )
     select_resp, select_resp_code = APIInterface().post_with_params(
         route=select_url, params={"txn_id": txn_id}
     )
+    current_action = None
+    while current_action != "ON_SELECT_CST":
+        get_txn_resp, get_txn_resp_code = APIInterface().get(
+            route=get_txn_url, params={"txn_id": txn_id}
+        )
+        current_action = get_txn_resp.get("current_action")
+        print(f"{current_action=}")
+        time.sleep(5)
     get_aa_resp, get_aa_resp_code = APIInterface().get(
         route=get_aa_url, params={"user_id": finvu_user_id, "txn_id": txn_id}
     )

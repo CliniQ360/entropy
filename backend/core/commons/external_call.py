@@ -68,14 +68,16 @@ class APIInterface:
             print(f"Error in DELETE API request: {error}")
 
     @staticmethod
-    def post_with_params(route, params=None, headers=None, data=None):
+    def post_with_params(route, params=None, headers=None, json=None, data=None):
         try:
             url = route
             print("POST request sent")
-            print(f"url = {url}, params = {params}")
-            response = requests.post(url, json=data, params=params, headers=headers)
+            print(f"url = {url}, params = {params}, data = {data}, json = {json}")
+            response = requests.post(
+                url, json=json, data=data, params=params, headers=headers
+            )
             print(
-                f"response.text = {response.text}, response.status_code = {response.status_code}"
+                f"response.json = {response.json()}, response.status_code = {response.status_code}"
             )
             if response.text:
                 return response.json(), response.status_code
