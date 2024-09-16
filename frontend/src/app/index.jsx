@@ -1,7 +1,7 @@
 import LandingPage from "../pages/LandingPage";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import CreditPage from "../pages/LandingPage/CreditPage";
+import CreditPage from "../pages/CreditPage";
 
 function App() {
   return (
