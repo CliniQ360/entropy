@@ -1,17 +1,17 @@
+import { Stack, styled, Typography } from "@mui/material";
 import React from "react";
 import CustomNavbar from "../../components/CustomNavbar";
 import AgentHeader from "../../components/AgentHeaderComponent";
-import { Stack, styled, Typography } from "@mui/material";
 
-const KYCWrapper = styled("div")(({ theme }) => ({
+const EMandateWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
 }));
-const KYCPage = () => {
+const EmandatePage = () => {
   return (
     <>
       <CustomNavbar />
       <AgentHeader />
-      <KYCWrapper>
+      <EMandateWrapper>
         <Stack gap={4}>
           <Typography
             sx={{
@@ -20,7 +20,7 @@ const KYCPage = () => {
               fontFamily: "Plus Jakarta Sans",
             }}
           >
-            KYC
+            E-Mandate
           </Typography>
           <Typography
             sx={{
@@ -37,9 +37,9 @@ const KYCPage = () => {
             healthcare services.
           </Typography>
         </Stack>
-      </KYCWrapper>
+      </EMandateWrapper>
     </>
   );
 };
 
-export default KYCPage;
+export default EmandatePage;
