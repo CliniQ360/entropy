@@ -1,16 +1,19 @@
 import { Stack, styled, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import CustomNavbar from "../../components/CustomNavbar";
 import AgentHeader from "../../components/AgentHeaderComponent";
+import SubmitDialogBox from "../../components/SubmitDialogComponent";
 
 const EMandateWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
 }));
 const EmandatePage = () => {
+  const [open, setOpen] = useState(true);
   return (
     <>
       <CustomNavbar />
       <AgentHeader />
+      <SubmitDialogBox open={open} setOpen={setOpen} />
       <EMandateWrapper>
         <Stack gap={4}>
           <Typography
