@@ -20,10 +20,7 @@ function App() {
         {/* ASSISTANTROUTING */}
         <Route path="/route-1" element={<AssistantHomepage />} />
         <Route path="/route-2" element={<ChooseAssistant />} />
-        <Route path="/route-3" element={<DocumentUploadPage />} />
-        <Route path="/route-4" element={<KYCPage />} />
-        <Route path="/route-5" element={<BankDetailsPage />} />
-        <Route path="/route-6" element={<EmandatePage />} />
+
         <Route path="/credit" element={<CreditPage />}>
           <Route path="personalDetails" element={<PersonalDetailsPage />} />
           <Route
@@ -31,6 +28,10 @@ function App() {
             element={<ProfessionalDetailsPage />}
           />
           <Route path="selectAA" element={<SelectAAPage />} />
+          <Route path="route-3" element={<DocumentUploadPage />} />
+          <Route path="route-4" element={<KYCPage />} />
+          <Route path="route-5" element={<BankDetailsPage />} />
+          <Route path="route-6" element={<EmandatePage />} />
         </Route>
       </Routes>
     </div>
