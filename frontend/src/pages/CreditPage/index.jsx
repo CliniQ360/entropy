@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Visualizer } from "../../../components/LiveAudioWavelengthComponent";
+import { Visualizer } from "../../components/LiveAudioWavelengthComponent";
 
 const CreditPage = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
