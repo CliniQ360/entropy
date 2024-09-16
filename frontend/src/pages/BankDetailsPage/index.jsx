@@ -73,8 +73,6 @@ const BankDetailsPage = () => {
   });
   return (
     <>
-      <CustomNavbar />
-      <AgentHeader />
       <BankDetailWrapper>
         <BankDetailHeader>
           <Typography

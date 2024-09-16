@@ -102,8 +102,6 @@ const DocumentUploadPage = () => {
   return (
     <>
       {" "}
-      <CustomNavbar />
-      <AgentHeader />
       <UploadDocumentWrapper>
         <DocumentHeaderSection>
           <Typography

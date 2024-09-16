@@ -9,8 +9,6 @@ const KYCWrapper = styled("div")(({ theme }) => ({
 const KYCPage = () => {
   return (
     <>
-      <CustomNavbar />
-      <AgentHeader />
       <KYCWrapper>
         <Stack gap={4}>
           <Typography

@@ -11,8 +11,6 @@ const EmandatePage = () => {
   const [open, setOpen] = useState(true);
   return (
     <>
-      <CustomNavbar />
-      <AgentHeader />
       <SubmitDialogBox open={open} setOpen={setOpen} />
       <EMandateWrapper>
         <Stack gap={4}>
