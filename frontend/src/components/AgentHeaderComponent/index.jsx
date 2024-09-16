@@ -11,11 +11,11 @@ const HeaderComponentWrapper = styled("div")(({ theme }) => ({
   marginBottom: "20px",
 }));
 const HeaderComponent = styled("div")(({ theme }) => ({
-  width: "95%",
+  width: "90%",
   display: "flex",
   flexDirection: "column",
   backgroundColor: "#EAF2FF",
-  borderRadius: "20px",
+  borderRadius: "10px",
 }));
 const HeaderIconSection = styled("div")(({ theme }) => ({
   display: "flex",
@@ -45,7 +45,14 @@ const AgentHeader = () => {
             alignItems={"center"}
           >
             <ProfileIcon />
-            <Typography sx={{ fontWeight: 700, fontSize: "1.4rem" }}>
+            <Typography
+              sx={{
+                fontWeight: 700,
+                fontSize: "1.2rem",
+                fontFamily: "plus jakarta sans",
+                ml: 2,
+              }}
+            >
               Agent Name
             </Typography>
           </Stack>
@@ -53,7 +60,13 @@ const AgentHeader = () => {
         </HeaderIconSection>
         <Divider />
         <Stack alignItems={"center"} justifyContent={"center"} padding={2}>
-          <Typography sx={{ color: "#535353", fontSize: "1rem" }}>
+          <Typography
+            sx={{
+              color: "#535353",
+              fontSize: "0.8rem",
+              fontFamily: "source sans pro",
+            }}
+          >
             Lorem Ipsum has been the industry's standard dummy..
           </Typography>
         </Stack>

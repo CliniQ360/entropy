@@ -5,6 +5,8 @@ import CreditPage from "../pages/CreditPage";
 import AssistantHomepage from "../pages/AssistantHomePage";
 import ChooseAssistant from "../pages/ChooseAssistantPage";
 import DocumentUploadPage from "../pages/DocumentUploadPage";
+import KYCPage from "../pages/KYCPage";
+import BankDetailsPage from "../pages/BankDetailsPage";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/route-1" element={<AssistantHomepage />} />
         <Route path="/route-2" element={<ChooseAssistant />} />
         <Route path="/route-3" element={<DocumentUploadPage />} />
+        <Route path="/route-4" element={<KYCPage />} />
+        <Route path="/route-5" element={<BankDetailsPage />} />
       </Routes>
     </div>
   );
