@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from "react";
 import PageFooter from "../../components/PageFooter";
+import { Outlet } from "react-router-dom";
+import AgentHeader from "../../components/AgentHeaderComponent";
+import CustomNavbar from "../../components/CustomNavbar";
+import { styled } from "@mui/material";
+
+const CreditPageContainer = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+}));
+
+const OutletContainer = styled("div")(({ theme }) => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginBottom: theme.spacing(35),
+}));
 
 const CreditPage = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -12,7 +28,7 @@ const CreditPage = () => {
         });
         const recorder = new MediaRecorder(stream);
         setMediaRecorder(recorder);
-        recorder.start(); // Start recording continuously
+        recorder.start();
       } catch (err) {
         console.error("Error accessing microphone:", err);
       }
@@ -24,10 +40,14 @@ const CreditPage = () => {
   }, [mediaRecorder]);
 
   return (
-    <div>
-      <h1>Credit Page</h1>
+    <CreditPageContainer>
+      <CustomNavbar />
+      <AgentHeader />
+      <OutletContainer>
+        <Outlet />
+      </OutletContainer>
       <PageFooter mediaRecorder={mediaRecorder} />
-    </div>
+    </CreditPageContainer>
   );
 };
 
