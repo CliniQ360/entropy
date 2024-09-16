@@ -1,0 +1,25 @@
+.chartfooter-wrapper {
+  padding: 24px 0;
+  display: grid;
+  text-align: center;
+  justify-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  .chartfooterIcon-container {
+    display: flex;
+    align-items: center;
+    .chartfooter-icon {
+      width: 12px;
+      height: 12px;
+      margin-right: 2px;
+      &__green {
+        background: rgba(41, 157, 47, 1);
+      }
+      &__yellow {
+        background: rgba(255, 165, 0, 1);
+      }
+      &__blue {
+        background: rgba(124, 181, 236, 1);
+      }
+    }
+  }
+}

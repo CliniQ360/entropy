@@ -1,0 +1,48 @@
+.slider-wrapper {
+  width: 100%;
+  margin: 8px 0;
+  .slider-group {
+    position: relative;
+    .MuiInput-root {
+      position: absolute;
+      top: -24px;
+      right: 0;
+      &:hover {
+        border: none;
+        MuiInput-root:before {
+          border: none;
+        }
+      }
+      &:before {
+        border: 1px solid #9f9f9f;
+        border-radius: 20px;
+      }
+      &:after {
+        border: none;
+      }
+
+      .MuiInput-input {
+        padding: 2px 8px;
+      }
+    }
+
+    .MuiSlider-colorPrimary {
+      margin-bottom: 36px;
+      .MuiSlider-thumb {
+        background: white;
+        border: 1px solid;
+      }
+      .MuiSlider-rail {
+        background: white;
+        border: 1px solid #cccccc;
+        height: 6px;
+      }
+      .MuiSlider-mark {
+        background: #ffffff;
+      }
+      .MuiSlider-markLabel {
+        color: #9f9f9f;
+      }
+    }
+  }
+}

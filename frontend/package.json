@@ -1,38 +1,82 @@
 {
-  "name": "Chat",
+  "name": "frontend",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite -m dev --host 0.0.0.0",
-    "build": "vite build -m prod --base=/static/app/",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.13.7",
-    "@mui/lab": "^5.0.0-alpha.135",
-    "@mui/material": "^5.13.7",
-    "@mui/x-data-grid": "^6.9.2",
-    "axios": "^1.7.7",
-    "json2mq": "^0.2.0",
+    "@mui/icons-material": "^5.15.12",
+    "@mui/material": "^5.16.7",
+    "@mui/system": "^6.0.1",
+    "@mui/x-data-grid": "^7.12.1",
+    "@mui/x-data-grid-generator": "^7.12.1",
+    "@reduxjs/toolkit": "^1.9.7",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.6.7",
+    "chart.js": "^4.4.4",
+    "country-state-city": "^3.2.1",
+    "date-fns": "^3.3.1",
+    "dotenv": "^16.4.5",
+    "groq-sdk": "^0.7.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
-    "react-dropzone": "^14.2.3",
-    "react-router-dom": "^6.14.1",
-    "uuid": "^9.0.1",
-    "zustand": "^4.3.9"
+    "react-icons": "^5.3.0",
+    "react-marquee-slider": "^1.1.5",
+    "react-multi-carousel": "^2.8.5",
+    "react-otp-input": "^3.1.1",
+    "react-redux": "^8.1.0",
+    "react-router-dom": "^6.26.1",
+    "react-scripts": "5.0.1",
+    "react-spinners": "^0.13.8",
+    "react-toastify": "^10.0.5",
+    "react-top-loading-bar": "^2.3.1",
+    "redux": "^4.0.0",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.2",
+    "styled-components": "^6.1.12",
+    "uuid": "^10.0.0",
+    "web-vitals": "^2.1.4",
+    "workbox-background-sync": "^6.6.0",
+    "workbox-broadcast-update": "^6.6.0",
+    "workbox-cacheable-response": "^6.5.4",
+    "workbox-core": "^6.6.0",
+    "workbox-expiration": "^6.6.0",
+    "workbox-google-analytics": "^6.6.1",
+    "workbox-navigation-preload": "^6.6.0",
+    "workbox-precaching": "^6.6.0",
+    "workbox-range-requests": "^6.6.0",
+    "workbox-routing": "^6.6.0",
+    "workbox-strategies": "^6.6.0",
+    "workbox-streams": "^6.6.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@types/react": "^18.0.37",
-    "@types/react-dom": "^18.0.11",
-    "@vitejs/plugin-react": "^4.0.0",
-    "eslint": "^8.38.0",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4",
-    "vite": "^4.3.9"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
