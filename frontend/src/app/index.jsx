@@ -5,6 +5,9 @@ import CreditPage from "../pages/CreditPage";
 import AssistantHomepage from "../pages/AssistantHomePage";
 import ChooseAssistant from "../pages/ChooseAssistantPage";
 import DocumentUploadPage from "../pages/DocumentUploadPage";
+import KYCPage from "../pages/KYCPage";
+import BankDetailsPage from "../pages/BankDetailsPage";
+import EmandatePage from "../pages/eMandatePage";
 import PersonalDetailsPage from "../pages/PersonalDetailsPage";
 import ProfessionalDetailsPage from "../pages/ProfessionalDetailsPage";
 import SelectAAPage from "../pages/SelectAAPage";
@@ -18,6 +21,9 @@ function App() {
         <Route path="/route-1" element={<AssistantHomepage />} />
         <Route path="/route-2" element={<ChooseAssistant />} />
         <Route path="/route-3" element={<DocumentUploadPage />} />
+        <Route path="/route-4" element={<KYCPage />} />
+        <Route path="/route-5" element={<BankDetailsPage />} />
+        <Route path="/route-6" element={<EmandatePage />} />
         <Route path="/credit" element={<CreditPage />}>
           <Route path="personalDetails" element={<PersonalDetailsPage />} />
           <Route
