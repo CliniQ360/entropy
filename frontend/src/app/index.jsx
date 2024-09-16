@@ -11,6 +11,7 @@ import EmandatePage from "../pages/eMandatePage";
 import PersonalDetailsPage from "../pages/PersonalDetailsPage";
 import ProfessionalDetailsPage from "../pages/ProfessionalDetailsPage";
 import SelectAAPage from "../pages/SelectAAPage";
+import CreditOfferPage from "../pages/CreditOfferDetail";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="route-4" element={<KYCPage />} />
           <Route path="route-5" element={<BankDetailsPage />} />
           <Route path="route-6" element={<EmandatePage />} />
+          <Route path="route-7" element={<CreditOfferPage />} />
         </Route>
       </Routes>
     </div>
