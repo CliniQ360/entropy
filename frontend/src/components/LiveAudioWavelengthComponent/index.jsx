@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { LiveAudioVisualizer } from "react-audio-visualize";
 
-export const Visualizer = ({ mediaRecorder }) => {
+export const VisualizerLive = ({ mediaRecorder }) => {
   return (
     <div>
       {mediaRecorder && (
