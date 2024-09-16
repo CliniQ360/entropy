@@ -1,3 +1,7 @@
+body {
+  margin: 0;
+}
+
 @font-face {
   font-family: "Source Sans Pro";
   src: url("./assets//fonts/source-sans-pro/SourceSansPro-Regular.otf")
