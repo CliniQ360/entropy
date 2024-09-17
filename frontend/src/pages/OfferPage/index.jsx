@@ -12,9 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
@@ -23,37 +20,37 @@ const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  padding: theme.spacing(4),
+  //   padding: theme.spacing(4),
   gap: theme.spacing(6),
+  [theme.breakpoints.down("sm")]: {
+    maxWidth: 375,
+  },
 }));
 
 const DocumentHeaderSection = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
+  padding: theme.spacing(4),
   gap: theme.spacing(4),
 }));
 
 const FormContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  width: "100%",
-  gap: theme.spacing(4),
+  width: "95%",
 }));
 
 const SelectBoxContainer = styled("div")(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  margin: theme.spacing(3),
   border: "1px solid #9E9E9E",
   padding: theme.spacing(2),
   borderRadius: "5px",
-  minWidth: "350px",
   boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
   [theme.breakpoints.down("sm")]: {
-    minWidth: 280,
     padding: theme.spacing(1),
+    maxWidth: 300,
   },
+  flex: "0 0 auto",
+  margin: theme.spacing(2),
 }));
 
 const SelectBoxHeader = styled("div")(({ theme }) => ({
@@ -72,6 +69,18 @@ const DetailRow = styled("div")(({ theme }) => ({
   justifyContent: "space-between",
   width: "100%",
   marginBottom: theme.spacing(1),
+}));
+
+const ScrollContainer = styled("div")(({ theme }) => ({
+  display: "flex",
+  overflowX: "auto",
+  scrollBehavior: "smooth",
+  padding: theme.spacing(1),
+  maxWidth: "100%", // Ensure it does not exceed viewport width
+  boxSizing: "border-box", // Include padding and border in the element's total width and height
+  "&::-webkit-scrollbar": {
+    display: "none", // Hide the scrollbar
+  },
 }));
 
 const ButtonContainer = styled(IconButton)(({ theme, disabled }) => ({
@@ -120,11 +129,44 @@ const AvailableOffersPage = () => {
         ],
       },
     },
-    // Add more offers as needed
+    {
+      offer_details: {
+        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72e",
+        item_price: "81132.23",
+        INTEREST_RATE: "26.99%",
+        TERM: "24 Months",
+        INSTALLMENT_AMOUNT: "3262.51 INR",
+      },
+      provider_details: {
+        name: "DMI FINANCE PRIVATE LIMITED",
+        images: [
+          {
+            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
+          },
+        ],
+      },
+    },
+    {
+      offer_details: {
+        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72e",
+        item_price: "81132.23",
+        INTEREST_RATE: "26.99%",
+        TERM: "24 Months",
+        INSTALLMENT_AMOUNT: "3262.51 INR",
+      },
+      provider_details: {
+        name: "DMI FINANCE PRIVATE LIMITED",
+        images: [
+          {
+            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
+          },
+        ],
+      },
+    },
   ]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const sliderRef = useRef(null);
+  const scrollRef = useRef(null);
 
   const filteredLoanOffers = offers.filter((offer) =>
     offer.provider_details.name.toLowerCase().includes("")
@@ -135,26 +177,24 @@ const AvailableOffersPage = () => {
     console.log(offer);
   };
 
+  const scrollTo = (index) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft =
+        scrollRef.current.children[index].offsetLeft;
+      setCurrentSlide(index);
+    }
+  };
+
   const next = () => {
-    sliderRef.current.slickNext();
+    if (currentSlide < filteredLoanOffers.length - 1) {
+      scrollTo(currentSlide + 1);
+    }
   };
 
   const previous = () => {
-    sliderRef.current.slickPrev();
-  };
-
-  const settings = {
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    adaptiveHeight: true,
-    infinite: false, // Disable infinite scrolling
-    beforeChange: (current, next) => {
-      setCurrentSlide(next);
-    },
-    afterChange: (current) => {
-      setCurrentSlide(current);
-    },
+    if (currentSlide > 0) {
+      scrollTo(currentSlide - 1);
+    }
   };
 
   const formatNumber = (num) => {
@@ -173,7 +213,7 @@ const AvailableOffersPage = () => {
         <Typography
           sx={{ fontSize: "1rem", color: "#535353", textAlign: "left" }}
         >
-          Lorem Ipsum is simply dummy text of the printing and typesetting
+          Lorem Ipsum is simply dummy text of the printing and typesetting
           industry
         </Typography>
       </DocumentHeaderSection>
@@ -181,10 +221,10 @@ const AvailableOffersPage = () => {
         <FormControl component="fieldset">
           <RadioGroup>
             {filteredLoanOffers && filteredLoanOffers.length > 0 ? (
-              <Slider ref={sliderRef} {...settings}>
-                {filteredLoanOffers.map((offer, index) => (
-                  <Box key={index}>
-                    <SelectBoxContainer>
+              <>
+                <ScrollContainer ref={scrollRef}>
+                  {filteredLoanOffers.map((offer, index) => (
+                    <SelectBoxContainer key={index}>
                       <SelectBoxHeader>
                         <div style={{ display: "flex", alignItems: "center" }}>
                           {offer.provider_details?.images?.[0]?.url && (
@@ -244,9 +284,33 @@ const AvailableOffersPage = () => {
                         </DetailRow>
                       </SelectBoxDetails>
                     </SelectBoxContainer>
-                  </Box>
-                ))}
-              </Slider>
+                  ))}
+                </ScrollContainer>
+                <Stack
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  flexDirection={"row"}
+                  gap={2}
+                >
+                  <ButtonContainer
+                    disabled={currentSlide === 0}
+                    onClick={previous}
+                  >
+                    <KeyboardArrowLeftIcon />
+                  </ButtonContainer>
+
+                  <Typography variant="body2" color="textSecondary">
+                    {currentSlide + 1} / {filteredLoanOffers.length}
+                  </Typography>
+
+                  <ButtonContainer
+                    disabled={currentSlide >= filteredLoanOffers.length - 1}
+                    onClick={next}
+                  >
+                    <ChevronRightIcon />
+                  </ButtonContainer>
+                </Stack>
+              </>
             ) : (
               <Box
                 sx={{
@@ -264,22 +328,6 @@ const AvailableOffersPage = () => {
           </RadioGroup>
         </FormControl>
       </FormContainer>
-      <Stack
-        justifyContent={"flex-start"}
-        alignItems={"center"}
-        flexDirection={"row"}
-        gap={2}
-      >
-        <ButtonContainer disabled={currentSlide === 0} onClick={previous}>
-          <KeyboardArrowLeftIcon />
-        </ButtonContainer>
-        <ButtonContainer
-          disabled={currentSlide >= filteredLoanOffers.length - 1}
-          onClick={next}
-        >
-          <ChevronRightIcon />
-        </ButtonContainer>
-      </Stack>
     </AvailableOffersContainer>
   );
 };
