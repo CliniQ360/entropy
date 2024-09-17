@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { AudioVisualizer } from "react-audio-visualize";
 
-const Visualizer = ({ blob, visualizerRef }) => {
+const AudioBarComponentVisualizer = ({ blob, visualizerRef }) => {
   return (
     <div>
       {blob && (
@@ -18,3 +18,5 @@ const Visualizer = ({ blob, visualizerRef }) => {
     </div>
   );
 };
+
+export default AudioBarComponentVisualizer;

@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
+import AudioBarComponentVisualizer from "../../components/AudioWavelengthComponent";
 
 const PageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -102,6 +103,7 @@ const FooterButton = styled(Button)(({ theme }) => ({
   color: "white",
   fontSize: "1.4rem",
   width: "90%",
+  boxShadow: "none",
 }));
 
 const ChooseAssistant = () => {
@@ -142,7 +144,7 @@ const ChooseAssistant = () => {
       </AssistantChangeSectionWrapper>
       <AssistantProfilePhotoWrapper>
         <AssistantProfilePhoto activeIndex={activeButton} />
-        <Typography>BarPlay Component</Typography>
+        <AudioBarComponentVisualizer />
         <Stack padding={3}>
           <Typography
             textAlign={"center"}
@@ -154,7 +156,7 @@ const ChooseAssistant = () => {
         </Stack>
       </AssistantProfilePhotoWrapper>
       <FooterButtonWrapper>
-        <FooterButton>Button</FooterButton>
+        <FooterButton variant="contained">Button</FooterButton>
       </FooterButtonWrapper>
     </PageWrapper>
   );
