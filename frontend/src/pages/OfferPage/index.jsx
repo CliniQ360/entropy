@@ -10,10 +10,21 @@ import {
   Typography,
   IconButton,
   Button,
+  Dialog,
+  DialogContent,
+  Grid,
+  TextField,
+  DialogTitle,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useLocation } from "react-router-dom";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -88,7 +99,43 @@ const ButtonContainer = styled(IconButton)(({ theme, disabled }) => ({
   cursor: disabled ? "not-allowed" : "pointer",
 }));
 
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogTitle-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(0),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(5),
+  },
+  "& .MuiBackdrop-root": {
+    backgroundColor: "rgba(23, 23, 23, 0.8)",
+    backdropFilter: "blur(16px)",
+  },
+  "& .MuiDialog-paper": {
+    boxShadow: "none",
+  },
+  "& .MuiAccordionSummary-content": {
+    margin: 0,
+  },
+}));
+
+const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+  minWidth: "600px",
+  minHeight: "400px",
+  maxHeight: "600px",
+  overflowY: "auto",
+  display: "flex",
+  flexDirection: "column",
+  [theme.breakpoints.down("sm")]: {
+    minWidth: "100%",
+    minHeight: "100%",
+  },
+}));
+
 const AvailableOffersPage = () => {
+  const [selectedOffer, setSelectedOffer] = useState(null);
   const [offers, setOffers] = useState([
     {
       offer_details: {
@@ -159,9 +206,9 @@ const AvailableOffersPage = () => {
       },
     },
   ]);
-
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [selectedOfferId, setSelectedOfferId] = useState(null); // Track selected offer
+  const [selectedOfferId, setSelectedOfferId] = useState(null);
+  const [openViewDetails, setOpenViewDetails] = useState(false);
   const scrollRef = useRef(null);
 
   const filteredLoanOffers = offers.filter((offer) =>
@@ -198,6 +245,186 @@ const AvailableOffersPage = () => {
     const parsedNum = parseFloat(num);
     return parsedNum % 1 === 0 ? parsedNum.toFixed(0) : parsedNum.toFixed(2);
   };
+
+  const handleCloseViewDetails = () => {
+    setOpenViewDetails(false);
+  };
+
+  const pageName = "offerPage";
+
+  const loanData =
+    pageName !== "offerPage"
+      ? selectedOffer?.offer_list[0]?.offer_details
+      : selectedOffer?.offer_details;
+  const GRO =
+    pageName !== "offerPage"
+      ? selectedOffer?.offer_list[0]?.provider_details
+      : selectedOffer?.provider_details;
+
+  const accordionList = [
+    {
+      title: "Loan Details",
+      content: loanData ? (
+        <Grid container spacing={2}>
+          {Object.entries(loanData).map(([key, value]) => (
+            <Grid item xs={12} md={6} key={key}>
+              <TextField label={key} value={value} fullWidth disabled />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <p style={{ color: "red" }}>Error While fetching Data</p>
+      ),
+    },
+    {
+      title: "GRO information",
+      content: GRO ? (
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="GRO Name"
+              value={GRO?.GRO_NAME}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              disabled
+              style={{ WebkitTextFillColor: "#000000b0" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="GRO Email"
+              value={GRO?.GRO_EMAIL}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              disabled
+              style={{ WebkitTextFillColor: "#000000b0" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="GRO Contact Number"
+              value={GRO?.GRO_CONTACT_NUMBER}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              disabled
+              style={{ WebkitTextFillColor: "#000000b0" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="GRO Designation"
+              value={GRO?.GRO_DESIGNATION}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              disabled
+              style={{ WebkitTextFillColor: "#000000b0" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="GRO Address"
+              value={GRO?.GRO_ADDRESS}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              disabled
+              style={{ WebkitTextFillColor: "#000000b0" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Customer Support Link"
+              value={GRO?.CUSTOMER_SUPPORT_LINK}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              disabled
+              style={{ WebkitTextFillColor: "#000000b0" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Customer Support Contact Number"
+              value={GRO?.CUSTOMER_SUPPORT_CONTACT_NUMBER}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              disabled
+              style={{ WebkitTextFillColor: "#000000b0" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Customer Support Email"
+              value={GRO?.CUSTOMER_SUPPORT_EMAIL}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              disabled
+              style={{ WebkitTextFillColor: "#000000b0" }}
+            />
+          </Grid>
+        </Grid>
+      ) : (
+        <p style={{ color: "red" }}>Error While fetching Data</p>
+      ),
+    },
+    {
+      title: "LSP information",
+      content: GRO ? (
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="LSP Name"
+              value={GRO?.LSP_NAME}
+              fullWidth
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="LSP Email"
+              value={GRO?.LSP_EMAIL}
+              fullWidth
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="LSP Contact Number"
+              value={GRO?.LSP_CONTACT_NUMBER}
+              fullWidth
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="LSP Address"
+              value={GRO?.LSP_ADDRESS}
+              fullWidth
+              disabled
+            />
+          </Grid>
+        </Grid>
+      ) : (
+        <p style={{ color: "red" }}>Error While fetching Data</p>
+      ),
+    },
+    {
+      title: "Terms and Conditions",
+      content: (
+        <Stack flexDirection={"row"} gap={2}>
+          <Typography>Please click the link to view the</Typography>
+          <a
+            style={{
+              color: "red",
+              textDecoration: "underline",
+              cursor: "pointer",
+            }}
+            onClick={() => window.open(loanData?.TNC_LINK, "_blank")}
+          >
+            Terms and Conditions
+          </a>{" "}
+        </Stack>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -347,6 +574,10 @@ const AvailableOffersPage = () => {
                             fontFamily={"Source Sans Pro SemiBold"}
                             fontSize={20}
                             sx={{ textTransform: "initial" }}
+                            onClick={() => {
+                              setSelectedOffer(offer);
+                              setOpenViewDetails(true);
+                            }}
                           >
                             {" "}
                             View Details{" "}
@@ -409,6 +640,57 @@ const AvailableOffersPage = () => {
           </FormControl>
         </FormContainer>
       </AvailableOffersContainer>
+
+      <BootstrapDialog
+        onClose={handleCloseViewDetails}
+        aria-labelledby="customized-dialog-title"
+        open={openViewDetails}
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+          id="customized-dialog-title"
+        >
+          <Typography
+            textAlign={"center"}
+            alignContent={"center"}
+            fontFamily={"Plus Jakarta Sans Bold"}
+            fontSize={20}
+          >
+            Offer Details
+          </Typography>
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseViewDetails}
+            sx={{
+              color: "black",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <Divider />
+        <StyledDialogContent dividers>
+          {accordionList.map((accordion, index) => (
+            <Accordion key={index}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel${index + 1}a-content`}
+                id={`panel${index + 1}a-header`}
+                sx={{ padding: 4 }}
+              >
+                <Typography>{accordion.title}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{accordion.content}</Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </StyledDialogContent>
+      </BootstrapDialog>
     </>
   );
 };
