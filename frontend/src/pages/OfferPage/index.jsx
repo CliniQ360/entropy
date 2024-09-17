@@ -186,71 +186,69 @@ const AvailableOffersPage = () => {
       <FormContainer>
         <FormControl component="fieldset">
           <RadioGroup>
-            <Grid container spacing={1}>
-              {filteredLoanOffers ? (
-                filteredLoanOffers.map((offer, index) => (
-                  <Grid item xs={12} md={5.8} key={index}>
-                    <SelectBoxContainer>
-                      <SelectBoxHeader>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          {offer.provider_details.images[0].url && (
-                            <img
-                              src={offer.provider_details.images[0].url}
-                              style={{ height: "40px", marginRight: "10px" }}
-                              alt=""
-                            />
-                          )}
-                          <Typography fontSize={18} fontWeight={600}>
-                            {offer.provider_details.name}
-                          </Typography>
-                        </div>
-                        <FormControlLabel
-                          value={offer.offer_details.offer_item_id}
-                          onChange={(e) => handleInputChange(e, offer)}
-                          control={<Radio />}
-                          label=""
-                          style={{ margin: 0 }}
-                        />
-                      </SelectBoxHeader>
-                      <Divider style={{ width: "100%", margin: "10px 0" }} />
-                      <SelectBoxDetails>
-                        <DetailRow>
-                          <span>Loan Amount</span>
-                          <span>
-                            Rs.
-                            {formatNumber(
-                              offer?.quote_details?.SelectedLoanAmount ||
-                                offer?.quote_details?.PRINCIPAL
-                            ) || ""}
-                          </span>
-                        </DetailRow>
-                        <DetailRow>
-                          <span>Interest Rate</span>
-                          <span>
-                            {formatNumber(offer.offer_details.INTEREST_RATE) ||
-                              ""}{" "}
-                            %
-                          </span>
-                        </DetailRow>
-                        <DetailRow>
-                          <span>Tenure</span>
-                          <span>
-                            {formatNumber(offer.offer_details.TERM) || ""}{" "}
-                            Months
-                          </span>
-                        </DetailRow>
-                        <DetailRow>
-                          <span>Installment Amount</span>
-                          <span>
-                            Rs.
-                            {formatNumber(
-                              offer.offer_details.INSTALLMENT_AMOUNT
-                            ) || ""}
-                            /Month
-                          </span>
-                        </DetailRow>
-                      </SelectBoxDetails>
-                      {/*   <Divider style={{ width: "100%", margin: "10px 0" }} />
+            {filteredLoanOffers ? (
+              filteredLoanOffers.map((offer, index) => (
+                <Box key={index}>
+                  <SelectBoxContainer>
+                    <SelectBoxHeader>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        {offer.provider_details.images[0].url && (
+                          <img
+                            src={offer.provider_details.images[0].url}
+                            style={{ height: "40px", marginRight: "10px" }}
+                            alt=""
+                          />
+                        )}
+                        <Typography fontSize={18} fontWeight={600}>
+                          {offer.provider_details.name}
+                        </Typography>
+                      </div>
+                      <FormControlLabel
+                        value={offer.offer_details.offer_item_id}
+                        onChange={(e) => handleInputChange(e, offer)}
+                        control={<Radio />}
+                        label=""
+                        style={{ margin: 0 }}
+                      />
+                    </SelectBoxHeader>
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <SelectBoxDetails>
+                      <DetailRow>
+                        <span>Loan Amount</span>
+                        <span>
+                          Rs.
+                          {formatNumber(
+                            offer?.quote_details?.SelectedLoanAmount ||
+                              offer?.quote_details?.PRINCIPAL
+                          ) || ""}
+                        </span>
+                      </DetailRow>
+                      <DetailRow>
+                        <span>Interest Rate</span>
+                        <span>
+                          {formatNumber(offer.offer_details.INTEREST_RATE) ||
+                            ""}{" "}
+                          %
+                        </span>
+                      </DetailRow>
+                      <DetailRow>
+                        <span>Tenure</span>
+                        <span>
+                          {formatNumber(offer.offer_details.TERM) || ""} Months
+                        </span>
+                      </DetailRow>
+                      <DetailRow>
+                        <span>Installment Amount</span>
+                        <span>
+                          Rs.
+                          {formatNumber(
+                            offer.offer_details.INSTALLMENT_AMOUNT
+                          ) || ""}
+                          /Month
+                        </span>
+                      </DetailRow>
+                    </SelectBoxDetails>
+                    {/*   <Divider style={{ width: "100%", margin: "10px 0" }} />
                       <Box
                         sx={{
                           display: "flex",
@@ -275,24 +273,23 @@ const AvailableOffersPage = () => {
                           setOpen={handleDialogClose}
                         /> 
                       </Box>*/}
-                    </SelectBoxContainer>
-                  </Grid>
-                ))
-              ) : (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography variant="h6" color="textSecondary">
-                    Please try reloading the page by clicking the reload button.
-                  </Typography>
+                  </SelectBoxContainer>
                 </Box>
-              )}
-            </Grid>
+              ))
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" color="textSecondary">
+                  Please try reloading the page by clicking the reload button.
+                </Typography>
+              </Box>
+            )}
           </RadioGroup>
         </FormControl>
       </FormContainer>
