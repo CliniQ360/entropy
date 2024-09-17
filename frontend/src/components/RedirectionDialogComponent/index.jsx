@@ -1,6 +1,7 @@
 import React from "react";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { Stack, styled, Dialog, Typography } from "@mui/material";
+import ReloadIcon from "../../utils/CustomIcons/ReloadIcon";
 
 const DialogContentSection = styled(Stack)(({ theme }) => ({
   justifyContent: "center",
@@ -42,7 +43,7 @@ const RedirectionDialogComponent = ({ open, setOpen }) => {
         <DialogContentSection>
           <LogoSectionWrapper>
             <LogoSectionItem>
-              <AutorenewIcon sx={{ fontSize: "2rem" }} />
+              <ReloadIcon />
             </LogoSectionItem>
           </LogoSectionWrapper>
           <Typography
@@ -64,7 +65,6 @@ const RedirectionDialogComponent = ({ open, setOpen }) => {
             Please wait while we are fetching best loan offers for you
           </Typography>
         </DialogContentSection>
-        =
       </Dialog>
     </>
   );

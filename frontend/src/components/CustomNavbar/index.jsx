@@ -5,6 +5,8 @@ import LinearProgress, {
 import { IconButton, styled } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import BackupTableIcon from "@mui/icons-material/BackupTable";
+import LeftArrowIcon from "../../utils/CustomIcons/LeftArrowIcon";
+import MultipleFilesIcon from "../../utils/CustomIcons/MultipleFilesIcon";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -33,12 +35,12 @@ const CustomNavbar = ({ progressValue }) => {
   return (
     <ProgressBarWrapper>
       <IconButton>
-        <KeyboardArrowLeftIcon sx={{ fontSize: "2.2rem", color: "black" }} />
+        <LeftArrowIcon color={"black"} />
       </IconButton>
       {/* Adjusted value to 40 for better visibility */}
       <BorderLinearProgress variant="determinate" value={40} />
       <IconButton>
-        <BackupTableIcon sx={{ fontSize: "2rem", color: "#0054BA" }} />
+        <MultipleFilesIcon color={"#0054BA"} />
       </IconButton>
     </ProgressBarWrapper>
   );

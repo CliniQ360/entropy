@@ -2,6 +2,7 @@ import { Divider, Stack, styled, Typography } from "@mui/material";
 import React from "react";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
+import AudioBarIcon from "../../utils/CustomIcons/BarIcon";
 
 const HeaderComponentWrapper = styled("div")(({ theme }) => ({
   width: "100%",
@@ -56,7 +57,9 @@ const AgentHeader = () => {
               Agent Name
             </Typography>
           </Stack>
-          <Typography>Bar Component</Typography>
+          <Stack justifyContent={"center"} alignItems={"center"}>
+            <AudioBarIcon />
+          </Stack>
         </HeaderIconSection>
         <Divider />
         <Stack alignItems={"center"} justifyContent={"center"} padding={2}>

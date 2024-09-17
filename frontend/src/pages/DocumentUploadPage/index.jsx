@@ -5,11 +5,11 @@ import AccordionActions from "@mui/material/AccordionActions";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import UploadIcon from "@mui/icons-material/Upload";
 import BackupTableIcon from "@mui/icons-material/BackupTable";
 import CloseIcon from "@mui/icons-material/Close";
 import CustomNavbar from "../../components/CustomNavbar";
 import AgentHeader from "../../components/AgentHeaderComponent";
+import UploadIcon from "../../utils/CustomIcons/UploadIcon";
 
 const UploadDocumentWrapper = styled("div")(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -29,6 +29,7 @@ const CustomAccordian = styled(Accordion)(({ theme }) => ({
   border: "1.2px solid #D2D2D2",
   boxShadow: "none",
   borderRadius: "10px",
+  marginBottom: theme.spacing(3),
 }));
 const UploadFilesSection = styled("div")(({ theme }) => ({
   border: "1.2px solid #D2D2D2",
@@ -127,8 +128,11 @@ const DocumentUploadPage = () => {
             </AccordionSummary>
             <AccordionDetails>
               <UploadFilesSection onClick={handleUploadClick}>
-                <UploadIcon />
-                <Typography sx={{ fontSize: "1.2rem", color: "#535353" }}>
+                <div style={{ marginTop: 3 }}></div>
+                <UploadIcon width={"25"} height={"25"} />{" "}
+                <Typography
+                  sx={{ fontSize: "1.2rem", color: "#535353", mt: 3 }}
+                >
                   Browse file to upload
                 </Typography>
                 <input
@@ -169,8 +173,11 @@ const DocumentUploadPage = () => {
             </AccordionSummary>
             <AccordionDetails>
               <UploadFilesSection onClick={handlePanUploadClick}>
-                <UploadIcon />
-                <Typography sx={{ fontSize: "1.2rem", color: "#535353" }}>
+                <div style={{ marginTop: 3 }}></div>
+                <UploadIcon width={"25"} height={"25"} />{" "}
+                <Typography
+                  sx={{ fontSize: "1.2rem", color: "#535353", mt: 3 }}
+                >
                   Browse file to upload
                 </Typography>
                 <input
