@@ -9,6 +9,12 @@ body {
 }
 
 @font-face {
+  font-family: "Source Sans Pro SemiBold";
+  src: url("./assets//fonts/source-sans-pro/SourceSansPro-Semibold.otf")
+    format("opentype");
+}
+
+@font-face {
   font-family: "Inter";
   src: url("./assets//fonts/Inter/static/Inter-Regular.ttf") format("truetype");
 }
@@ -28,5 +34,11 @@ body {
 @font-face {
   font-family: "Plus Jakarta Sans";
   src: url("./assets/fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Regular.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans Bold";
+  src: url("./assets/fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Bold.ttf")
     format("truetype");
 }
