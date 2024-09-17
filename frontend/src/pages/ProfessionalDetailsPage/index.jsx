@@ -40,11 +40,6 @@ const ProfessionalDetailsPage = () => {
     udyamNumber: "",
   });
 
-  const [formData3, setFormData3] = useState({
-    aa_id: "",
-    bureauConsent: "",
-  });
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
