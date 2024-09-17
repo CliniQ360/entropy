@@ -38,7 +38,11 @@ const FooterActionContainer = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(6, 8),
 }));
 
-const PageFooter = ({ mediaRecorder }) => {
+const PageFooter = ({
+  mediaRecorder,
+  handleStopRecording,
+  handlePauseResume,
+}) => {
   return (
     <FooterContainer>
       <FooterText>
@@ -48,7 +52,14 @@ const PageFooter = ({ mediaRecorder }) => {
       </FooterText>
       <FooterActionContainer>
         <CustomFabButton
-          bgColor={"rgba(30,30,30,0.5)"}
+          onClick={handlePauseResume}
+          bgColor={
+            mediaRecorder?.state === "recording"
+              ? "rgba(30,30,30,0.5)"
+              : mediaRecorder?.state === "paused"
+              ? "#E25341"
+              : "#fff"
+          }
           size="large"
           aria-label="mute"
         >
@@ -57,7 +68,12 @@ const PageFooter = ({ mediaRecorder }) => {
         <Box>
           <VisualizerLive mediaRecorder={mediaRecorder} />
         </Box>
-        <CustomFabButton bgColor={"#E25341"} size="large" aria-label="Close">
+        <CustomFabButton
+          onClick={handleStopRecording}
+          bgColor={"#E25341"}
+          size="large"
+          aria-label="Close"
+        >
           <CloseIcon sx={{ color: "white" }} />
         </CustomFabButton>
       </FooterActionContainer>

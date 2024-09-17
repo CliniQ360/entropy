@@ -12,6 +12,7 @@ import PersonalDetailsPage from "../pages/PersonalDetailsPage";
 import ProfessionalDetailsPage from "../pages/ProfessionalDetailsPage";
 import SelectAAPage from "../pages/SelectAAPage";
 import CreditOfferPage from "../pages/CreditOfferDetail";
+import AvailableOffersPage from "../pages/OfferPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             element={<ProfessionalDetailsPage />}
           />
           <Route path="selectAA" element={<SelectAAPage />} />
+          <Route path="availableOffers" element={<AvailableOffersPage />} />
           <Route path="route-3" element={<DocumentUploadPage />} />
           <Route path="route-4" element={<KYCPage />} />
           <Route path="route-5" element={<BankDetailsPage />} />

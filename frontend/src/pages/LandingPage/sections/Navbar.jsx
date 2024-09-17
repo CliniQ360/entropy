@@ -93,7 +93,7 @@ export const Navbar = () => {
             <>
               <Button
                 variant="contained"
-                onClick={() => navigate("/credit")}
+                onClick={() => navigate("/route-1")}
                 sx={{
                   backgroundColor: "#0054BA",
                   textTransform: "none",
@@ -131,7 +131,7 @@ export const Navbar = () => {
         <Divider />
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate("/credit")}>
+            <ListItemButton onClick={() => navigate("/route-1")}>
               <ListItemIcon>
                 <CreditScoreIcon sx={{ color: "#1976d2" }} />
               </ListItemIcon>
