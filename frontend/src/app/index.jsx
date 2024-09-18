@@ -13,6 +13,7 @@ import ProfessionalDetailsPage from "../pages/ProfessionalDetailsPage";
 import SelectAAPage from "../pages/SelectAAPage";
 import CreditOfferPage from "../pages/CreditOfferDetail";
 import AvailableOffersPage from "../pages/OfferPage";
+import PreviewDocumentPage from "../pages/PreviewDocumentPage";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="route-5" element={<BankDetailsPage />} />
           <Route path="route-6" element={<EmandatePage />} />
           <Route path="route-7" element={<CreditOfferPage />} />
+          <Route path="route-8" element={<PreviewDocumentPage />} />
         </Route>
       </Routes>
     </div>
