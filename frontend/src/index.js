@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./styles/theme";
-import { BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import store from "./store/store";
 import { SocketContextProvider } from "./context/socket";
 
@@ -16,9 +16,7 @@ root.render(
     <ThemeProvider theme={theme}>
       <SocketContextProvider>
         <Router>
-          <Routes>
-            <App />
-          </Routes>
+          <App />
         </Router>
       </SocketContextProvider>
     </ThemeProvider>
