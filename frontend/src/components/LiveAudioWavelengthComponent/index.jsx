@@ -12,6 +12,9 @@ export const VisualizerLive = ({ mediaRecorder }) => {
           barWidth={3}
           gap={2}
           barColor={"#0054BA"}
+          maxDecibels={-30}
+          minDecibels={-100}
+          smoothingTimeConstant={0.1}
         />
       )}
     </div>
