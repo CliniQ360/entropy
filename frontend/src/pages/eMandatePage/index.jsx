@@ -16,9 +16,9 @@ const EmandatePage = () => {
         <Stack gap={4}>
           <Typography
             sx={{
-              fontSize: "1.3rem",
+              fontSize: "1.4rem",
               fontWeight: 700,
-              fontFamily: "Plus Jakarta Sans",
+              fontFamily: "Plus Jakarta Sans bold",
             }}
           >
             E-Mandate

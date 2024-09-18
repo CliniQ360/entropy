@@ -77,9 +77,9 @@ const BankDetailsPage = () => {
         <BankDetailHeader>
           <Typography
             sx={{
-              fontSize: "1.3rem",
+              fontSize: "1.43rem",
               fontWeight: 700,
-              fontFamily: "plus jakarta sans",
+              fontFamily: "plus jakarta sans bold",
             }}
           >
             Bank Details

@@ -44,7 +44,7 @@ const CreditOfferPage = () => {
             fontSize: "1.3rem",
             fontWeight: 700,
             color: "#00A91C",
-            fontFamily: "plus jakarta sans",
+            fontFamily: "plus jakarta sans bold",
           }}
         >
           Success Message

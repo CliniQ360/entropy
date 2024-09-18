@@ -13,9 +13,8 @@ const KYCPage = () => {
         <Stack gap={4}>
           <Typography
             sx={{
-              fontSize: "1.3rem",
-              fontWeight: 700,
-              fontFamily: "Plus Jakarta Sans",
+              fontSize: "1.4rem",
+              fontFamily: "Plus Jakarta Sans bold",
             }}
           >
             KYC

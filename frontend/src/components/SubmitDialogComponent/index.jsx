@@ -23,7 +23,7 @@ const CustomOutlinedButton = styled(Button)(({ theme, buttonType }) => ({
   borderRadius: "8px",
   color: "#0561A0",
   textTransform: "none",
-  fontFamily: "plus jakarta sans",
+  fontFamily: "plus jakarta sans bold",
   fontWeight: 500,
   fontSize: "1rem",
 }));
@@ -34,7 +34,7 @@ const CustomContainedButton = styled(Button)(({ theme, buttonType }) => ({
   borderRadius: "8px",
   color: "white",
   textTransform: "none",
-  fontFamily: "plus jakarta sans",
+  fontFamily: "plus jakarta sans bold",
   fontWeight: 500,
   fontSize: "1rem",
 }));
@@ -57,9 +57,9 @@ const SubmitDialogBox = ({ open, setOpen }) => {
       <DialogContentSection>
         <Typography
           sx={{
-            fontSize: "1.1rem",
+            fontSize: "1.25rem",
             fontWeight: 700,
-            fontFamily: "plus jakarta sans",
+            fontFamily: "plus jakarta sans bold",
           }}
         >
           Are you sure you want to submit?
