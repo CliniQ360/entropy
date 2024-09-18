@@ -4,9 +4,12 @@ services:
     image: entropy/core:latest
     container_name: entropy-core
     env_file: backend/core/env_var
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/data/google_credential.json
     volumes:
       - ./backend/core:/app
       - ./backend/logs:/core/logs
+      - ${GOOGLE_APPLICATION_CREDENTIALS}:/app/data/google_credential.json
     ports:
       - 8000:8000
     networks:

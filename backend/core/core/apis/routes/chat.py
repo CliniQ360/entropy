@@ -1,4 +1,12 @@
-from fastapi import FastAPI, WebSocket, APIRouter, WebSocketDisconnect, UploadFile, File
+from fastapi import (
+    FastAPI,
+    WebSocket,
+    APIRouter,
+    WebSocketDisconnect,
+    UploadFile,
+    File,
+    HTTPException,
+)
 from typing import List
 from core.controllers.chat_controller import AutogenChat
 from core.controllers.user_interaction_controller import UserInteractions
@@ -203,3 +211,80 @@ async def store_user_details(chat_id: str, user_details: dict):
         )
     except Exception as e:
         print("ERROR", str(e))
+
+
+from pydantic import BaseModel
+
+
+class ChatMessage(BaseModel):
+    chat_id: str
+    message: str
+
+
+class ChatInitResponse(BaseModel):
+    chat_id: str
+    message: str
+
+
+@chat_router.post("/initialize_chat", response_model=ChatInitResponse)
+async def initialize_chat():
+    try:
+        chat_id = str(uuid.uuid4())
+        autogen_chat = AutogenChat(chat_id=chat_id)
+        await manager.connect(autogen_chat)
+        data = "Hi Good morning!"
+        asyncio.create_task(autogen_chat.start(data))
+        response_message = await asyncio.wait_for(
+            autogen_chat.client_receive_queue.get(), timeout=60
+        )
+        return {"chat_id": chat_id, "message": response_message}
+    except asyncio.TimeoutError:
+        raise HTTPException(
+            status_code=408, detail={"message": "Request timed out", "status_code": 408}
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail={"message": str(e), "status_code": 500}
+        )
+
+
+@chat_router.post("/send_and_receive_message")
+async def send_and_receive_message(chat_message: ChatMessage):
+    chat_id = chat_message.chat_id
+    message = chat_message.message
+    autogen_chat = manager.active_connections.get(chat_id)
+    if not autogen_chat:
+        raise HTTPException(
+            status_code=404, detail={"message": "Chat ID not found", "status_code": 404}
+        )
+
+    # Send the message
+    await autogen_chat.client_sent_queue.put(message)
+
+    # Wait for the response
+    try:
+        response_message = await asyncio.wait_for(
+            autogen_chat.client_receive_queue.get(), timeout=60
+        )
+        autogen_chat.client_receive_queue.task_done()
+        return {"message": response_message}
+    except asyncio.TimeoutError:
+        raise HTTPException(
+            status_code=408,
+            detail={"message": "Timeout waiting for message", "status_code": 408},
+        )
+
+
+@chat_router.post("/disconnect/{chat_id}")
+async def disconnect(chat_id: str):
+    try:
+        await manager.disconnect(chat_id)
+        return {"message": f"Disconnected from chat {chat_id}"}
+    except KeyError:
+        raise HTTPException(
+            status_code=404, detail={"message": "Chat ID not found", "status_code": 404}
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail={"message": str(e), "status_code": 500}
+        )
