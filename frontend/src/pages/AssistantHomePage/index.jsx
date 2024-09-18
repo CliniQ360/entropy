@@ -9,8 +9,9 @@ import {
 import * as React from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ImageIcon from "@mui/icons-material/Image";
-import MicIcon from "@mui/icons-material/Mic";
-import ForumIcon from "@mui/icons-material/Forum";
+import MicIcon from "../../utils/CustomIcons/MicIcon";
+import ChatIcon from "../../utils/CustomIcons/ChatIcon";
+
 // import Micicon from "../../assets/icons/MicIcon.svg";
 
 const PageWrapper = styled("div")(({ theme }) => ({}));
@@ -18,7 +19,7 @@ const ImageSectionWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   backgroundColor: "#EAF2FF",
-  height: "45vh",
+  height: "40vh",
 }));
 const RedirectionContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -39,11 +40,11 @@ const HomePageContentWrapper = styled("div")(({ theme }) => ({
 }));
 const TextFeildWrapper = styled(Stack)(({ theme }) => ({
   display: "flex",
-  gap: theme.spacing(1),
+  gap: theme.spacing(3),
 }));
 const ActionWrapper = styled(Grid)(({ theme }) => ({
   gap: theme.spacing(2),
-  margin: theme.spacing(3, 0),
+  margin: theme.spacing(8, 0),
 }));
 const ActionContainerItem = styled(Grid)(({ theme }) => ({
   gap: theme.spacing(2),
@@ -51,7 +52,7 @@ const ActionContainerItem = styled(Grid)(({ theme }) => ({
   flexDirection: "column",
   border: "1px solid #0188E8 ",
   backgroundColor: "#EAF2FF",
-  padding: theme.spacing(3),
+  padding: theme.spacing(4),
   width: "100%",
 }));
 const FooterButton = styled(Button)(({ theme }) => ({
@@ -60,6 +61,16 @@ const FooterButton = styled(Button)(({ theme }) => ({
   color: "White",
   fontSize: "1.4rem",
   marginTop: "10px",
+  width: "90%",
+}));
+
+const FooterButtonWrapper = styled(Stack)(({ theme }) => ({
+  position: "absolute",
+  bottom: 25,
+  left: 0,
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%", // Ensure full width for horizontal centering
 }));
 
 const AssistantHomepage = () => {
@@ -106,7 +117,12 @@ const AssistantHomepage = () => {
         </Stack>
         <TextFeildWrapper>
           <Typography
-            sx={{ fontSize: "2rem", fontWeight: 700, color: "black" }}
+            sx={{
+              fontSize: "2rem",
+              fontWeight: 700,
+              color: "black",
+              fontFamily: "plus jakarta sans bold",
+            }}
           >
             Lorem Ipsum is simply dummy text
           </Typography>
@@ -117,19 +133,32 @@ const AssistantHomepage = () => {
         </TextFeildWrapper>
         <ActionWrapper container>
           <ActionContainerItem xs={5.8} sm={5.8}>
-            <MicIcon sx={{ color: "#0188E8", fontSize: "2rem" }} />
-            <Typography sx={{ fontSize: "1.4rem", fontWeight: 600 }}>
+            <MicIcon />
+            <Typography
+              sx={{
+                fontSize: "1.4rem",
+                fontFamily: "plus jakarta sans bold",
+              }}
+            >
               Audio Experience
             </Typography>
           </ActionContainerItem>
           <ActionContainerItem xs={5.8} sm={5.8}>
-            <ForumIcon sx={{ color: "#0188E8", fontSize: "2rem" }} />
-            <Typography sx={{ fontSize: "1.4rem", fontWeight: 600 }}>
+            <ChatIcon />{" "}
+            <Typography
+              sx={{
+                fontSize: "1.4rem",
+                fontWeight: 600,
+                fontFamily: "plus jakarta sans bold",
+              }}
+            >
               Chat Experience
             </Typography>
           </ActionContainerItem>
         </ActionWrapper>
-        <FooterButton>Get Started</FooterButton>
+        <FooterButtonWrapper>
+          <FooterButton variant="contained">Get Started</FooterButton>
+        </FooterButtonWrapper>
       </HomePageContentWrapper>
     </PageWrapper>
   );

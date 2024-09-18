@@ -106,7 +106,11 @@ const DocumentUploadPage = () => {
       <UploadDocumentWrapper>
         <DocumentHeaderSection>
           <Typography
-            sx={{ fontSize: "1.4rem", fontWeight: 700, textAlign: "left" }}
+            sx={{
+              fontSize: "1.4rem",
+              fontFamily: "plus jakarta sans bold",
+              textAlign: "left",
+            }}
           >
             Lorem Ipsum is simply dummy text
           </Typography>
@@ -124,9 +128,11 @@ const DocumentUploadPage = () => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography>ADDHAR</Typography>
+              <Typography sx={{ fontFamily: "plus jakarta sans bold", ml: 3 }}>
+                ADDHAR
+              </Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ padding: 4 }}>
               <UploadFilesSection onClick={handleUploadClick}>
                 <div style={{ marginTop: 3 }}></div>
                 <UploadIcon width={"25"} height={"25"} />{" "}
@@ -169,9 +175,11 @@ const DocumentUploadPage = () => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography>PAN</Typography>
+              <Typography sx={{ fontFamily: "plus jakarta sans bold", ml: 3 }}>
+                PAN
+              </Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ padding: 4 }}>
               <UploadFilesSection onClick={handlePanUploadClick}>
                 <div style={{ marginTop: 3 }}></div>
                 <UploadIcon width={"25"} height={"25"} />{" "}

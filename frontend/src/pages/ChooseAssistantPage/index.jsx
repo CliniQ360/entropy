@@ -11,6 +11,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 import AudioBarComponentVisualizer from "../../components/AudioWavelengthComponent";
+import AudioBarIcon from "../../utils/CustomIcons/BarIcon";
 
 const PageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -94,7 +95,7 @@ const FooterButtonWrapper = styled(Stack)(({ theme }) => ({
   left: 0,
   justifyContent: "center",
   alignItems: "center",
-  width: "100%", // Ensure full width for horizontal centering
+  width: "100%",
 }));
 
 const FooterButton = styled(Button)(({ theme }) => ({
@@ -121,7 +122,9 @@ const ChooseAssistant = () => {
         </IconButton>
       </RedirectionContainer>
       <HeadingSection>
-        <Typography sx={{ fontSize: "1.7rem", fontWeight: 600 }}>
+        <Typography
+          sx={{ fontSize: "1.4rem", fontFamily: "plus jakarta sans bold" }}
+        >
           Choose your assistant for today
         </Typography>
       </HeadingSection>
@@ -144,8 +147,10 @@ const ChooseAssistant = () => {
       </AssistantChangeSectionWrapper>
       <AssistantProfilePhotoWrapper>
         <AssistantProfilePhoto activeIndex={activeButton} />
-        <AudioBarComponentVisualizer />
-        <Stack padding={3}>
+        <Stack justifyContent={"center"} alignItems={"center"}>
+          <AudioBarIcon width={50} height={60} />
+        </Stack>
+        <Stack padding={6}>
           <Typography
             textAlign={"center"}
             sx={{ fontSize: "1.2rem", color: "#535353" }}
