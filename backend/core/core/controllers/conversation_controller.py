@@ -71,7 +71,7 @@ class ConversationController:
 
             return {
                 "audio_file": audio_base64,
-                "text": response_text,
+                "text": response_text.get("text"),
                 "file_name": output_audio_file_path,
             }
         except Exception as error:
