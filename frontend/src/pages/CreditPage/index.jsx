@@ -75,8 +75,11 @@ const CreditPage = () => {
         // Append the Blob to the FormData
         formData.append("audio_file", audioBlob, "agent_audio.webm");
 
+        const payload = {
+          audio_file: formData,
+        };
         // Prepare the payload with the FormData object
-        dispatch(agentConversation(formData))
+        dispatch(agentConversation(payload))
           .then((res) => {
             console.log(res?.payload);
           })
