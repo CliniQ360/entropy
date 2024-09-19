@@ -5,7 +5,8 @@ import AgentHeader from "../../components/AgentHeaderComponent";
 import CustomNavbar from "../../components/CustomNavbar";
 import { styled } from "@mui/material";
 import { createSilenceDetector } from "../../components/SilenceDetectorComponent";
-
+import { useDispatch } from "react-redux";
+import { agentConversation } from "./audioAgent.slice";
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -23,6 +24,7 @@ const CreditPage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const audioChunks = useRef([]);
+  const dispatch = useDispatch();
 
   // Function to start recording
   const handleStartRecording = () => {
@@ -56,6 +58,7 @@ const CreditPage = () => {
   };
 
   // Function to handle downloading the audio when silence is detected
+  // Function to handle downloading the audio when silence is detected
   const onSilence = () => {
     console.log("Silence detected for 3 seconds!");
 
@@ -66,27 +69,25 @@ const CreditPage = () => {
 
       // Check if the blob size is greater than 0
       if (audioBlob.size > 0) {
-        // Convert Blob to Base64
-        const reader = new FileReader();
-        reader.readAsDataURL(audioBlob); // This will trigger onload once the Blob is read
-        reader.onloadend = () => {
-          const base64Audio = reader.result;
+        // Create a FormData object
+        const formData = new FormData();
 
-          console.log("Base64 Audio Data:", base64Audio);
+        // Append the Blob to the FormData
+        formData.append("audio_file", audioBlob, "agent_audio.webm");
 
-          // Create a downloadable link for the base64 audio
-          const a = document.createElement("a");
-          a.href = base64Audio;
-          a.download = "recorded_audio_base64.txt"; // Save as a Base64 text file
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+        // Prepare the payload with the FormData object
+        dispatch(agentConversation(formData))
+          .then((res) => {
+            console.log(res?.payload);
+          })
+          .catch((error) => {
+            console.error("Error uploading the audio file:", error);
+          });
 
-          // Clear the chunks to continue recording without stopping
-          audioChunks.current = [];
-        };
+        // Clear the chunks to continue recording without stopping
+        audioChunks.current = [];
       } else {
-        console.warn("Recorded audio size is zero, skipping download.");
+        console.warn("Recorded audio size is zero, skipping upload.");
       }
     } else {
       console.warn("No audio data available.");
