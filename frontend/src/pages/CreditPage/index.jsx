@@ -25,7 +25,7 @@ const CreditPage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [resetChunks, setResetChunks] = useState(false);
-  const { setError, setAudioResponse, setMessageResponse } =
+  const { audioResponse, setAudioResponse, setMessageResponse } =
     useContext(MediaContext);
   const audioChunks = useRef([]);
   const dispatch = useDispatch();
@@ -46,7 +46,6 @@ const CreditPage = () => {
       mediaRecorder.stop();
       setTimeout(() => {
         audioChunks.current = [];
-        setResetChunks(!resetChunks);
       }, 200);
       setIsRecording(false);
     }
@@ -66,15 +65,13 @@ const CreditPage = () => {
   };
 
   // Function to handle downloading the audio when silence is detected
-  // Function to handle downloading the audio when silence is detected
   const onSilence = () => {
     console.log("Silence detected for 3 seconds!");
 
     // Ensure there is data in the audio chunks before proceeding
     if (audioChunks.current.length > 0) {
       // Create a Blob from the audio chunks
-      const audioBlob = new Blob(audioChunks.current, { type: "audio/webm" }); // Use "audio/webm" as format
-
+      const audioBlob = new Blob(audioChunks.current, { type: "audio/webm" });
       // Check if the blob size is greater than 0
       if (audioBlob.size > 0) {
         // Create a FormData object
@@ -89,13 +86,8 @@ const CreditPage = () => {
         // Prepare the payload with the FormData object
         dispatch(agentConversation(payload))
           .then((res) => {
-            if (res?.error && Object.keys(res?.error)?.length > 0) {
-              setError(true);
-              return;
-            }
             setAudioResponse(res?.payload?.data?.audio_file);
             setMessageResponse(res?.payload?.data?.text);
-            setError(false);
           })
           .catch((error) => {
             console.error("Error uploading the audio file:", error);
