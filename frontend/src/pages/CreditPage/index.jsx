@@ -25,7 +25,7 @@ const CreditPage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [resetChunks, setResetChunks] = useState(false);
-  const { audioResponse, setAudioResponse, setMessageResponse } =
+  const { setError, setAudioResponse, setMessageResponse } =
     useContext(MediaContext);
   const audioChunks = useRef([]);
   const dispatch = useDispatch();
@@ -86,6 +86,11 @@ const CreditPage = () => {
         // Prepare the payload with the FormData object
         dispatch(agentConversation(payload))
           .then((res) => {
+            if (res?.error && Object.keys(res?.error)?.length > 0) {
+              setError(true);
+              return;
+            }
+            setError(false);
             setAudioResponse(res?.payload?.data?.audio_file);
             setMessageResponse(res?.payload?.data?.text);
           })
