@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import PageFooter from "../../components/PageFooter";
 import { Outlet } from "react-router-dom";
 import AgentHeader from "../../components/AgentHeaderComponent";
@@ -7,6 +7,7 @@ import { styled } from "@mui/material";
 import { createSilenceDetector } from "../../components/SilenceDetectorComponent";
 import { useDispatch } from "react-redux";
 import { agentConversation } from "./audioAgent.slice";
+import { MediaContext, useMediaContext } from "../../context/mediaContext";
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -23,6 +24,8 @@ const CreditPage = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const { audioResponse, setAudioResponse, setMessageResponse } =
+    useContext(MediaContext);
   const audioChunks = useRef([]);
   const dispatch = useDispatch();
 
@@ -81,7 +84,8 @@ const CreditPage = () => {
         // Prepare the payload with the FormData object
         dispatch(agentConversation(payload))
           .then((res) => {
-            console.log(res?.payload);
+            setAudioResponse(res?.payload?.data?.audio_file);
+            setMessageResponse(res?.payload?.data?.text);
           })
           .catch((error) => {
             console.error("Error uploading the audio file:", error);

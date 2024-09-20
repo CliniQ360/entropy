@@ -4,8 +4,6 @@ import { BASE_URL } from "../../utils/request";
 
 import axios from "axios";
 
-console.log(BASE_URL + apis?.agentAudioApi + `?translate=true`);
-
 export const agentConversation = createAsyncThunk(
   "agentConversation",
   async (payload) => {
