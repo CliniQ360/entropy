@@ -7,18 +7,19 @@ class UserDetailsState(TypedDict):
     document_upload_flag: bool
     document_list: list
     customer_extracted_details: dict
-    questions: Annotated[list, operator.add]
+    agent_message: Annotated[list, operator.add]
     customer_details: Annotated[list, operator.add]
     customer_account_details: Annotated[list, operator.add]
-    answer: str
+    user_message: Annotated[list, operator.add]
     urls: str
     txn_id: str
+    dummy: str
 
 
 class OfferState(TypedDict):
     txn_id: str
     status: str
-    answer: str
+    user_message: Annotated[list, operator.add]
     offer_list: list
     offer_summary: str
     offer_item_id: str
@@ -26,6 +27,7 @@ class OfferState(TypedDict):
     customer_account_details: Annotated[list, operator.add]
     urls: str
     loan_document_url: str
+    dummy: str
 
 
 class LoanDocumentState(TypedDict):
@@ -35,3 +37,4 @@ class LoanDocumentState(TypedDict):
     loan_agreement_text: str
     user_query: Annotated[list, operator.add]
     engine_answer: Annotated[list, operator.add]
+    dummy: str
