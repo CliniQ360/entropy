@@ -8,17 +8,17 @@ import { ThemeProvider } from "@emotion/react";
 import theme from "./styles/theme";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import store from "./store/store";
-import { SocketContextProvider } from "./context/socket";
+import { MediaContextProvider } from "./context/mediaContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      <SocketContextProvider>
-        <Router>
+      <Router>
+        <MediaContextProvider>
           <App />
-        </Router>
-      </SocketContextProvider>
+        </MediaContextProvider>
+      </Router>
     </ThemeProvider>
   </Provider>
 );

@@ -1,51 +1,41 @@
-import React, { useEffect, useRef } from "react";
-
-const SilenceDetector = ({
+export const createSilenceDetector = ({
   noiseThreshold = 10,
   silenceDurationThreshold = 3000,
   onSilence,
 }) => {
-  const audioContextRef = useRef(null);
-  const analyserRef = useRef(null);
-  const silenceStart = useRef(null);
+  const audioContextRef = { current: null };
+  const analyserRef = { current: null };
+  const silenceStart = { current: null };
+  let running = false; // Flag to control detection
+  let silenceDetected = false; // New flag to track silence detection
 
-  useEffect(() => {
-    // Create an audio context and analyser node for silence detection
-    const initAudioAnalyser = () => {
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          const audioContext = new (window.AudioContext ||
-            window.webkitAudioContext)();
-          const analyser = audioContext.createAnalyser();
-          const source = audioContext.createMediaStreamSource(stream);
-          source.connect(analyser);
+  const initAudioAnalyser = () => {
+    return navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        const audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        const analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
 
-          audioContextRef.current = audioContext;
-          analyserRef.current = analyser;
-        })
-        .catch((error) => {
-          console.error("Microphone access denied:", error);
-        });
-    };
-
-    initAudioAnalyser();
-
-    return () => {
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
-    };
-  }, []);
+        audioContextRef.current = audioContext;
+        analyserRef.current = analyser;
+      })
+      .catch((error) => {
+        console.error("Microphone access denied:", error);
+      });
+  };
 
   const checkForSilence = () => {
+    if (!running) return; // Stop the loop if not running
+
     const analyser = analyserRef.current;
     if (!analyser) return;
 
     const dataArray = new Uint8Array(analyser.fftSize);
     analyser.getByteTimeDomainData(dataArray);
 
-    // Calculate the root mean square (RMS) to filter out background noise
     const rms = Math.sqrt(
       dataArray.reduce((sum, value) => sum + (value - 128) ** 2, 0) /
         dataArray.length
@@ -53,24 +43,34 @@ const SilenceDetector = ({
 
     const isSilent = rms < noiseThreshold;
 
-    if (isSilent) {
+    if (isSilent && !silenceDetected) {
       if (!silenceStart.current) {
-        silenceStart.current = Date.now();
+        silenceStart.current = Date.now(); // Start the silence timer
       } else if (Date.now() - silenceStart.current > silenceDurationThreshold) {
-        onSilence(); // Call the action after silence is detected for the threshold duration
+        onSilence(); // Trigger onSilence only once
+        silenceDetected = true; // Set silence detected flag to prevent multiple calls
+        silenceStart.current = null; // Reset silence start time
       }
-    } else {
-      silenceStart.current = null; // Reset silence start if sound is detected
+    } else if (!isSilent) {
+      silenceStart.current = null; // Reset the timer if sound is detected
+      silenceDetected = false; // Reset silence detection flag
     }
 
-    requestAnimationFrame(checkForSilence);
+    requestAnimationFrame(checkForSilence); // Continue looping
   };
 
-  useEffect(() => {
+  const start = async () => {
+    await initAudioAnalyser();
+    running = true; // Mark detector as running
     checkForSilence();
-  }, []);
+  };
 
-  return null; // This component does not render any UI
+  const stop = () => {
+    running = false; // Mark detector as not running
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+    }
+  };
+
+  return { start, stop };
 };
-
-export default SilenceDetector;

@@ -12,14 +12,14 @@ export const SocketContextProvider = ({ children }) => {
 
   /* CREATING SOCKET CONNECTION */
   const chatid = uuidv4();
-  useEffect(() => {
-    const ws = new WebSocket(
-      process.env.REACT_APP_SOCKET_BASE_URL + "fill_form/" + chatid
-    );
-    setSocket(ws);
+  // useEffect(() => {
+  //   const ws = new WebSocket(
+  //     process.env.REACT_APP_SOCKET_BASE_URL + "fill_form/" + chatid
+  //   );
+  //   setSocket(ws);
 
-    return () => socket.close();
-  }, []);
+  //   return () => socket.close();
+  // }, []);
 
   return (
     <SocketContext.Provider value={{ socket }}>

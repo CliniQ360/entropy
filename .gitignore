@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 backend/core/env_var
+backend/core/audio_data
 # Distribution / packaging
 .Python
 build/
@@ -27,6 +28,7 @@ share/python-wheels/
 MANIFEST
 db/*
 backend/core/env
+*podman*
 poc/docs/*
 # PyInstaller
 #  Usually these files are written by a python script from a template

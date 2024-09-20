@@ -36,3 +36,6 @@ instructor>=1.4.1
 openai>=1.44.0
 groq>=0.11.0
 google-cloud-aiplatform
+elevenlabs
+python-dotenv
+scikit-learn
