@@ -44,6 +44,10 @@ const CreditPage = () => {
   const handleStopRecording = () => {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
       mediaRecorder.stop();
+      setTimeout(() => {
+        audioChunks.current = [];
+        setResetChunks(!resetChunks);
+      }, 200);
       setIsRecording(false);
     }
   };
