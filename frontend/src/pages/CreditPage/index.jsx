@@ -87,8 +87,14 @@ const CreditPage = () => {
             console.error("Error uploading the audio file:", error);
           });
 
-        // Clear the chunks to continue recording without stopping
-        audioChunks.current = [];
+        // Stop and restart the media recorder to reset its internal state
+        mediaRecorder.stop();
+
+        setTimeout(() => {
+          // Restart recording after stopping, with a short delay
+          audioChunks.current = [];
+          mediaRecorder.start(1000); // Restart the recorder after stopping
+        }, 200); // Add a short delay to ensure everything resets properly
       } else {
         console.warn("Recorded audio size is zero, skipping upload.");
       }
