@@ -114,7 +114,7 @@ const CreditPage = () => {
         }
       };
 
-      // Set the media recorder and start recording once it's ready
+      // Set the media recorder and start recording once it's ready testing
       setMediaRecorder(recorder);
 
       // Start recording immediately after the recorder is set up with a timeslice of 1000ms
