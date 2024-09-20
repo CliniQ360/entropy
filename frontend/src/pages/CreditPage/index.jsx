@@ -33,10 +33,13 @@ const CreditPage = () => {
   // Function to start recording
   const handleStartRecording = () => {
     if (mediaRecorder && mediaRecorder.state === "inactive") {
-      audioChunks.current = [];
-      mediaRecorder.start(1000); // Start with a timeslice to deliver chunks every 1000ms
-      setIsRecording(true);
-      setIsPaused(false);
+      setTimeout(() => {
+        mediaRecorder.start(1000);
+        audioChunks.current = [];
+        setResetChunks(!resetChunks);
+        setIsRecording(true);
+        setIsPaused(false);
+      }, 200);
     }
   };
 
@@ -44,9 +47,6 @@ const CreditPage = () => {
   const handleStopRecording = () => {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
       mediaRecorder.stop();
-      setTimeout(() => {
-        audioChunks.current = [];
-      }, 200);
       setIsRecording(false);
     }
   };
