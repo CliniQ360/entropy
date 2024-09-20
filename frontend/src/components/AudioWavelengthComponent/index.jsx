@@ -1,69 +1,81 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const AudioBarComponentVisualizer = ({ audioBlob }) => {
+const AudioVisualizer = ({
+  audioBlob, // Audio blob to visualize
+  numBars,
+  barWidth,
+  barColor,
+  height,
+  gap,
+}) => {
   const canvasRef = useRef(null);
-  const audioContextRef = useRef(null);
-  const analyserRef = useRef(null);
-  const dataArrayRef = useRef(null);
-  const animationRef = useRef(null);
+  const [analyser, setAnalyser] = useState(null);
 
   useEffect(() => {
     if (audioBlob) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
       const audioContext = new (window.AudioContext ||
         window.webkitAudioContext)();
-      audioContextRef.current = audioContext;
+      const analyserNode = audioContext.createAnalyser();
+      analyserNode.fftSize = 64;
+      analyserNode.smoothingTimeConstant = 0.8;
+      analyserNode.minDecibels = -90;
+      analyserNode.maxDecibels = -10;
 
-      const analyser = audioContext.createAnalyser();
-      analyser.fftSize = 64; // Adjust for the number of bars
-      analyserRef.current = analyser;
+      const sourceNode = audioContext.createBufferSource();
 
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      dataArrayRef.current = dataArray;
+      audioBlob.arrayBuffer().then((arrayBuffer) => {
+        audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
+          sourceNode.buffer = audioBuffer;
+          sourceNode.connect(analyserNode);
+          analyserNode.connect(audioContext.destination);
 
-      // Create audio source
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      const source = audioContext.createMediaElementSource(audio);
-      source.connect(analyser);
-      analyser.connect(audioContext.destination);
-
-      // Start audio playback
-      audio.play();
-
-      const draw = () => {
-        animationRef.current = requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(dataArray);
-
-        // Clear canvas before each frame
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const barWidth = canvas.width / bufferLength;
-        let barHeight;
-        let x = 0;
-
-        for (let i = 0; i < bufferLength; i++) {
-          barHeight = dataArray[i] / 2;
-
-          ctx.fillStyle = "#f76565"; // Bar color
-          ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-
-          x += barWidth + 2; // Adjust gap between bars
-        }
-      };
-
-      draw();
+          sourceNode.start();
+          setAnalyser(analyserNode);
+        });
+      });
 
       return () => {
-        cancelAnimationFrame(animationRef.current);
         audioContext.close();
       };
     }
   }, [audioBlob]);
 
-  return <canvas ref={canvasRef} width={300} height={150} />;
+  useEffect(() => {
+    if (analyser) {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+
+      const drawVisualizer = () => {
+        analyser.getByteFrequencyData(dataArray);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const barHeightMultiplier = height / 255; // Scale the frequency data to canvas height
+
+        for (let i = 0; i < numBars; i++) {
+          const barHeight = dataArray[i] * barHeightMultiplier;
+          const x = i * (barWidth + gap);
+          ctx.fillStyle = barColor;
+          ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+        }
+
+        requestAnimationFrame(drawVisualizer); // Continue drawing at each animation frame
+      };
+
+      drawVisualizer();
+    }
+  }, [analyser, numBars, barWidth, barColor, height, gap]);
+
+  return (
+    <div>
+      <canvas
+        ref={canvasRef}
+        width={numBars * (barWidth + gap)}
+        height={height}
+      />
+    </div>
+  );
 };
 
-export default AudioBarComponentVisualizer;
+export default AudioVisualizer;

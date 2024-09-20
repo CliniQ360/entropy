@@ -5,6 +5,7 @@ import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 import AudioBarIcon from "../../utils/CustomIcons/BarIcon";
 import { MediaContext } from "../../context/mediaContext";
 import AudioBarComponentVisualizer from "../AudioWavelengthComponent";
+import AudioVisualizer from "../AudioWavelengthComponent";
 
 const HeaderComponentWrapper = styled("div")(({ theme }) => ({
   width: "100%",
@@ -37,7 +38,7 @@ const ProfileIcon = styled("div")(({ theme }) => ({
 }));
 
 const AgentHeader = () => {
-  const { audioResponse, messageResponse } = useContext(MediaContext);
+  const { audioResponse, messageResponse, error } = useContext(MediaContext);
   const [audioSrc, setAudioSrc] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
 
@@ -103,7 +104,14 @@ const AgentHeader = () => {
           <Stack justifyContent={"center"} alignItems={"center"}>
             {audioSrc && (
               <>
-                <AudioBarComponentVisualizer blob={audioBlob} />
+                <AudioVisualizer
+                  audioBlob={audioBlob}
+                  numBars={5}
+                  barWidth={5}
+                  barColor="#0054BA"
+                  height={20}
+                  gap={3}
+                />
                 <audio src={audioSrc} autoPlay style={{ display: "none" }} />
               </>
             )}
@@ -116,15 +124,29 @@ const AgentHeader = () => {
           padding={2}
           sx={{ overflowX: "auto" }}
         >
-          <Typography
-            sx={{
-              color: "#535353",
-              fontSize: "0.8rem",
-              fontFamily: "source sans pro",
-            }}
-          >
-            {messageResponse}
-          </Typography>
+          {!error ? (
+            <Typography
+              sx={{
+                color: "#535353",
+                fontSize: "1rem",
+                fontFamily: "source sans pro",
+              }}
+            >
+              {messageResponse}
+            </Typography>
+          ) : (
+            <Typography
+              sx={{
+                color: "#535353",
+                fontSize: "1rem",
+                fontFamily: "source sans pro",
+                textAlign: "center",
+              }}
+            >
+              Oops! Please bring the mic closer to your mouth for better
+              communication.
+            </Typography>
+          )}
         </Stack>
       </HeaderComponent>
     </HeaderComponentWrapper>
