@@ -24,6 +24,7 @@ const CreditPage = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [resetChunks, setResetChunks] = useState(false);
   const { audioResponse, setAudioResponse, setMessageResponse } =
     useContext(MediaContext);
   const audioChunks = useRef([]);
@@ -98,6 +99,7 @@ const CreditPage = () => {
           // Restart recording after stopping, with a short delay
           audioChunks.current = [];
           mediaRecorder.start(1000); // Restart the recorder after stopping
+          setResetChunks(!resetChunks);
         }, 200); // Add a short delay to ensure everything resets properly
       } else {
         console.warn("Recorded audio size is zero, skipping upload.");
@@ -132,7 +134,7 @@ const CreditPage = () => {
         mediaRecorder.stop();
       }
     };
-  }, []);
+  }, [resetChunks]);
 
   // Silence detection hook
   useEffect(() => {
