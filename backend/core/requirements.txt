@@ -45,3 +45,6 @@ xgboost
 psycopg-pool
 langgraph-checkpoint-postgres
 psycopg[binary,pool]
+elevenlabs
+python-dotenv
+scikit-learn

@@ -27,21 +27,6 @@ services:
       - entropy
     restart: "on-failure"
 
-  entropy_ui:
-    build: frontend/.
-    image: entropy/ui:latest
-    container_name: entropy-ui
-    environment:
-      - BASE_URL=ws://entropy_core:8000
-      - CORE_URL=http://entropy_core:8000
-    volumes:
-      - ./demo_ui:/app
-    ports:
-      - 8501:8501
-    networks:
-      - entropy
-    restart: "on-failure"
-
 networks:
   entropy:
     name: entropy-network

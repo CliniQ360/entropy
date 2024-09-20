@@ -1,8 +1,11 @@
 import { Divider, Stack, styled, Typography } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 import AudioBarIcon from "../../utils/CustomIcons/BarIcon";
+import { MediaContext } from "../../context/mediaContext";
+import AudioBarComponentVisualizer from "../AudioWavelengthComponent";
+import AudioVisualizer from "../AudioWavelengthComponent";
 
 const HeaderComponentWrapper = styled("div")(({ theme }) => ({
   width: "100%",
@@ -35,6 +38,47 @@ const ProfileIcon = styled("div")(({ theme }) => ({
 }));
 
 const AgentHeader = () => {
+  const { audioResponse, messageResponse, error } = useContext(MediaContext);
+  const [audioSrc, setAudioSrc] = useState(null);
+  const [audioBlob, setAudioBlob] = useState(null);
+
+  const base64ToBlob = (base64Data, contentType) => {
+    const byteCharacters = atob(base64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(slice.length);
+
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: contentType });
+  };
+
+  useEffect(() => {
+    if (audioResponse) {
+      try {
+        const audioBlob = base64ToBlob(audioResponse, "audio/wav");
+        setAudioBlob(audioBlob);
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setAudioSrc(audioUrl);
+
+        // Cleanup URL when component unmounts or audioResponse changes
+        return () => {
+          URL.revokeObjectURL(audioUrl);
+        };
+      } catch (error) {
+        console.error("Error converting Base64 audio to Blob", error);
+      }
+    }
+  }, [audioResponse]);
+
   return (
     <HeaderComponentWrapper>
       <HeaderComponent>
@@ -58,20 +102,51 @@ const AgentHeader = () => {
             </Typography>
           </Stack>
           <Stack justifyContent={"center"} alignItems={"center"}>
-            <AudioBarIcon />
+            {audioSrc && (
+              <>
+                <AudioVisualizer
+                  audioBlob={audioBlob}
+                  numBars={5}
+                  barWidth={5}
+                  barColor="#0054BA"
+                  height={20}
+                  gap={3}
+                />
+                <audio src={audioSrc} autoPlay style={{ display: "none" }} />
+              </>
+            )}
           </Stack>
         </HeaderIconSection>
         <Divider />
-        <Stack alignItems={"center"} justifyContent={"center"} padding={2}>
-          <Typography
-            sx={{
-              color: "#535353",
-              fontSize: "0.8rem",
-              fontFamily: "source sans pro",
-            }}
-          >
-            Lorem Ipsum has been the industry's standard dummy..
-          </Typography>
+        <Stack
+          alignItems={"center"}
+          justifyContent={"center"}
+          padding={2}
+          sx={{ overflowX: "auto" }}
+        >
+          {!error ? (
+            <Typography
+              sx={{
+                color: "#535353",
+                fontSize: "1rem",
+                fontFamily: "source sans pro",
+              }}
+            >
+              {messageResponse}
+            </Typography>
+          ) : (
+            <Typography
+              sx={{
+                color: "#535353",
+                fontSize: "1rem",
+                fontFamily: "source sans pro",
+                textAlign: "center",
+              }}
+            >
+              Oops! Please bring the mic closer to your mouth for better
+              communication.
+            </Typography>
+          )}
         </Stack>
       </HeaderComponent>
     </HeaderComponentWrapper>
