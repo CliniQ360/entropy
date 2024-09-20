@@ -8,3 +8,11 @@ class ConversationResume(BaseModel):
     state: str
     document_upload_flag: Optional[bool] = False
     file_path_list: Optional[list] = []
+
+
+class SahayakResumeConversation(BaseModel):
+    thread_id: str
+    state: str
+    translate: bool = True
+    document_upload_flag: Optional[bool] = False
+    file_path_list: Optional[list] = []
