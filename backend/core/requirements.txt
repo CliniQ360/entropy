@@ -48,3 +48,4 @@ psycopg[binary,pool]
 elevenlabs
 python-dotenv
 scikit-learn
+google-cloud-storage

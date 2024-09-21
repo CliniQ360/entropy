@@ -1,4 +1,3 @@
-from core.agents.workflow import build_workflow
 from psycopg_pool import ConnectionPool
 from langgraph.checkpoint.postgres import PostgresSaver
 from core import logger
@@ -10,7 +9,9 @@ from datetime import datetime
 from core.utils.groq.stt import GroqHelper
 from core.utils.elevenlabs.tts import ElevenLabsHelper
 from core.apis.schemas.conversation_input_schema import ConversationResume
-from core.controllers.conversation_controller import ConversationController
+from core.controllers.audio_conversation_controller import AudioConversationController
+from core.utils.vertex_ai_helper.gemini_helper import transcribe
+from core.utils.vertex_ai_helper.gcs_helper import upload_blob_string
 
 logging = logger(__name__)
 
@@ -19,6 +20,8 @@ class SahayakController:
     def __init__(self):
 
         self.DB_URI = os.getenv("DB_URI")
+        self.bucket_name = os.getenv("GCS_BUCKET_NAME")
+        self.audio_file_folder_path = f"/app/audio_data"
 
     def text_generator(self, transcribed_text: str):
         if transcribed_text:
@@ -31,46 +34,96 @@ class SahayakController:
             #     Let us make securing your personal loan simple, fast, and hassle-free!"""
             # }
 
-    def speech_to_speech(self, request):
+    def start_audio_conversation(self):
+        thread_id = str(uuid.uuid4())
+        logging.debug(f"{thread_id=}")
+        conversation_response = AudioConversationController().start_conversation(
+            thread_id=thread_id
+        )
+        agent_message = conversation_response.get("agent_message")
+        output_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-output.mp3"
+        output_audio_file_path = f"{self.audio_file_folder_path}/{output_file_name}"
+        logging.info(f"executing text to speech function")
+        agent_audio_data = ElevenLabsHelper.text_to_speech_generator(
+            text=agent_message, output_path=output_audio_file_path
+        )
+        # Encode audio bytes as base64
+        audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+        conversation_response.update({"agent_audio_data": audio_base64})
+        return conversation_response
+
+    def resume_audio_conversation(self, request):
         try:
             master_start = time.time()
-            logging.info("executing SahayakController.speech_to_speech function")
-            audio_file_folder_path = f"/app/audio_data"
-            os.makedirs(audio_file_folder_path, exist_ok=True)
-            audio_file_name = request.pop("audio_file_name")
-            audio_data = request.pop("audio_data")
-            _, audio_file_ext = os.path.splitext(audio_file_name)
-            input_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-input"
-            output_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-output"
-            inp_audio_file_path = (
-                f"{audio_file_folder_path}/{input_file_name}{audio_file_ext}"
+            logging.info(
+                "executing SahayakController.resume_audio_conversation function"
             )
-            logging.info(f"Saving audio file to local at {inp_audio_file_path=}")
-            with open(inp_audio_file_path, "wb") as f:
-                f.write(audio_data)
-            if request.get("translate"):
-                logging.info("Translating file using Groq whisper")
-                transcription_result = GroqHelper().translate(
-                    file_path=inp_audio_file_path
+            os.makedirs(self.audio_file_folder_path, exist_ok=True)
+            audio_data = request.get("audio_data", None)
+            output_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-output.mp3"
+            if audio_data:
+                logging.info(f"Audio data received")
+                audio_file_name = request.get("audio_file_name", None)
+                _, audio_file_ext = os.path.splitext(audio_file_name)
+                # inp_audio_file_path = (
+                #     f"{audio_file_folder_path}/{input_file_name}{audio_file_ext}"
+                # )
+                input_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-input"
+                inp_audio_file_path = f"{input_file_name}{audio_file_ext}"
+                logging.info(f"Saving audio file to GCS at {inp_audio_file_path=}")
+                gcs_uri = upload_blob_string(
+                    bucket_name=self.bucket_name,
+                    destination_file_name=inp_audio_file_path,
+                    content_type="audio/mpeg",
+                    file=audio_data,
                 )
+                logging.info(f"Saving audio file to local at {inp_audio_file_path=}")
+                # with open(inp_audio_file_path, "wb") as f:
+                #     f.write(audio_data)
+                custom_prompt = None
+                if request.get("state") == "human_feedback":
+                    custom_prompt = """The audio might contains technical information, including email addresses and domain names.
+                        Do not convert the @ symbol into at the rate or the . symbol into dot. Please transcribe the audio verbatim with exact character
+                        preservation for email addresses and technical terms.
+                        Pay special attention to ensuring special characters are accurately captured, as is"""
+                transcription_result = transcribe(
+                    gcs_uri=gcs_uri, input_prompt=custom_prompt
+                )
+                # if request.get("translate"):
+                #     logging.info("Translating file using Groq whisper")
+                #     transcription_result = GroqHelper().translate(
+                #         file_path=inp_audio_file_path
+                #     )
 
+                # else:
+                #     logging.info("Trancribing file using Groq whisper")
+                #     transcription_result = GroqHelper().transcribe(
+                #         file_path=inp_audio_file_path
+                #     )
+                end = time.time()
+                logging.info(f"Transcription Time: {end-master_start}")
+                transcribed_text = transcription_result.get("transcription")
+                logging.info(f"Transcription Text: {transcribed_text=}")
+                request.update({"user_message": [transcribed_text]})
+                # request.update({"gcs_uri": gcs_uri})
             else:
-                logging.info("Trancribing file using Groq whisper")
-                transcription_result = GroqHelper().transcribe(
-                    file_path=inp_audio_file_path
-                )
-            end = time.time()
-            logging.info(f"Transcription Time: {end-master_start}")
-            transcribed_text = transcription_result.get("transcription")
-            logging.info(f"Transcription Text: {transcribed_text=}")
-            request.update({"user_message": transcribed_text})
-            conversation_response = ConversationController().resume_conversation(
-                **request
+                logging.info(f"Audio data not received")
+                request.update({"user_message": ["dummy message"]})
+                # request.update({"gcs_uri": None})
+            workflow_payload = {
+                "thread_id": request.get("thread_id"),
+                "state": request.get("state"),
+                "user_message": request.get("user_message"),
+                "document_upload_flag": request.get("document_upload_flag"),
+                "offer_item_id": request.get("offer_item_id"),
+                "selected_loan_amount": request.get("selected_loan_amount"),
+            }
+            conversation_response = AudioConversationController().resume_conversation(
+                **workflow_payload
             )
+            logging.info(f"{conversation_response=}")
             agent_message = conversation_response.get("agent_message")
-            output_audio_file_path = (
-                f"{audio_file_folder_path}/{output_file_name}{audio_file_ext}"
-            )
+            output_audio_file_path = f"{self.audio_file_folder_path}/{output_file_name}"
             logging.info(f"executing text to speech function")
             agent_audio_data = ElevenLabsHelper.text_to_speech_generator(
                 text=agent_message, output_path=output_audio_file_path
@@ -82,6 +135,6 @@ class SahayakController:
             return conversation_response
         except Exception as error:
             logging.error(
-                f"Error in SahayakController.speech_to_speech function: {error}"
+                f"Error in SahayakController.resume_audio_conversation function: {error}"
             )
             raise error

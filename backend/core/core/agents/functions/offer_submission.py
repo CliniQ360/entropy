@@ -3,11 +3,15 @@ from core.agents.schemas.output_schemas import (
     UserDetailsResponse,
     UserDocumentDetails,
     GeneratedQuestion,
+    UserIntent,
 )
 from core.utils.external_call import APIInterface
 import os, json, time, base64
-from core.utils.vertex_ai_helper import llm_flash, llm_pro
+from core.utils.vertex_ai_helper.gemini_helper import llm_flash, llm_pro
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from core import logger
+
+logging = logger(__name__)
 
 
 def submit_form(state: UserDetailsState):
@@ -32,42 +36,49 @@ def submit_form(state: UserDetailsState):
             for key, value in collected_details.items():
                 if value != None and value != " " and value != "None":
                     customer_details[key] = value
-        print(customer_details)
+        logging.info(customer_details)
     txn_id = search_resp.get("txn_id")
-    print("Sleeping for 5 seconds")
+    logging.info("Sleeping for 5 seconds")
     time.sleep(5)
     user_contact_number = customer_details.get("contactNumber")
     finvu_user_id = f"{user_contact_number}@finvu"
     customer_details.update({"bureauConsent": True, "aa_id": finvu_user_id})
     submit_payload = {"loanForm": customer_details}
-    print(f"{submit_payload=}")
+    logging.info(f"{submit_payload=}")
     json_payload = json.dumps(submit_payload)
     submit_resp, submit_resp_code = APIInterface().post_with_params(
         route=submit_url, params={"txn_id": txn_id}, data=json_payload
     )
-    select_resp, select_resp_code = APIInterface().post_with_params(
-        route=select_url, params={"txn_id": txn_id}
-    )
-    current_action = None
-    while current_action != "ON_SELECT_CST":
-        get_txn_resp, get_txn_resp_code = APIInterface().get(
-            route=get_txn_url, params={"txn_id": txn_id}
+    if submit_resp_code == 200:
+        select_resp, select_resp_code = APIInterface().post_with_params(
+            route=select_url, params={"txn_id": txn_id}
         )
-        current_action = get_txn_resp.get("current_action")
-        print(f"{current_action=}")
-        time.sleep(5)
-    get_aa_resp, get_aa_resp_code = APIInterface().get(
-        route=get_aa_url, params={"user_id": finvu_user_id, "txn_id": txn_id}
-    )
-    aa_url = get_aa_resp.get("aa_url")
-    print(f"{aa_url=}")
-    return {
-        "urls": aa_url,
-        "txn_id": txn_id,
-        "agent_message": [
-            f"Your details are successfully submitted. Please click on the link to proceed with the account aggregator flow.{aa_url}"
-        ],
-    }
+        current_action = None
+        while current_action != "ON_SELECT_CST":
+            get_txn_resp, get_txn_resp_code = APIInterface().get(
+                route=get_txn_url, params={"txn_id": txn_id}
+            )
+            current_action = get_txn_resp.get("current_action")
+            logging.info(f"{current_action=}")
+            time.sleep(5)
+        get_aa_resp, get_aa_resp_code = APIInterface().get(
+            route=get_aa_url, params={"user_id": finvu_user_id, "txn_id": txn_id}
+        )
+        aa_url = get_aa_resp.get("aa_url")
+        logging.info(f"{aa_url=}")
+        return {
+            "urls": aa_url,
+            "txn_id": txn_id,
+            "agent_message": [
+                f"Your details are successfully submitted. Please click proceed to complete account aggregator flow."
+            ],
+        }
+    else:
+        return {
+            "urls": None,
+            "txn_id": txn_id,
+            "agent_message": [f"Error in submitting the form. Please try again later."],
+        }
 
 
 def collect_updated_details(state: UserDetailsState):
@@ -165,7 +176,7 @@ def summarise_offers(state: OfferState):
     offer_summary = llm_flash.invoke(summary_prompt)
     offer_summary = offer_summary.content
     # Write the list of analysis to state
-    return {"offer_summary": offer_summary}
+    return {"offer_summary": offer_summary, "agent_message": [offer_summary]}
 
 
 def user_intent(state: OfferState):

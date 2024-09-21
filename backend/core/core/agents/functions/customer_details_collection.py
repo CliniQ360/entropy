@@ -2,10 +2,11 @@ from core.agents.schemas.state_schemas import UserDetailsState
 from core.agents.schemas.output_schemas import (
     UserDetailsResponse,
     UserDocumentDetails,
+    UserIntentClassification,
     GeneratedQuestion,
 )
 import os, json, time, base64
-from core.utils.vertex_ai_helper import llm_flash, llm_pro
+from core.utils.vertex_ai_helper.gemini_helper import llm_flash, llm_pro
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 
@@ -173,7 +174,14 @@ def human_feedback(state: UserDetailsState):
 
 def should_submit(state: UserDetailsState):
     # Check if human feedback
-    if state.get("user_message")[-1] == "yes":
+    intent_classification_prompt = f"""You are tasked to identify the intent from the user message.
+        The user could either agree to the information or ask for updates. Classify the intent accordingly.
+        User message: {state.get("user_message")[-1]}."""
+    structured_llm = llm_flash.with_structured_output(UserIntentClassification)
+
+    # Generate question
+    extracted_data = structured_llm.invoke([intent_classification_prompt])
+    if extracted_data.user_intent.lower() == "ok":
         return "submit_form"
     return "collect_updated_details"
 
@@ -187,24 +195,28 @@ def should_verify(state: UserDetailsState):
 
 def verify_user_details(state: UserDetailsState):
     # Generate verification message
-    collected_details_list = state.get("customer_details", None)
-    master_dict = {}
-    if collected_details_list:
-        for item in collected_details_list:
-            if isinstance(item, dict):
-                collected_details = item
-            else:
-                collected_details = item.dict()
-            for key, value in collected_details.items():
-                if value != None and value != " " and value != "None":
-                    master_dict[key] = value
-        print(master_dict)
-    message = llm_flash.invoke(
-        f"""Summaries the details collected from the user {master_dict} in simple language. 
-        Ask the user to confirm if the collected details are correct. Accepted responses are 'yes' or 'no'."""
-    )
-    message = message.content
-    return {"agent_message": [message]}
+    # collected_details_list = state.get("customer_details", None)
+    # master_dict = {}
+    # if collected_details_list:
+    #     for item in collected_details_list:
+    #         if isinstance(item, dict):
+    #             collected_details = item
+    #         else:
+    #             collected_details = item.dict()
+    #         for key, value in collected_details.items():
+    #             if value != None and value != " " and value != "None":
+    #                 master_dict[key] = value
+    #     print(master_dict)
+    # message = llm_flash.invoke(
+    #     f"""Summaries the details collected from the user {master_dict} in simple language. Keep the message short and simple and tone conversational.
+    #     Ask the user to confirm if the collected details are correct. Accepted responses are 'yes' or 'no'."""
+    # )
+    # message = message.content
+    return {
+        "agent_message": [
+            "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
+        ]
+    }
 
 
 def human_verification_feedback(state: UserDetailsState):

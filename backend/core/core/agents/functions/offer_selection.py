@@ -10,7 +10,7 @@ from core.agents.schemas.output_schemas import (
 )
 from core.utils.external_call import APIInterface
 import os, json, time
-from core.utils.vertex_ai_helper import llm_flash, llm_pro
+from core.utils.vertex_ai_helper.gemini_helper import llm_flash, llm_pro
 from langchain_community.document_loaders import PyPDFLoader
 
 
@@ -385,6 +385,7 @@ def summarise_loan_tnc(state: LoanDocumentState):
     return {
         "loan_agreement_summary": loan_agreement_summary,
         "loan_agreement_text": text,
+        "agent_message": [loan_agreement_summary],
     }
 
 

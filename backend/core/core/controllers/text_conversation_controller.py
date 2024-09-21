@@ -1,4 +1,4 @@
-from core.agents.workflow import build_workflow
+from core.agents.workflows.text_conversation_workflow import build_workflow
 from psycopg_pool import ConnectionPool
 from langgraph.checkpoint.postgres import PostgresSaver
 from core import logger
@@ -7,14 +7,14 @@ import os
 logging = logger(__name__)
 
 
-class ConversationController:
+class TextConversationController:
     def __init__(self):
 
         self.DB_URI = os.getenv("DB_URI")
 
     def start_conversation(self, thread_id: str):
         try:
-            logging.info(f"ConversationController: start_conversation")
+            logging.info(f"TextConversationController: start_conversation")
             logging.info(f"Stating workflow with thread_id: {thread_id}")
             with ConnectionPool(
                 conninfo=self.DB_URI,
@@ -74,13 +74,13 @@ class ConversationController:
                 return return_payload
         except Exception as error:
             logging.error(
-                f"Error in ConversationController.start_conversation: {error}"
+                f"Error in TextConversationController.start_conversation: {error}"
             )
             raise error
 
     def resume_conversation(self, **kwargs):
         try:
-            logging.info(f"ConversationController: resume_conversation")
+            logging.info(f"TextConversationController: resume_conversation")
             thread_id = kwargs.get("thread_id")
             thread = {"configurable": {"thread_id": thread_id}}
             state = kwargs.get("state")
@@ -176,29 +176,96 @@ class ConversationController:
                 else:
                     user_message = "None"
                 next_state = workflow.get_state(thread).next[0]
+                collected_details_list = workflow.get_state(thread).values.get(
+                    "customer_details"
+                )
+                customer_details = {}
+                if collected_details_list:
+                    for item in collected_details_list:
+                        if isinstance(item, dict):
+                            collected_details = item
+                        else:
+                            collected_details = item.dict()
+                        for key, value in collected_details.items():
+                            if value != None and value != " " and value != "None":
+                                customer_details[key] = value
+                    print(f"{customer_details=}")
+                customer_account_details_list = workflow.get_state(thread).values.get(
+                    "customer_account_details"
+                )
+                customer_account_details = {}
+                if customer_account_details_list:
+                    for item in customer_account_details_list:
+                        if isinstance(item, dict):
+                            collected_details = item
+                        else:
+                            collected_details = item.dict()
+                        for key, value in collected_details.items():
+                            if value != None and value != " " and value != "None":
+                                customer_account_details[key] = value
+                    print(f"{customer_account_details=}")
                 return {
                     "thread_id": thread_id,
                     "user_message": user_message,
                     "agent_message": agent_message,
                     "next_state": next_state,
+                    "customer_details": customer_details,
+                    "customer_account_details": customer_account_details,
+                    "txn_id": workflow.get_state(thread).values.get("txn_id"),
+                    "redirect_url": workflow.get_state(thread).values.get("urls"),
                 }
         except Exception as error:
             logging.error(
-                f"Error in ConversationController.resume_conversation: {error}"
+                f"Error in TextConversationController.resume_conversation: {error}"
             )
             raise error
 
     def get_state(self, thread_id: str):
         try:
             thread = {"configurable": {"thread_id": thread_id}}
-            return self.workflow.get_state(thread).next
+            with ConnectionPool(
+                conninfo=self.DB_URI,
+                max_size=20,
+                kwargs={"autocommit": True, "prepare_threshold": 0},
+            ) as conn:
+                builder = build_workflow()
+                PostgresSaver(conn).setup()
+                checkpointer = PostgresSaver(conn=conn)
+                workflow = builder.compile(
+                    interrupt_before=[
+                        "human_document_upload_feedback",
+                        "human_feedback",
+                        "human_verification_feedback",
+                        "human_update_feedback",
+                        "human_selection",
+                        "human_loan_amount_selection",
+                        "human_recheck_approval",
+                        "human_account_details_feedback",
+                        "resume_after_kyc_redirect",
+                        "human_account_details_verification_feedback",
+                        "resume_after_emdt_redirect",
+                        "human_loan_tnc_feedback",
+                        "resume_loan_agreement_signing",
+                    ],
+                    interrupt_after=["submit_form", "send_ack", "human_refreh_offer"],
+                    checkpointer=checkpointer,
+                )
+                print("Workflow compiled")
+                return {
+                    "txn_id": workflow.get_state(thread).values.get("txn_id"),
+                    "url": workflow.get_state(thread).values.get("urls"),
+                    "offer_list": workflow.get_state(thread).values.get("offer_list"),
+                    "offer_summary": workflow.get_state(thread).values.get(
+                        "offer_summary"
+                    ),
+                }
         except Exception as error:
-            logging.error(f"Error in ConversationController.get_state: {error}")
+            logging.error(f"Error in TextConversationController.get_state: {error}")
             raise error
 
     async def upload_documents(self, files):
         try:
-            logging.info(f"ConversationController: upload_documents")
+            logging.info(f"TextConversationController: upload_documents")
             file_path_list = []
             for document in files:
                 document_name = document.filename
@@ -210,4 +277,6 @@ class ConversationController:
                 file_path_list.append(document_key)
             return {"file_path_list": file_path_list}
         except Exception as error:
-            logging.error(f"Error in ConversationController.upload_documents: {error}")
+            logging.error(
+                f"Error in TextConversationController.upload_documents: {error}"
+            )

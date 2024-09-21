@@ -8,7 +8,7 @@ class UserDetails(BaseModel):
     dob: str = Field(description="Customer's date of birth in DD-MM-YYYY format")
     gender: str = Field(description="Customer's gender in Male, Female or Other format")
     email: str = Field(description="Customer's email address")
-    pan: str = Field(description="Customer's PAN number")
+    pan: str = Field(description="Customer's PAN number without any special characters")
     contactNumber: str = Field(description="Customer's contact number")
     addressL1: str = Field(description="Customer's address line 1")
     addressL2: str = Field(description="Customer's address line 2")
@@ -20,7 +20,9 @@ class UserDetails(BaseModel):
     )
     companyName: str = Field(description="Customer's company name")
     officialEmail: str = Field(description="Customer's company email id")
-    income: str = Field(description="Customer's annual income")
+    income: str = Field(
+        description="Customer's annual income without any special characters"
+    )
     endUse: str = Field(
         description="Customer's purpose to get loan in Education, Health, Travel, Other"
     )
@@ -67,4 +69,10 @@ class UserAccountDetailsResponse(BaseModel):
 class UserIntent(BaseModel):
     user_intent: str = Field(
         description="Classification of user message  in question or Acknowledgement"
+    )
+
+
+class UserIntentClassification(BaseModel):
+    user_intent: str = Field(
+        description="Intent of the user in the audio file from the given options: 'ok', 'edit'"
     )

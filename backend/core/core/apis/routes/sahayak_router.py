@@ -13,20 +13,51 @@ sahayak_router = APIRouter()
 logging = logger(__name__)
 
 
+@sahayak_router.post("/v1/sahayak/start_conversation", response_model=SahayakOutput)
+def start_conversation():
+    try:
+        return SahayakController().start_audio_conversation()
+    except Exception as error:
+        logging.error(f"Error in /v1/sahayak/start_conversation endpoint: {error}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(error),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
 @sahayak_router.post("/v1/sahayak/resume_conversation", response_model=SahayakOutput)
 async def resume_conversation(
-    request: SahayakResumeConversation, audio_file: UploadFile = File(None)
+    thread_id: str,
+    state: str,
+    translate: bool = False,
+    document_upload_flag: bool = False,
+    file_path_list: list = [],
+    file: UploadFile | None = None,
+    offer_item_id: str = None,
+    selected_loan_amount: str = None,
 ):
     try:
         logging.info(f"Calling /v1/sahayak/resume_conversation endpoint")
-        logging.debug(f"{request=}")
-        request_dict = request.__dict__()
-        audio_data = await audio_file.read()
-        audio_file_name = audio_file.filename
-        request_dict.update(
-            {"audio_data": audio_data, "audio_file_name": audio_file_name}
-        )
-        return SahayakOutput(SahayakController().speech_to_speech(request=request_dict))
+        print(f"{file=}")
+        if not file:
+            audio_data = None
+            audio_file_name = None
+        else:
+            audio_data = await file.read()
+            audio_file_name = file.filename
+        payload = {
+            "thread_id": thread_id,
+            "state": state,
+            "translate": translate,
+            "document_upload_flag": document_upload_flag,
+            "file_path_list": file_path_list,
+            "audio_data": audio_data,
+            "audio_file_name": audio_file_name,
+            "offer_item_id": offer_item_id,
+            "selected_loan_amount": selected_loan_amount,
+        }
+        return SahayakController().resume_audio_conversation(request=payload)
     except Exception as error:
         logging.error(f"Error in /v1/sahayak/resume_conversation endpoint: {error}")
         raise HTTPException(

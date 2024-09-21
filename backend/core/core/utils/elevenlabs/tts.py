@@ -35,6 +35,6 @@ class ElevenLabsHelper:
 
         # Move the buffer's position to the start
         audio_buffer.seek(0)
-        print(f"{audio_buffer.getvalue()}")
+        # print(f"{audio_buffer.getvalue()}")
         # Return the bytes of the audio
         return audio_buffer.getvalue()
