@@ -113,18 +113,16 @@ const CreditPage = () => {
       if (audioChunks.current.length > 0) {
         // Create a Blob from the audio chunks
         const audioBlob = new Blob(audioChunks.current, { type: "audio/webm" });
-        // Check if the blob size is greater than 0
+
         if (audioBlob.size > 0) {
           // Create a FormData object
           const formData = new FormData();
-
-          // Append the Blob to the FormData
           formData.append("audio_file", audioBlob, "agent_audio.webm");
 
           const payload = {
             audio_file: formData,
           };
-          // Prepare the payload with the FormData object
+
           dispatch(agentConversation(payload))
             .then((res) => {
               if (res?.error && Object.keys(res?.error)?.length > 0) {
@@ -139,15 +137,23 @@ const CreditPage = () => {
               console.error("Error uploading the audio file:", error);
             });
 
-          // Stop and restart the media recorder to reset its internal state
-          mediaRecorder.stop();
+          // Use a new MediaRecorder to continue recording in the background while uploading
+          const clonedStream = audioStream.current.clone(); // Clone the original stream
+          const newRecorder = new MediaRecorder(clonedStream);
 
+          newRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+              audioChunks.current.push(event.data);
+            }
+          };
+
+          // Start the new recorder while the original one keeps running
+          newRecorder.start(1000);
+
+          // Optionally handle newRecorder stop logic if needed
           setTimeout(() => {
-            // Restart recording after stopping, with a short delay
-            audioChunks.current = [];
-            // Restart the recorder after stopping
-            mediaRecorder.start(1000);
-          }, 200);
+            newRecorder.stop();
+          }, 3000); // Stop after a few seconds to avoid unnecessary resource use
         } else {
           console.warn("Recorded audio size is zero, skipping upload.");
         }
@@ -155,6 +161,7 @@ const CreditPage = () => {
         console.warn("No audio data available.");
       }
     };
+
     const silenceDetector = createSilenceDetector({
       noiseThreshold: 10,
       silenceDurationThreshold: 3000,
