@@ -25,7 +25,7 @@ function App() {
         <Route path="/route-2" element={<ChooseAssistant />} />
 
         <Route path="/credit" element={<CreditPage />}>
-          <Route path="personalDetails" element={<PersonalDetailsPage />} />
+          <Route path="personal-Detail" element={<PersonalDetailsPage />} />
           <Route
             path="professionalDetails"
             element={<ProfessionalDetailsPage />}

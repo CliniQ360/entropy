@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import PageFooter from "../../components/PageFooter";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import AgentHeader from "../../components/AgentHeaderComponent";
 import CustomNavbar from "../../components/CustomNavbar";
 import { styled } from "@mui/material";
@@ -8,6 +8,7 @@ import { createSilenceDetector } from "../../components/SilenceDetectorComponent
 import { useDispatch } from "react-redux";
 import { agentConversation } from "./audioAgent.slice";
 import { MediaContext, useMediaContext } from "../../context/mediaContext";
+import { AudioDataContext } from "../../context/audioDataContext";
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -25,11 +26,15 @@ const CreditPage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [resetChunks, setResetChunks] = useState(false);
-  const { setError, setAudioResponse, setMessageResponse } =
+  const { setError, setAudioResponse, setMessageResponse, nextState } =
     useContext(MediaContext);
+  const { setCustomerDetails } = useContext(AudioDataContext);
   const audioChunks = useRef([]);
   const dispatch = useDispatch();
-
+  const location = useLocation();
+  const thread_id = sessionStorage.getItem("thread_id");
+  const uploadFlag = sessionStorage.getItem("document_upload_flag");
+  const next_state = sessionStorage.getItem("next_state");
   // Function to start recording
   const handleStartRecording = () => {
     if (mediaRecorder && mediaRecorder.state === "inactive") {
@@ -78,10 +83,13 @@ const CreditPage = () => {
         const formData = new FormData();
 
         // Append the Blob to the FormData
-        formData.append("audio_file", audioBlob, "agent_audio.webm");
+        formData.append("file", audioBlob, "agent_audio.webm");
 
         const payload = {
-          audio_file: formData,
+          file: formData,
+          threadId: thread_id,
+          uploadFlag: uploadFlag,
+          state: next_state,
         };
         // Prepare the payload with the FormData object
         dispatch(agentConversation(payload))
@@ -92,7 +100,8 @@ const CreditPage = () => {
             }
             setError(false);
             setAudioResponse(res?.payload?.data?.audio_file);
-            setMessageResponse(res?.payload?.data?.text);
+            setMessageResponse(res?.payload?.data?.agent_message);
+            setCustomerDetails(res?.payload?.data?.customer_details);
           })
           .catch((error) => {
             console.error("Error uploading the audio file:", error);
@@ -117,6 +126,8 @@ const CreditPage = () => {
 
   useEffect(() => {
     // Set up the media recorder when the component mounts
+    if (location.pathname === "/credit/route-3") return;
+
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const recorder = new MediaRecorder(stream);
 

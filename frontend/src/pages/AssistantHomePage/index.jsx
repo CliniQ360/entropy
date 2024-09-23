@@ -11,6 +11,9 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ImageIcon from "@mui/icons-material/Image";
 import MicIcon from "../../utils/CustomIcons/MicIcon";
 import ChatIcon from "../../utils/CustomIcons/ChatIcon";
+import { useDispatch } from "react-redux";
+import { startConversion } from "../CreditPage/audioAgent.slice";
+import { useNavigate } from "react-router-dom";
 
 // import Micicon from "../../assets/icons/MicIcon.svg";
 
@@ -74,6 +77,8 @@ const FooterButtonWrapper = styled(Stack)(({ theme }) => ({
 }));
 
 const AssistantHomepage = () => {
+  const navigate = useNavigate();
+
   return (
     <PageWrapper>
       <ImageSectionWrapper>
@@ -157,7 +162,12 @@ const AssistantHomepage = () => {
           </ActionContainerItem>
         </ActionWrapper>
         <FooterButtonWrapper>
-          <FooterButton variant="contained">Get Started</FooterButton>
+          <FooterButton
+            variant="contained"
+            onClick={() => navigate("/route-2")}
+          >
+            Get Started
+          </FooterButton>
         </FooterButtonWrapper>
       </HomePageContentWrapper>
     </PageWrapper>

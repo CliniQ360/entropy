@@ -1,5 +1,5 @@
 import { Divider, Stack, styled, Typography } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 import AudioBarIcon from "../../utils/CustomIcons/BarIcon";
@@ -41,6 +41,8 @@ const AgentHeader = () => {
   const { audioResponse, messageResponse, error } = useContext(MediaContext);
   const [audioSrc, setAudioSrc] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
+  const audioRef = useRef(null);
+  const previousAudioUrlRef = useRef(null);
 
   const base64ToBlob = (base64Data, contentType) => {
     const byteCharacters = atob(base64Data);
@@ -63,21 +65,40 @@ const AgentHeader = () => {
 
   useEffect(() => {
     if (audioResponse) {
-      try {
-        const audioBlob = base64ToBlob(audioResponse, "audio/wav");
-        setAudioBlob(audioBlob);
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setAudioSrc(audioUrl);
+      const blob = base64ToBlob(audioResponse, "audio/wav");
+      if (blob) {
+        setAudioBlob(blob);
+        const newAudioUrl = URL.createObjectURL(blob);
+        setAudioSrc(newAudioUrl);
 
-        // Cleanup URL when component unmounts or audioResponse changes
-        return () => {
-          URL.revokeObjectURL(audioUrl);
-        };
-      } catch (error) {
-        console.error("Error converting Base64 audio to Blob", error);
+        // Revoke the previous Blob URL to free up memory
+        if (previousAudioUrlRef.current) {
+          URL.revokeObjectURL(previousAudioUrlRef.current);
+        }
+        previousAudioUrlRef.current = newAudioUrl;
       }
     }
+
+    // Cleanup when component unmounts
+    return () => {
+      if (previousAudioUrlRef.current) {
+        URL.revokeObjectURL(previousAudioUrlRef.current);
+      }
+    };
   }, [audioResponse]);
+
+  useEffect(() => {
+    if (audioRef.current && audioSrc) {
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {})
+          .catch((error) => {
+            console.error("Error attempting to play audio:", error);
+          });
+      }
+    }
+  }, [audioSrc]);
 
   return (
     <HeaderComponentWrapper>
@@ -112,7 +133,12 @@ const AgentHeader = () => {
                   height={20}
                   gap={3}
                 />
-                <audio src={audioSrc} autoPlay style={{ display: "none" }} />
+                <audio
+                  ref={audioRef}
+                  src={audioSrc}
+                  autoPlay
+                  style={{ display: "none" }}
+                />
               </>
             )}
           </Stack>
