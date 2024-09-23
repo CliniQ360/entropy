@@ -240,10 +240,10 @@ class AudioConversationController:
                     "next_state": next_state,
                     "customer_details": customer_details,
                     "customer_account_details": customer_account_details,
-                    "txn_id": txn_id if txn_id else None,
-                    "redirect_url": redirect_url if redirect_url else None,
+                    "txn_id": txn_id if txn_id else "None",
+                    "redirect_url": redirect_url if redirect_url else "None",
                     "offer_list": offer_list if offer_list else [],
-                    "offer_summary": offer_summary if offer_summary else None,
+                    "offer_summary": offer_summary if offer_summary else "None",
                 }
         except Exception as error:
             logging.error(

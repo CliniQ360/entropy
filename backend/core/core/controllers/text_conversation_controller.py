@@ -252,6 +252,12 @@ class TextConversationController:
                 )
                 print("Workflow compiled")
                 return {
+                    "user_message": workflow.get_state(thread).values.get(
+                        "user_message"
+                    ),
+                    "agent_message": workflow.get_state(thread).values.get(
+                        "agent_message"
+                    ),
                     "txn_id": workflow.get_state(thread).values.get("txn_id"),
                     "url": workflow.get_state(thread).values.get("urls"),
                     "offer_list": workflow.get_state(thread).values.get("offer_list"),
