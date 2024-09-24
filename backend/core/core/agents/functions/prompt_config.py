@@ -37,12 +37,12 @@ class OpenAIPrompts:
         """
 
         self.account_extractor_instructions = """You are tasked with extracting the user details from the customer's response. 
-            If values are not present, return None.
-            customer response: {user_message}"""
+            customer_response: {user_message}
+            If information is not present in customer_response, return 'NA' for the respective field."""
 
         self.account_extractor_instructions = """You are tasked with extracting the user details from the customer's response. 
-            If values are not present, return None.
-            customer response: {user_message}"""
+            customer_response: {user_message}
+            If information is not present in customer_response, return 'NA' for the respective field."""
 
         self.summarise_loan_agreement_instructions = """
         You will be given different passages from a loan agreement document one by one. 
