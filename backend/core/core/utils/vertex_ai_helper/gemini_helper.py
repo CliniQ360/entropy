@@ -1,4 +1,5 @@
 from langchain_google_vertexai import ChatVertexAI
+
 from langchain_core.messages import HumanMessage
 import os, base64
 

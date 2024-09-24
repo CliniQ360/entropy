@@ -7,9 +7,11 @@ from core.agents.schemas.output_schemas import (
 )
 from core.utils.external_call import APIInterface
 import os, json, time, base64
-from core.utils.vertex_ai_helper.gemini_helper import llm_flash, llm_pro
+from core.utils.vertex_ai_helper.gemini_helper import llm_flash
+from core.utils.openai_helper import llm_4omini
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from core import logger
+from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
 
 logging = logger(__name__)
 
@@ -42,7 +44,10 @@ def submit_form(state: UserDetailsState):
     time.sleep(5)
     user_contact_number = customer_details.get("contactNumber")
     finvu_user_id = f"{user_contact_number}@finvu"
-    customer_details.update({"bureauConsent": True, "aa_id": finvu_user_id})
+    user_income = customer_details.get("income")
+    customer_details.update(
+        {"bureauConsent": True, "aa_id": finvu_user_id, "income": str(user_income)}
+    )
     submit_payload = {"loanForm": customer_details}
     logging.info(f"{submit_payload=}")
     json_payload = json.dumps(submit_payload)
@@ -54,7 +59,11 @@ def submit_form(state: UserDetailsState):
             route=select_url, params={"txn_id": txn_id}
         )
         current_action = None
+        counter = 0
         while current_action != "ON_SELECT_CST":
+            if counter == 10:
+                logging.info("Did not receive submit form response.")
+                break
             get_txn_resp, get_txn_resp_code = APIInterface().get(
                 route=get_txn_url, params={"txn_id": txn_id}
             )
@@ -67,7 +76,7 @@ def submit_form(state: UserDetailsState):
         aa_url = get_aa_resp.get("aa_url")
         logging.info(f"{aa_url=}")
         return {
-            "urls": aa_url,
+            "aa_url": aa_url,
             "txn_id": txn_id,
             "agent_message": [
                 f"Your details are successfully submitted. Please click proceed to complete account aggregator flow."
@@ -75,7 +84,7 @@ def submit_form(state: UserDetailsState):
         }
     else:
         return {
-            "urls": None,
+            "aa_url": None,
             "txn_id": txn_id,
             "agent_message": [f"Error in submitting the form. Please try again later."],
         }
@@ -170,20 +179,37 @@ def human_selection(state: OfferState):
 def summarise_offers(state: OfferState):
     offer_list = state.get("offer_list")
     # Generate summary
-    summary_prompt = f"""Offer details: {offer_list}.
-    Act as a financial adviser. From the credit offer list provided above, help customer understand each credit offer in simple paragraph focusing on important information. 
-    Keep the tone conversational and maximum 3 lines per offer."""
-    offer_summary = llm_flash.invoke(summary_prompt)
+    # summary_prompt = f"""Offer details: {offer_list}.
+    # Act as a financial adviser. From the credit offer list provided above, help customer understand each credit offer in simple paragraph focusing on important information.
+    # Keep the tone conversational and maximum 3 lines per offer."""
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        offer_summary_instructions = GeminiPrompts().offer_summary_instructions
+        offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
+        offer_summary = llm_flash.invoke(offer_summary_prompt)
+    else:
+        offer_summary_instructions = OpenAIPrompts().offer_summary_instructions
+        offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
+        offer_summary = llm_4omini.invoke(offer_summary_prompt)
     offer_summary = offer_summary.content
     # Write the list of analysis to state
     return {"offer_summary": offer_summary, "agent_message": [offer_summary]}
 
 
 def user_intent(state: OfferState):
-    structured_llm = llm_flash.with_structured_output(UserIntent)
-    summary_prompt = f"""User message: {state.get("user_message")[-1]}.
-    Classify the user_message provided above between two categories: ["question", "acknowledgment"]. Respond in one word."""
-    llm_response = structured_llm.invoke(summary_prompt)
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        structured_llm = llm_flash.with_structured_output(UserIntent)
+        user_intent_instructions = GeminiPrompts().user_intent_1_instructions
+        user_intent_prompt = user_intent_instructions.format(
+            user_message=state.get("user_message")[-1]
+        )
+    else:
+        structured_llm = llm_4omini.with_structured_output(UserIntent)
+        user_intent_instructions = OpenAIPrompts().user_intent_1_instructions
+        user_intent_prompt = user_intent_instructions.format(
+            user_message=state.get("user_message")[-1]
+        )
+
+    llm_response = structured_llm.invoke(user_intent_prompt)
     user_intent = llm_response.user_intent
     if user_intent.lower().strip() == "question":
         return "answer_user_query"
@@ -192,10 +218,17 @@ def user_intent(state: OfferState):
 
 def answer_user_query(state: OfferState):
     offer_list = state.get("offer_list")
-    qna_prompt = f"""Offer details : {offer_list}.
-    Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
-    user_query: {state.get("user_message")[-1]}"""
-    llm_response = llm_flash.invoke(qna_prompt)
+    # qna_prompt = f"""Offer details : {offer_list}.
+    # Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
+    # user_query: {state.get("user_message")[-1]}"""
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        offer_qna_instructions = GeminiPrompts().offer_qna_instructions
+        offer_qna_prompt = offer_qna_instructions.format(offer_list=offer_list)
+        llm_response = llm_flash.invoke(offer_qna_prompt)
+    else:
+        offer_qna_instructions = OpenAIPrompts().offer_qna_instructions
+        offer_qna_prompt = offer_qna_instructions.format(offer_list=offer_list)
+        llm_response = llm_4omini.invoke(offer_qna_prompt)
     answer = llm_response.content
     return {"agent_message": [answer]}
 

@@ -7,7 +7,9 @@ from core.agents.schemas.output_schemas import (
 )
 import os, json, time, base64
 from core.utils.vertex_ai_helper.gemini_helper import llm_flash, llm_pro
+from core.utils.openai_helper import llm_4o, llm_4omini
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
 
 
 def welcome_message(state: UserDetailsState):
@@ -83,26 +85,26 @@ def process_user_document(state: UserDetailsState):
 def generate_questions(state: UserDetailsState):
     """Generate questions to collect user details"""
     # human_analyst_feedback=state.get('human_analyst_feedback', '')
-    collector_instructions = """
-        You are a helpful assistant tasked with collecting customer information in order to complete a loan application form.
-        The information you need to collect includes: {required_fields}
-        Here’s how you should proceed:
-        1. Initial Check: Analyze the already collected information provided in {customer_info} and identify missing values.
-        2. Sequential Processing: For each required detail (in the list above), check if it has been provided.
-            - If the detail is missing, ask the customer a follow-up question to gather the information for that specific field.
-            - If the detail is present, move to the next field without prompting for it again.
-        3. Handle End-of-Sequence Issues: Pay special attention to the last element in the list (Income, Address Line 2) and ensure that it is properly processed, even if it is at the end.
-            - If Income or Address Line 2 is already provided, do not ask for it again. If it's missing, generate a question specifically for it.
-            - Use explicit end-sequence handling to ensure that no details are missed due to an indexing or sequence error.
-        4. Chain of Thought: Think step-by-step and carefully verify each piece of information before moving to the next.
-            - Ask only for the missing information and avoid repeating questions for details that have already been collected.
-        5. Final Validation: After going through the list, confirm that all details have been collected.
-            - If all required information is available, return: "ALL DATA COLLECTED"
-            - If there are still missing pieces of information, generate a question targeting those fields only.
-        Now, proceed step-by-step and analyze {customer_info}.
-        """
-    collected_details_list = state.get("customer_details", None)
+    # collector_instructions = """
+    #     You are a helpful assistant tasked with collecting customer information in order to complete a loan application form.
+    #     The information you need to collect includes: {required_fields}
+    #     Here’s how you should proceed:
+    #     1. Initial Check: Analyze the already collected information provided in {customer_info} and identify missing values.
+    #     2. Sequential Processing: For each required detail (in the list above), check if it has been provided.
+    #         - If the detail is missing, ask the customer a follow-up question to gather the information for that specific field.
+    #         - If the detail is present, move to the next field without prompting for it again.
+    #     3. Handle End-of-Sequence Issues: Pay special attention to the last element in the list (Income, Address Line 2) and ensure that it is properly processed, even if it is at the end.
+    #         - If Income or Address Line 2 is already provided, do not ask for it again. If it's missing, generate a question specifically for it.
+    #         - Use explicit end-sequence handling to ensure that no details are missed due to an indexing or sequence error.
+    #     4. Chain of Thought: Think step-by-step and carefully verify each piece of information before moving to the next.
+    #         - Ask only for the missing information and avoid repeating questions for details that have already been collected.
+    #     5. Final Validation: After going through the list, confirm that all details have been collected.
+    #         - If all required information is available, return: "ALL DATA COLLECTED"
+    #         - If there are still missing pieces of information, generate a question targeting those fields only.
+    #     Now, proceed step-by-step and analyze {customer_info}.
+    #     """
     master_dict = {}
+    collected_details_list = state.get("customer_details", None)
     if collected_details_list:
         for item in collected_details_list:
             if isinstance(item, dict):
@@ -113,10 +115,6 @@ def generate_questions(state: UserDetailsState):
                 if value != None and value != " " and value != "None":
                     master_dict[key] = value
         print(master_dict)
-    # for item in collected_details_list:
-    #     collected_details = collected_details_list[-1]
-    # else:
-    #     collected_details = ""
     required_fields = [
         "firstName",
         "lastName",
@@ -136,12 +134,20 @@ def generate_questions(state: UserDetailsState):
         "officialEmail",
         "endUse",
     ]
-    collector_prompt = collector_instructions.format(
-        customer_info=master_dict, required_fields=required_fields
-    )
-    # Enforce structured output
-    structured_llm = llm_pro.with_structured_output(GeneratedQuestion)
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        collector_instructions = GeminiPrompts().collector_instructions
 
+        collector_prompt = collector_instructions.format(
+            customer_info=master_dict, required_fields=required_fields
+        )
+        # Enforce structured output
+        structured_llm = llm_pro.with_structured_output(GeneratedQuestion)
+    else:
+        collector_instructions = OpenAIPrompts().collector_instructions
+        collector_prompt = collector_instructions.format(
+            customer_info=master_dict, required_fields=required_fields
+        )
+        structured_llm = llm_4o.with_structured_output(GeneratedQuestion)
     # Generate question
     generated_data = structured_llm.invoke(collector_prompt)
 
@@ -153,15 +159,27 @@ def extract_user_details(state: UserDetailsState):
     """Extract user details"""
 
     # human_analyst_feedback=state.get('human_analyst_feedback', '')
-    extractor_instructions = f"""You are tasked with extracting the user details from the customer's response.
-        Question asked to the user: {state.get("agent_message")[-1]}.
-        User response: {state.get("user_message")[-1]}.
-        If values are not present, return None."""
+    # extractor_instructions = f"""You are tasked with extracting the user details from the customer's response.
+    #     Question asked to the user: {state.get("agent_message")[-1]}.
+    #     User response: {state.get("user_message")[-1]}.
+    #     If values are not present, return None."""
     # Enforce structured output
-    structured_llm = llm_flash.with_structured_output(UserDetailsResponse)
-
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        extractor_instructions = GeminiPrompts().extractor_instructions
+        extractor_prompt = extractor_instructions.format(
+            agent_question=state.get("agent_message")[-1],
+            user_answer=state.get("user_message")[-1],
+        )
+        structured_llm = llm_flash.with_structured_output(UserDetailsResponse)
+    else:
+        extractor_instructions = OpenAIPrompts().extractor_instructions
+        extractor_prompt = extractor_instructions.format(
+            agent_question=state.get("agent_message")[-1],
+            user_answer=state.get("user_message")[-1],
+        )
+        structured_llm = llm_4omini.with_structured_output(UserDetailsResponse)
     # Generate question
-    extracted_data = structured_llm.invoke([extractor_instructions])
+    extracted_data = structured_llm.invoke([extractor_prompt])
 
     # Write the list of analysis to state
     return {"customer_details": extracted_data.userDetails}
@@ -174,11 +192,25 @@ def human_feedback(state: UserDetailsState):
 
 def should_submit(state: UserDetailsState):
     # Check if human feedback
-    intent_classification_prompt = f"""You are tasked to identify the intent from the user message.
-        The user could either agree to the information or ask for updates. Classify the intent accordingly.
-        User message: {state.get("user_message")[-1]}."""
-    structured_llm = llm_flash.with_structured_output(UserIntentClassification)
-
+    # intent_classification_prompt = f"""You are tasked to identify the intent from the user message.
+    #     The user could either agree to the information or ask for updates. Classify the intent accordingly.
+    #     User message: {state.get("user_message")[-1]}."""
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        intent_classification_instructions = (
+            GeminiPrompts().intent_classification_instructions
+        )
+        intent_classification_prompt = intent_classification_instructions.format(
+            user_answer=state.get("user_message")[-1]
+        )
+        structured_llm = llm_flash.with_structured_output(UserIntentClassification)
+    else:
+        intent_classification_instructions = (
+            OpenAIPrompts().intent_classification_instructions
+        )
+        intent_classification_prompt = intent_classification_instructions.format(
+            user_answer=state.get("user_message")[-1]
+        )
+        structured_llm = llm_4omini.with_structured_output(UserIntentClassification)
     # Generate question
     extracted_data = structured_llm.invoke([intent_classification_prompt])
     if extracted_data.user_intent.lower() == "ok":

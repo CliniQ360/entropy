@@ -11,7 +11,10 @@ class UserDetailsState(TypedDict):
     customer_details: Annotated[list, operator.add]
     customer_account_details: Annotated[list, operator.add]
     user_message: Annotated[list, operator.add]
-    urls: str
+    aa_url: str
+    kyc_url: str
+    emndt_url: str
+    loan_signing_redirect_url: str
     txn_id: str
     dummy: str
 
@@ -25,14 +28,17 @@ class OfferState(TypedDict):
     offer_item_id: str
     selected_loan_amount: str
     customer_account_details: Annotated[list, operator.add]
-    urls: str
+    aa_url: str
+    kyc_url: str
+    emndt_url: str
+    loan_signing_redirect_url: str
     loan_document_url: str
     dummy: str
 
 
 class LoanDocumentState(TypedDict):
     txn_id: str
-    loan_document_url: str
+    loan_signing_redirect_url: str
     loan_agreement_summary: str
     loan_agreement_text: str
     user_query: Annotated[list, operator.add]

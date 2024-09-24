@@ -266,7 +266,12 @@ class AudioConversationController:
                                 customer_account_details[key] = value
                     print(f"{customer_account_details=}")
                 txn_id = workflow.get_state(thread).values.get("txn_id")
-                redirect_url = workflow.get_state(thread).values.get("urls")
+                aa_redirect_url = workflow.get_state(thread).values.get("aa_url")
+                kyc_redirect_url = workflow.get_state(thread).values.get("kyc_url")
+                emndt_redirect_url = workflow.get_state(thread).values.get("emndt_url")
+                loan_signing_redirect_url = workflow.get_state(thread).values.get(
+                    "loan_signing_redirect_url"
+                )
                 offer_list = workflow.get_state(thread).values.get("offer_list")
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
                 return {
@@ -277,7 +282,18 @@ class AudioConversationController:
                     "customer_details": customer_details,
                     "customer_account_details": customer_account_details,
                     "txn_id": txn_id if txn_id else "None",
-                    "redirect_url": redirect_url if redirect_url else "None",
+                    "aa_redirect_url": aa_redirect_url if aa_redirect_url else "None",
+                    "kyc_redirect_url": (
+                        kyc_redirect_url if kyc_redirect_url else "None"
+                    ),
+                    "emndt_redirect_url": (
+                        emndt_redirect_url if emndt_redirect_url else "None"
+                    ),
+                    "loan_signing_redirect_url": (
+                        loan_signing_redirect_url
+                        if loan_signing_redirect_url
+                        else "None"
+                    ),
                     "offer_list": offer_list if offer_list else [],
                     "offer_summary": offer_summary if offer_summary else "None",
                 }

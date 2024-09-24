@@ -12,6 +12,7 @@ from core.apis.schemas.conversation_input_schema import ConversationResume
 from core.controllers.audio_conversation_controller import AudioConversationController
 from core.utils.vertex_ai_helper.gemini_helper import transcribe
 from core.utils.vertex_ai_helper.gcs_helper import upload_blob_string
+from core.utils.openai_helper import WhisperHelper
 
 logging = logger(__name__)
 
@@ -20,6 +21,7 @@ class SahayakController:
     def __init__(self):
 
         self.DB_URI = os.getenv("DB_URI")
+        self.LLM_CONFIG = os.getenv("LLM_CONFIG")
         self.bucket_name = os.getenv("GCS_BUCKET_NAME")
         self.audio_file_folder_path = f"/app/audio_data"
 
@@ -71,36 +73,43 @@ class SahayakController:
                 # )
                 input_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-input"
                 inp_audio_file_path = f"{input_file_name}{audio_file_ext}"
-                logging.info(f"Saving audio file to GCS at {inp_audio_file_path=}")
-                gcs_uri = upload_blob_string(
-                    bucket_name=self.bucket_name,
-                    destination_file_name=inp_audio_file_path,
-                    content_type="audio/mpeg",
-                    file=audio_data,
-                )
-                logging.info(f"Saving audio file to local at {inp_audio_file_path=}")
-                # with open(inp_audio_file_path, "wb") as f:
-                #     f.write(audio_data)
                 custom_prompt = None
                 if request.get("state") == "human_feedback":
                     custom_prompt = """The audio might contains technical information, including email addresses and domain names.
                         Do not convert the @ symbol into at the rate or the . symbol into dot. Please transcribe the audio verbatim with exact character
                         preservation for email addresses and technical terms.
                         Pay special attention to ensuring special characters are accurately captured, as is"""
-                transcription_result = transcribe(
-                    gcs_uri=gcs_uri, input_prompt=custom_prompt
-                )
-                # if request.get("translate"):
-                #     logging.info("Translating file using Groq whisper")
-                #     transcription_result = GroqHelper().translate(
-                #         file_path=inp_audio_file_path
-                #     )
-
-                # else:
-                #     logging.info("Trancribing file using Groq whisper")
-                #     transcription_result = GroqHelper().transcribe(
-                #         file_path=inp_audio_file_path
-                #     )
+                if self.LLM_CONFIG == "GOOGLE":
+                    logging.info(f"Saving audio file to GCS at {inp_audio_file_path=}")
+                    gcs_uri = upload_blob_string(
+                        bucket_name=self.bucket_name,
+                        destination_file_name=inp_audio_file_path,
+                        content_type="audio/mpeg",
+                        file=audio_data,
+                    )
+                    logging.info(
+                        f"Saving audio file to local at {inp_audio_file_path=}"
+                    )
+                    transcription_result = transcribe(
+                        gcs_uri=gcs_uri, input_prompt=custom_prompt
+                    )
+                else:
+                    with open(inp_audio_file_path, "wb") as f:
+                        f.write(audio_data)
+                    # if request.get("translate"):
+                    #     logging.info("Translating file using Groq whisper")
+                    #     transcription_result = GroqHelper().translate(
+                    #         file_path=inp_audio_file_path, prompt=custom_prompt
+                    #     )
+                    # else:
+                    #     logging.info("Trancribing file using Groq whisper")
+                    #     transcription_result = GroqHelper().transcribe(
+                    #         file_path=inp_audio_file_path, prompt=custom_prompt
+                    #     )
+                    logging.info("Trancribing file using OpenAI Whisper")
+                    transcription_result = WhisperHelper().transcribe(
+                        file_path=inp_audio_file_path
+                    )
                 end = time.time()
                 logging.info(f"Transcription Time: {end-master_start}")
                 transcribed_text = transcription_result.get("transcription")

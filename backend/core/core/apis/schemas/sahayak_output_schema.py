@@ -6,7 +6,10 @@ class SahayakOutput(BaseModel):
     user_message: str = None
     agent_message: str
     next_state: str
-    redirect_url: str = None
+    aa_redirect_url: str = None
+    kyc_redirect_url: str = None
+    emndt_redirect_url: str = None
+    loan_signing_redirect_url: str = None
     txn_id: str = None
     customer_account_details: dict
     customer_details: dict

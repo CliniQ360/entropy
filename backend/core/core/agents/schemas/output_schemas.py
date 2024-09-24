@@ -20,7 +20,7 @@ class UserDetails(BaseModel):
     )
     companyName: str = Field(description="Customer's company name")
     officialEmail: str = Field(description="Customer's company email id")
-    income: str = Field(
+    income: int = Field(
         description="Customer's annual income without any special characters"
     )
     endUse: str = Field(

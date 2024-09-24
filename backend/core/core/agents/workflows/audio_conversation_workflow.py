@@ -59,7 +59,6 @@ def build_workflow():
     builder.add_node("summarise_loan_tnc", summarise_loan_tnc)
     builder.add_node("human_loan_tnc_feedback", human_loan_tnc_feedback)
     builder.add_node("answer_tnc_query", answer_tnc_query)
-    builder.add_node("loan_agreement_signing", loan_agreement_signing)
     builder.add_node("resume_loan_agreement_signing", resume_loan_agreement_signing)
     builder.add_node("loan_agreement_signing_pending", loan_agreement_signing_pending)
     builder.add_node("confirm_loan", confirm_loan)
@@ -144,21 +143,37 @@ def build_workflow():
         ["send_emdt_ack", "emdt_approval_pending"],
     )
     builder.add_edge("emdt_approval_pending", "resume_after_emdt_redirect")
-    builder.add_edge("send_emdt_ack", "summarise_loan_tnc")
-    builder.add_edge("summarise_loan_tnc", "human_loan_tnc_feedback")
-    builder.add_conditional_edges(
-        "human_loan_tnc_feedback",
-        user_intent_1,
-        ["answer_tnc_query", "loan_agreement_signing"],
-    )
-    builder.add_edge("answer_tnc_query", "human_loan_tnc_feedback")
-    builder.add_edge("loan_agreement_signing", "resume_loan_agreement_signing")
+
+    builder.add_edge("send_emdt_ack", "resume_loan_agreement_signing")
     builder.add_conditional_edges(
         "resume_loan_agreement_signing",
         is_loan_agreement_signed,
         ["loan_agreement_signing_pending", "confirm_loan"],
     )
     builder.add_edge("loan_agreement_signing_pending", "resume_loan_agreement_signing")
-    builder.add_edge("confirm_loan", END)
+    builder.add_edge("confirm_loan", "summarise_loan_tnc")
+    builder.add_edge("summarise_loan_tnc", "human_loan_tnc_feedback")
+    builder.add_conditional_edges(
+        "human_loan_tnc_feedback",
+        user_intent_1,
+        ["answer_tnc_query", END],
+    )
+    builder.add_edge("answer_tnc_query", "human_loan_tnc_feedback")
+    # builder.add_edge("send_emdt_ack", "summarise_loan_tnc")
+    # builder.add_edge("summarise_loan_tnc", "human_loan_tnc_feedback")
+    # builder.add_conditional_edges(
+    #     "human_loan_tnc_feedback",
+    #     user_intent_1,
+    #     ["answer_tnc_query", "loan_agreement_signing"],
+    # )
+    # builder.add_edge("answer_tnc_query", "human_loan_tnc_feedback")
+    # builder.add_edge("loan_agreement_signing", "resume_loan_agreement_signing")
+    # builder.add_conditional_edges(
+    #     "resume_loan_agreement_signing",
+    #     is_loan_agreement_signed,
+    #     ["loan_agreement_signing_pending", "confirm_loan"],
+    # )
+    # builder.add_edge("loan_agreement_signing_pending", "resume_loan_agreement_signing")
+    # builder.add_edge("confirm_loan", END)
     return builder
     # Compile
