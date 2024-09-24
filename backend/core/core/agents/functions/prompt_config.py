@@ -17,7 +17,7 @@ class OpenAIPrompts:
         self.extractor_instructions = """You are tasked with extracting the user details from the customer's response.
         Question asked to the user: {agent_question}.
         User response: {user_answer}.
-        If values are not present, return None."""
+        If information is not present in user_answer, return 'NA' for the respective field."""
 
         self.intent_classification_instructions = """You are tasked to identify the intent from the user message.
         The user could either agree to the information or ask for updates. Classify the intent accordingly.
