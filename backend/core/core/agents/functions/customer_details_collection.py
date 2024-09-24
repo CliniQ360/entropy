@@ -226,24 +226,6 @@ def should_verify(state: UserDetailsState):
 
 
 def verify_user_details(state: UserDetailsState):
-    # Generate verification message
-    # collected_details_list = state.get("customer_details", None)
-    # master_dict = {}
-    # if collected_details_list:
-    #     for item in collected_details_list:
-    #         if isinstance(item, dict):
-    #             collected_details = item
-    #         else:
-    #             collected_details = item.dict()
-    #         for key, value in collected_details.items():
-    #             if value != None and value != " " and value != "None":
-    #                 master_dict[key] = value
-    #     print(master_dict)
-    # message = llm_flash.invoke(
-    #     f"""Summaries the details collected from the user {master_dict} in simple language. Keep the message short and simple and tone conversational.
-    #     Ask the user to confirm if the collected details are correct. Accepted responses are 'yes' or 'no'."""
-    # )
-    # message = message.content
     return {
         "agent_message": [
             "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"

@@ -248,7 +248,12 @@ class AudioConversationController:
                         else:
                             collected_details = item.dict()
                         for key, value in collected_details.items():
-                            if value != None and value != " " and value != "None":
+                            if (
+                                value != None
+                                and value != " "
+                                and value != "None"
+                                and value != "NA"
+                            ):
                                 customer_details[key] = value
                     print(f"{customer_details=}")
                 customer_account_details_list = workflow.get_state(thread).values.get(
@@ -262,7 +267,12 @@ class AudioConversationController:
                         else:
                             collected_details = item.dict()
                         for key, value in collected_details.items():
-                            if value != None and value != " " and value != "None":
+                            if (
+                                value != None
+                                and value != " "
+                                and value != "None"
+                                and value != "NA"
+                            ):
                                 customer_account_details[key] = value
                     print(f"{customer_account_details=}")
                 txn_id = workflow.get_state(thread).values.get("txn_id")

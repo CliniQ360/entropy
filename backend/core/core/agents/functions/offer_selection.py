@@ -188,6 +188,7 @@ def generate_account_details_questions(state: UserDetailsState):
     #             - If there are still missing pieces of information, generate a question targeting those fields only.
     #         Now, proceed step-by-step and analyze {customer_info}.
     #    """
+    master_dict = {}
     if customer_account_details_list:
         for items in customer_account_details_list:
             print(items.dict())
@@ -199,8 +200,6 @@ def generate_account_details_questions(state: UserDetailsState):
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
         collector_instructions = GeminiPrompts().account_collector_instructions
         customer_account_details_list = state.get("customer_account_details", None)
-        master_dict = {}
-
         collector_prompt = collector_instructions.format(
             customer_info=master_dict, required_fields=required_fields
         )
@@ -208,8 +207,6 @@ def generate_account_details_questions(state: UserDetailsState):
     else:
         collector_instructions = OpenAIPrompts().account_collector_instructions
         customer_account_details_list = state.get("customer_account_details", None)
-        master_dict = {}
-
         collector_prompt = collector_instructions.format(
             customer_info=master_dict, required_fields=required_fields
         )
@@ -256,24 +253,6 @@ def extract_user_account_details(state: OfferState):
 
 
 def verify_user_account_details(state: OfferState):
-    # collected_details_list = state.get("customer_account_details", None)
-    # master_dict = {}
-    # if collected_details_list:
-    #     for item in collected_details_list:
-    #         if isinstance(item, dict):
-    #             collected_details = item
-    #         else:
-    #             collected_details = item.dict()
-    #         for key, value in collected_details.items():
-    #             if value != None and value != " " and value != "None":
-    #                 master_dict[key] = value
-    #     print(master_dict)
-    # message = llm_flash.invoke(
-    #     f"""Summaries the details collected from the user {master_dict} in simple language.
-    #     Ask the user to confirm if the collected details are correct. Accepted responses are 'yes' or 'no'."""
-    # )
-    # message = message.content
-    # return {"agent_message": [message]}
     return {
         "agent_message": [
             "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
