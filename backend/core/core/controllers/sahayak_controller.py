@@ -71,8 +71,10 @@ class SahayakController:
                 # inp_audio_file_path = (
                 #     f"{audio_file_folder_path}/{input_file_name}{audio_file_ext}"
                 # )
-                input_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-input"
-                inp_audio_file_path = f"{input_file_name}{audio_file_ext}"
+                input_file_name = (
+                    f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-input{audio_file_ext}"
+                )
+                inp_audio_file_path = f"{self.audio_file_folder_path}/{input_file_name}"
                 custom_prompt = None
                 if request.get("state") == "human_feedback":
                     custom_prompt = """The audio might contains technical information, including email addresses and domain names.
@@ -80,20 +82,20 @@ class SahayakController:
                         preservation for email addresses and technical terms.
                         Pay special attention to ensuring special characters are accurately captured, as is"""
                 if self.LLM_CONFIG == "GOOGLE":
-                    logging.info(f"Saving audio file to GCS at {inp_audio_file_path=}")
+                    logging.info(f"Saving audio file to GCS at {input_file_name=}")
                     gcs_uri = upload_blob_string(
                         bucket_name=self.bucket_name,
-                        destination_file_name=inp_audio_file_path,
+                        destination_file_name=input_file_name,
                         content_type="audio/mpeg",
                         file=audio_data,
-                    )
-                    logging.info(
-                        f"Saving audio file to local at {inp_audio_file_path=}"
                     )
                     transcription_result = transcribe(
                         gcs_uri=gcs_uri, input_prompt=custom_prompt
                     )
                 else:
+                    logging.info(
+                        f"Saving audio file to local at {inp_audio_file_path=}"
+                    )
                     with open(inp_audio_file_path, "wb") as f:
                         f.write(audio_data)
                     # if request.get("translate"):
