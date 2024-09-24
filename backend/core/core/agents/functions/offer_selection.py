@@ -192,7 +192,7 @@ def generate_account_details_questions(state: UserDetailsState):
         for items in customer_account_details_list:
             print(items.dict())
             for key, value in items.dict().items():
-                if value != None and value != " " and value != "None":
+                if value != None and value != " " and value != "None" and value != "NA":
                     master_dict[key] = value
         print(master_dict)
     required_fields = ["accHolderName", "acctype", "accNo", "ifscCode"]

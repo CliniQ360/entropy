@@ -112,7 +112,7 @@ def generate_questions(state: UserDetailsState):
             else:
                 collected_details = item.dict()
             for key, value in collected_details.items():
-                if value != None and value != " " and value != "None":
+                if value != None and value != " " and value != "None" and value != "NA":
                     master_dict[key] = value
         print(master_dict)
     required_fields = [
