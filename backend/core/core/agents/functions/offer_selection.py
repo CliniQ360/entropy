@@ -7,6 +7,7 @@ from core.agents.schemas.output_schemas import (
     GeneratedQuestion,
     UserAccountDetailsResponse,
     UserIntent,
+    UserIntentClassification,
 )
 from core.utils.external_call import APIInterface
 import os, json, time
@@ -304,9 +305,15 @@ def should_verify_account_details(state: UserDetailsState):
 
 def should_submit_account_details(state: UserDetailsState):
     # Check if human feedback
-    if state.get("user_message")[-1] == "yes":
+    intent_classification_prompt = f"""You are tasked to identify the intent from the user message.
+        The user could either agree to the information or ask for updates. Classify the intent accordingly.
+        User message: {state.get("user_message")[-1]}."""
+    structured_llm = llm_flash.with_structured_output(UserIntentClassification)
+    # Identify intent
+    extracted_data = structured_llm.invoke([intent_classification_prompt])
+    if extracted_data.user_intent.lower() == "ok":
         return "submit_account_details_form"
-    return "collect_updated_details"
+    return "extract_user_account_details"
 
 
 def resume_after_emdt_redirect(state: OfferState):

@@ -132,7 +132,7 @@ def build_workflow():
     builder.add_conditional_edges(
         "human_account_details_verification_feedback",
         should_submit_account_details,
-        ["submit_account_details_form"],
+        ["submit_account_details_form", "extract_user_account_details"],
     )
     builder.add_edge(
         "extract_user_account_details", "generate_account_details_questions"

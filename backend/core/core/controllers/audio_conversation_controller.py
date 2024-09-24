@@ -181,6 +181,42 @@ class AudioConversationController:
                         },
                         as_node=state,
                     )
+                elif state == "resume_after_kyc_redirect":
+                    workflow.update_state(
+                        thread,
+                        {"dummy": "resume_after_kyc_redirect"},
+                        as_node=state,
+                    )
+                elif state == "human_account_details_feedback":
+                    workflow.update_state(
+                        thread,
+                        {"user_message": kwargs.get("user_message")},
+                        as_node=state,
+                    )
+                elif state == "human_account_details_verification_feedback":
+                    workflow.update_state(
+                        thread,
+                        {"user_message": kwargs.get("user_message")},
+                        as_node=state,
+                    )
+                elif state == "resume_after_emdt_redirect":
+                    workflow.update_state(
+                        thread,
+                        {"user_message": kwargs.get("user_message")},
+                        as_node=state,
+                    )
+                elif state == "human_loan_tnc_feedback":
+                    workflow.update_state(
+                        thread,
+                        {"user_message": kwargs.get("user_message")},
+                        as_node=state,
+                    )
+                elif state == "resume_loan_agreement_signing":
+                    workflow.update_state(
+                        thread,
+                        {"dummy": "resume_loan_agreement_signing"},
+                        as_node=state,
+                    )
                 print("Streaming workflow")
                 for event in workflow.stream(None, thread):
                     agent_message = event.get("agent_message", "")
@@ -240,10 +276,10 @@ class AudioConversationController:
                     "next_state": next_state,
                     "customer_details": customer_details,
                     "customer_account_details": customer_account_details,
-                    "txn_id": txn_id if txn_id else None,
-                    "redirect_url": redirect_url if redirect_url else None,
+                    "txn_id": txn_id if txn_id else "None",
+                    "redirect_url": redirect_url if redirect_url else "None",
                     "offer_list": offer_list if offer_list else [],
-                    "offer_summary": offer_summary if offer_summary else None,
+                    "offer_summary": offer_summary if offer_summary else "None",
                 }
         except Exception as error:
             logging.error(
