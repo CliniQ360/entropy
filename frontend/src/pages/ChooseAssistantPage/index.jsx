@@ -6,12 +6,16 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 import AudioBarComponentVisualizer from "../../components/AudioWavelengthComponent";
 import AudioBarIcon from "../../utils/CustomIcons/BarIcon";
+import { useDispatch } from "react-redux";
+import { startConversion } from "../CreditPage/audioAgent.slice";
+import { MediaContext } from "../../context/mediaContext";
+import { useNavigate } from "react-router-dom";
 
 const PageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -110,9 +114,24 @@ const FooterButton = styled(Button)(({ theme }) => ({
 const ChooseAssistant = () => {
   const [activeButton, setActiveButton] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
+  const { setAudioResponse, setMessageResponse, setNextState } =
+    useContext(MediaContext);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleButtonClick = (index) => {
     setActiveButton(index);
+  };
+
+  const handleInitConversion = () => {
+    dispatch(startConversion()).then((res) => {
+      setAudioResponse(res?.payload?.agent_audio_data);
+      setMessageResponse(res?.payload?.agent_message);
+      sessionStorage.setItem("next_state", res?.payload?.next_state);
+      setNextState(res?.payload?.next_state);
+      sessionStorage.setItem("thread_id", res?.payload?.thread_id);
+      navigate("/credit/route-3");
+    });
   };
   return (
     <PageWrapper>
@@ -161,7 +180,9 @@ const ChooseAssistant = () => {
         </Stack>
       </AssistantProfilePhotoWrapper>
       <FooterButtonWrapper>
-        <FooterButton variant="contained">Button</FooterButton>
+        <FooterButton variant="contained" onClick={handleInitConversion}>
+          Button
+        </FooterButton>
       </FooterButtonWrapper>
     </PageWrapper>
   );

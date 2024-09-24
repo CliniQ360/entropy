@@ -7,7 +7,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AudioDataContext } from "../../context/audioDataContext";
 
 const PersonalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -32,20 +33,25 @@ const FormContainer = styled(Box)(({ theme }) => ({
 }));
 
 const PersonalDetailsPage = () => {
+  const { customerDetails } = useContext(AudioDataContext);
+
+  useEffect(() => {
+    console.log(customerDetails);
+  });
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    dob: "",
-    contactNumber: "",
-    pan: "",
-    pincode: "",
-    city: "",
-    state: "",
-    email: "",
-    gender: "",
-    addressL1: "",
-    addressL2: "",
-    endUse: "",
+    firstName: "" || customerDetails?.firstName,
+    lastName: "" || customerDetails?.lastName,
+    dob: "" || customerDetails?.dob,
+    contactNumber: "" || customerDetails?.contactNumber,
+    pan: "" || customerDetails?.pan,
+    pincode: "" || customerDetails?.pincode,
+    city: "" || customerDetails?.city,
+    state: "" || customerDetails?.state,
+    email: "" || customerDetails?.email,
+    gender: "" || customerDetails?.gender,
+    addressL1: "" || customerDetails?.addressL1,
+    addressL2: "" || customerDetails?.addressL2,
+    endUse: "" || customerDetails?.endUse,
   });
 
   const handleInputChange = (e) => {

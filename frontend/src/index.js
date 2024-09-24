@@ -9,6 +9,7 @@ import theme from "./styles/theme";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import store from "./store/store";
 import { MediaContextProvider } from "./context/mediaContext";
+import { AudioContextProvider } from "./context/audioDataContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -16,7 +17,9 @@ root.render(
     <ThemeProvider theme={theme}>
       <Router>
         <MediaContextProvider>
-          <App />
+          <AudioContextProvider>
+            <App />
+          </AudioContextProvider>
         </MediaContextProvider>
       </Router>
     </ThemeProvider>

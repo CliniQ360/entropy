@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apis } from "../../utils/apis";
-import { BASE_URL } from "../../utils/request";
+import { apiRequest, BASE_URL } from "../../utils/request";
 
 import axios from "axios";
 
@@ -9,8 +9,10 @@ export const agentConversation = createAsyncThunk(
   async (payload) => {
     try {
       const response = await axios.post(
-        BASE_URL + `/${apis?.agentAudioApi}` + `?translate=true`,
-        payload?.audio_file,
+        BASE_URL +
+          `/${apis?.resumeConversionApi}?` +
+          `thread_id=${payload?.threadId}&state=${payload?.state}&translate=false&document_upload_flag=${payload?.uploadFlag}`,
+        payload?.file,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -27,6 +29,11 @@ export const agentConversation = createAsyncThunk(
     }
   }
 );
+
+export const startConversion = createAsyncThunk("startConversion", async () => {
+  const response = await apiRequest("POST", apis?.startConversionApi);
+  return response;
+});
 
 const audioAgentSlice = createSlice({
   name: "SearchVitals",
