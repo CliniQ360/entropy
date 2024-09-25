@@ -235,6 +235,7 @@ def answer_user_query(state: OfferState):
         offer_qna_prompt = offer_qna_instructions.format(offer_list=offer_list)
         llm_response = llm_4omini.invoke(offer_qna_prompt)
     answer = llm_response.content
+    logging.info(f"{answer=}")
     return {"agent_message": [answer]}
 
 
