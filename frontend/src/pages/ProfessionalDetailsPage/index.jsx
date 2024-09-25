@@ -20,6 +20,7 @@ import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice"
 import { useDispatch } from "react-redux";
 import CustomLoader from "../../components/CustomLoader";
 import { useNavigate } from "react-router-dom";
+import { agentConversation } from "../CreditPage/audioAgent.slice";
 
 const ProfessionalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -142,7 +143,19 @@ const ProfessionalDetailsPage = () => {
           console.log("Desired response received:");
           form_aa_URL.close();
           setShowLoader(false);
-          navigate("/credit/availableOffers");
+          const secondpayload = {
+            threadId: sessionStorage.getItem("thread_id"),
+            uploadFlag: sessionStorage.getItem("document_upload_flag"),
+            state: sessionStorage.getItem("next_state"),
+          };
+          dispatch(agentConversation(secondpayload)).then((res) => {
+            sessionStorage.setItem(
+              "next_state",
+              res?.payload?.data?.next_state
+            );
+            sessionStorage.setItem("showTimer", true);
+            navigate("/credit/availableOffers");
+          });
         } else if (res?.payload?.redirection_status === "AA_REJECTED") {
           form_aa_URL.close();
           setConfirmationDialog(true);

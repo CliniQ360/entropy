@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import PageFooter from "../../components/PageFooter";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import AgentHeader from "../../components/AgentHeaderComponent";
 import CustomNavbar from "../../components/CustomNavbar";
 import { styled } from "@mui/material";
@@ -38,11 +38,12 @@ const CreditPage = () => {
     setNextState,
     nextState,
   } = useContext(MediaContext);
-  const { setCustomerDetails, setAaRedirectUrl, setOfferDetails } =
+  const { setCustomerDetails, setAaRedirectUrl, setKycRedirectUrl } =
     useContext(AudioDataContext);
   const audioChunks = useRef([]);
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -64,16 +65,19 @@ const CreditPage = () => {
       state: sessionStorage.getItem("next_state"),
     };
 
+    if (sessionStorage.getItem("offer_item_id") !== "None") {
+      payload.offer_item_id = sessionStorage.getItem("offer_item_id");
+    }
+    if (sessionStorage.getItem("selected_amt") !== "None") {
+      payload.selected_loan_amount = sessionStorage.getItem("selected_amt");
+    }
     dispatch(agentConversation(payload))
       .then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
           setError(true);
-
           return;
         }
         setError(false);
-        console.log(res?.payload?.data);
-
         setAudioResponse(res?.payload?.data?.audio_file);
         setMessageResponse(res?.payload?.data?.agent_message);
         setCustomerDetails(res?.payload?.data?.customer_details);
@@ -84,6 +88,11 @@ const CreditPage = () => {
           sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         }, 300);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
+
+        if (res?.payload?.data?.next_state === "resume_after_kyc_redirect") {
+          navigate("/credit/kyc-page");
+          setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
+        }
         clearBlobUrl();
       })
       .catch((error) => {

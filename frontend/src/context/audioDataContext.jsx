@@ -5,6 +5,7 @@ const AudioDataContext = createContext();
 const AudioContextProvider = ({ children }) => {
   const [customerDetails, setCustomerDetails] = useState({});
   const [aaRedirectUrl, setAaRedirectUrl] = useState("");
+  const [kycRedirectUrl, setKycRedirectUrl] = useState("");
 
   return (
     <AudioDataContext.Provider
@@ -13,6 +14,8 @@ const AudioContextProvider = ({ children }) => {
         setCustomerDetails,
         aaRedirectUrl,
         setAaRedirectUrl,
+        kycRedirectUrl,
+        setKycRedirectUrl,
       }}
     >
       {children}

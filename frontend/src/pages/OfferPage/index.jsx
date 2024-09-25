@@ -151,6 +151,7 @@ const AvailableOffersPage = () => {
 
   /*APIS FOR REFERESH OFFER */
   useEffect(() => {
+    setShowLoader(true);
     const thread_id = sessionStorage.getItem("thread_id");
     const uploadFlag = sessionStorage.getItem("document_upload_flag");
     const next_state = sessionStorage.getItem("next_state");
@@ -160,10 +161,18 @@ const AvailableOffersPage = () => {
       state: "refresh_offer",
     };
 
-    const setTimeoutSeconds = showTimer ? 59000 : 2000;
+    const setTimeoutSeconds = showTimer ? 59000 : 0;
     setTimeout(() => {
       dispatch(agentConversation(payload)).then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setShowLoader(false);
+          return;
+        }
         setOfferDetails(res?.payload?.data?.offer_list);
+        setShowLoader(false);
+        setTimeout(() => {
+          sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+        }, 300);
       });
     }, setTimeoutSeconds);
   }, []);
@@ -175,6 +184,8 @@ const AvailableOffersPage = () => {
   const handleInputChange = (event, offer) => {
     event.preventDefault();
     setSelectedOfferId(offer.offer_details.offer_item_id); // Set the selected offer's ID
+    sessionStorage.setItem("offer_item_id", offer.offer_details.offer_item_id);
+    sessionStorage.setItem("selected_amt", offer.offer_details.item_price);
     console.log(offer);
   };
 
