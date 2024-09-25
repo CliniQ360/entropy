@@ -173,6 +173,8 @@ def get_offers(state: OfferState):
 
 
 def human_selection(state: OfferState):
+    logging.info("Inside human_selection")
+
     pass
 
 
@@ -196,6 +198,8 @@ def summarise_offers(state: OfferState):
 
 
 def user_intent(state: OfferState):
+    logging.info("Inside user_intent")
+
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
         structured_llm = llm_flash.with_structured_output(UserIntent)
         user_intent_instructions = GeminiPrompts().user_intent_1_instructions
@@ -218,6 +222,7 @@ def user_intent(state: OfferState):
 
 def answer_user_query(state: OfferState):
     offer_list = state.get("offer_list")
+    logging.info("Inside answer_user_query")
     # qna_prompt = f"""Offer details : {offer_list}.
     # Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
     # user_query: {state.get("user_message")[-1]}"""
@@ -234,6 +239,7 @@ def answer_user_query(state: OfferState):
 
 
 def select_offer(state: OfferState):
+    logging.info("Inside select_offer")
     offer_item_id = state.get("offer_item_id")
     offer_list = state.get("offer_list")
     for offer in offer_list:

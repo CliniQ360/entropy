@@ -180,7 +180,7 @@ def extract_user_details(state: UserDetailsState):
         structured_llm = llm_4omini.with_structured_output(UserDetailsResponse)
     # Generate question
     extracted_data = structured_llm.invoke([extractor_prompt])
-
+    print(f"Inside Extract User Details {extracted_data.userDetails=}")
     # Write the list of analysis to state
     return {"customer_details": extracted_data.userDetails}
 

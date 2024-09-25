@@ -255,7 +255,7 @@ class AudioConversationController:
                                 and value != "NA"
                             ):
                                 customer_details[key] = value
-                    print(f"{customer_details=}")
+                    print(f"Inside resume_conversation {customer_details=}")
                 customer_account_details_list = workflow.get_state(thread).values.get(
                     "customer_account_details"
                 )

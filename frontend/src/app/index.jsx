@@ -14,6 +14,7 @@ import SelectAAPage from "../pages/SelectAAPage";
 import CreditOfferPage from "../pages/CreditOfferDetail";
 import AvailableOffersPage from "../pages/OfferPage";
 import PreviewDocumentPage from "../pages/PreviewDocumentPage";
+import CustomizeOfferPage from "../pages/customizeOffer";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           />
           <Route path="selectAA" element={<SelectAAPage />} />
           <Route path="availableOffers" element={<AvailableOffersPage />} />
+          <Route path="customizeOffers" element={<CustomizeOfferPage />} />
           <Route path="route-3" element={<DocumentUploadPage />} />
           <Route path="kyc-page" element={<KYCPage />} />
           <Route path="route-5" element={<BankDetailsPage />} />
