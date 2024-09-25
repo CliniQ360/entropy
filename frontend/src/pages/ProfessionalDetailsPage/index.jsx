@@ -19,6 +19,7 @@ import { AudioDataContext } from "../../context/audioDataContext";
 import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice";
 import { useDispatch } from "react-redux";
 import CustomLoader from "../../components/CustomLoader";
+import { useNavigate } from "react-router-dom";
 
 const ProfessionalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -75,6 +76,7 @@ const ProfessionalDetailsPage = () => {
   const { nextState } = useContext(MediaContext);
   const [showLoader, setShowLoader] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   let form_aa_URL;
 
@@ -140,6 +142,7 @@ const ProfessionalDetailsPage = () => {
           console.log("Desired response received:");
           form_aa_URL.close();
           setShowLoader(false);
+          navigate("/credit/availableOffers");
         } else if (res?.payload?.redirection_status === "AA_REJECTED") {
           form_aa_URL.close();
           setConfirmationDialog(true);

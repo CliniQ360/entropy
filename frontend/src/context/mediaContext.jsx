@@ -7,6 +7,7 @@ const MediaContextProvider = ({ children }) => {
   const [messageResponse, setMessageResponse] = useState("");
   const [nextState, setNextState] = useState("");
   const [error, setError] = useState(false);
+  const [progressValue, setProgressValue] = useState(0);
 
   return (
     <MediaContext.Provider
@@ -19,6 +20,8 @@ const MediaContextProvider = ({ children }) => {
         setError,
         nextState,
         setNextState,
+        progressValue,
+        setProgressValue,
       }}
     >
       {children}

@@ -35,12 +35,17 @@ const ProgressBarWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-const CustomNavbar = ({ progressValue }) => {
+const CustomNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { setError, setAudioResponse, setMessageResponse, nextState } =
-    useContext(MediaContext);
+  const {
+    setError,
+    setAudioResponse,
+    setMessageResponse,
+    nextState,
+    progressValue,
+  } = useContext(MediaContext);
   const thread_id = sessionStorage.getItem("thread_id");
   const uploadFlag = sessionStorage.getItem("document_upload_flag");
   const next_state = sessionStorage.getItem("next_state");
@@ -48,7 +53,7 @@ const CustomNavbar = ({ progressValue }) => {
     const payload = {
       threadId: thread_id,
       uploadFlag: false,
-      state: next_state,
+      state: sessionStorage.getItem("next_state"),
     };
     dispatch(agentConversation(payload)).then((res) => {
       console.log(res?.payload?.data?.agent_audio_data);
@@ -66,7 +71,7 @@ const CustomNavbar = ({ progressValue }) => {
         <LeftArrowIcon color={"black"} />
       </IconButton>
       {/* Adjusted value to 40 for better visibility */}
-      <BorderLinearProgress variant="determinate" value={40} />
+      <BorderLinearProgress variant="determinate" value={progressValue} />
       <IconButton>
         <MultipleFilesIcon color={"#0054BA"} />
       </IconButton>

@@ -38,7 +38,8 @@ const CreditPage = () => {
     setNextState,
     nextState,
   } = useContext(MediaContext);
-  const { setCustomerDetails, setAaRedirectUrl } = useContext(AudioDataContext);
+  const { setCustomerDetails, setAaRedirectUrl, setOfferDetails } =
+    useContext(AudioDataContext);
   const audioChunks = useRef([]);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -78,6 +79,7 @@ const CreditPage = () => {
         setCustomerDetails(res?.payload?.data?.customer_details);
         setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
         setNextState(res?.payload?.data?.next_state);
+
         setTimeout(() => {
           sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         }, 300);
