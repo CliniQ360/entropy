@@ -41,19 +41,19 @@ const audioAgentSlice = createSlice({
     audioResponse: {},
   },
 
-  extraReducers: (builder) => {
-    builder
-      .addCase(agentConversation.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(agentConversation.fulfilled, (state, action) => {
-        state.loading = false;
-        state.audioResponse = action.payload;
-      })
-      .addCase(agentConversation.rejected, (state, action) => {
-        state.loading = false;
-      });
-  },
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(agentConversation.pending, (state) => {
+  //       state.loading = true;
+  //     })
+  //     .addCase(agentConversation.fulfilled, (state, action) => {
+  //       state.loading = false;
+  //       state.audioResponse = action.payload;
+  //     })
+  //     .addCase(agentConversation.rejected, (state, action) => {
+  //       state.loading = false;
+  //     });
+  // },
 });
 
 export default audioAgentSlice.reducer;
