@@ -1,14 +1,18 @@
 import {
   Box,
+  Button,
   FormControl,
   FormHelperText,
   FormLabel,
+  Stack,
   styled,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { AudioDataContext } from "../../context/audioDataContext";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 const PersonalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -34,25 +38,49 @@ const FormContainer = styled(Box)(({ theme }) => ({
 
 const PersonalDetailsPage = () => {
   const { customerDetails } = useContext(AudioDataContext);
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    dob: "",
+    contactNumber: "",
+    pan: "",
+    pincode: "",
+    city: "",
+    state: "",
+    email: "",
+    gender: "",
+    addressL1: "",
+    addressL2: "",
+    endUse: "",
+  });
 
   useEffect(() => {
-    console.log(customerDetails);
-  });
-  const [formData, setFormData] = useState({
-    firstName: "" || customerDetails?.firstName,
-    lastName: "" || customerDetails?.lastName,
-    dob: "" || customerDetails?.dob,
-    contactNumber: "" || customerDetails?.contactNumber,
-    pan: "" || customerDetails?.pan,
-    pincode: "" || customerDetails?.pincode,
-    city: "" || customerDetails?.city,
-    state: "" || customerDetails?.state,
-    email: "" || customerDetails?.email,
-    gender: "" || customerDetails?.gender,
-    addressL1: "" || customerDetails?.addressL1,
-    addressL2: "" || customerDetails?.addressL2,
-    endUse: "" || customerDetails?.endUse,
-  });
+    if (customerDetails) {
+      const dobParts = customerDetails.dob
+        ? customerDetails.dob.split("-")
+        : null;
+      const formattedDob = dobParts
+        ? `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}` // Convert to YYYY-MM-DD
+        : "";
+      setFormData({
+        firstName: customerDetails.firstName ?? "",
+        lastName: customerDetails.lastName ?? "",
+        dob: formattedDob,
+        contactNumber: customerDetails.contactNumber ?? "",
+        pan: customerDetails.pan ?? "",
+        pincode: customerDetails.pincode ?? "",
+        city: customerDetails.city ?? "",
+        state: customerDetails.state ?? "",
+        email: customerDetails.email ?? "",
+        gender: customerDetails.gender ?? "",
+        addressL1: customerDetails.addressL1 ?? "",
+        addressL2: customerDetails.addressL2 ?? "",
+        endUse: customerDetails.endUse ?? "",
+      });
+    }
+  }, [customerDetails]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -221,6 +249,14 @@ const PersonalDetailsPage = () => {
           />
         </FormControl>
       </FormContainer>
+      <Stack justifyContent="flex-end" mb={4}>
+        <Button
+          onClick={() => navigate("/credit/professionalDetails")}
+          variant="contained"
+        >
+          Proceed for Professional Details
+        </Button>
+      </Stack>
     </PersonalDetailsContainer>
   );
 };

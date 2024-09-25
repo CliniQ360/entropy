@@ -9,6 +9,11 @@ import { useDispatch } from "react-redux";
 import { agentConversation } from "./audioAgent.slice";
 import { MediaContext, useMediaContext } from "../../context/mediaContext";
 import { AudioDataContext } from "../../context/audioDataContext";
+import {
+  ReactMediaRecorder,
+  useReactMediaRecorder,
+} from "react-media-recorder-2";
+
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -22,138 +27,106 @@ const OutletContainer = styled("div")(({ theme }) => ({
 }));
 
 const CreditPage = () => {
-  const [mediaRecorder, setMediaRecorder] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [resetChunks, setResetChunks] = useState(false);
-  const { setError, setAudioResponse, setMessageResponse, nextState } =
-    useContext(MediaContext);
-  const { setCustomerDetails } = useContext(AudioDataContext);
-  const audioChunks = useRef([]);
-  const dispatch = useDispatch();
-  const location = useLocation();
   const thread_id = sessionStorage.getItem("thread_id");
   const uploadFlag = sessionStorage.getItem("document_upload_flag");
   const next_state = sessionStorage.getItem("next_state");
-  // Function to start recording
-  const handleStartRecording = () => {
-    if (mediaRecorder && mediaRecorder.state === "inactive") {
-      setTimeout(() => {
-        mediaRecorder.start(1000);
-        audioChunks.current = [];
-        setResetChunks(!resetChunks);
-        setIsRecording(true);
-        setIsPaused(false);
-      }, 200);
-    }
-  };
 
-  // Function to stop recording (this will be used only for the full stop, not on silence)
-  const handleStopRecording = () => {
-    if (mediaRecorder && mediaRecorder.state !== "inactive") {
-      mediaRecorder.stop();
-      setIsRecording(false);
-    }
-  };
+  const {
+    setError,
+    setAudioResponse,
+    setMessageResponse,
+    setNextState,
+    nextState,
+  } = useContext(MediaContext);
+  const { setCustomerDetails, setAaRedirectUrl } = useContext(AudioDataContext);
+  const audioChunks = useRef([]);
+  const dispatch = useDispatch();
+  const location = useLocation();
 
-  // Function to pause/resume recording
-  const handlePauseResume = () => {
-    if (mediaRecorder) {
-      if (mediaRecorder.state === "recording") {
-        mediaRecorder.pause();
-        setIsPaused(true);
-      } else if (mediaRecorder.state === "paused") {
-        mediaRecorder.resume();
-        setIsPaused(false);
-      }
-    }
-  };
+  const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
 
-  // Function to handle downloading the audio when silence is detected
-  const onSilence = () => {
-    console.log("Silence detected for 3 seconds!");
+  /* CONFIGURING REACT MEdiA RECORDER COMPONENT */
 
-    // Ensure there is data in the audio chunks before proceeding
-    if (audioChunks.current.length > 0) {
-      // Create a Blob from the audio chunks
-      const audioBlob = new Blob(audioChunks.current, { type: "audio/webm" });
-      // Check if the blob size is greater than 0
-      if (audioBlob.size > 0) {
-        // Create a FormData object
-        const formData = new FormData();
-
-        // Append the Blob to the FormData
-        formData.append("file", audioBlob, "agent_audio.webm");
-
-        const payload = {
-          file: formData,
-          threadId: thread_id,
-          uploadFlag: uploadFlag,
-          state: next_state,
-        };
-        // Prepare the payload with the FormData object
-        dispatch(agentConversation(payload))
-          .then((res) => {
-            if (res?.error && Object.keys(res?.error)?.length > 0) {
-              setError(true);
-              return;
-            }
-            setError(false);
-            setAudioResponse(res?.payload?.data?.audio_file);
-            setMessageResponse(res?.payload?.data?.agent_message);
-            setCustomerDetails(res?.payload?.data?.customer_details);
-          })
-          .catch((error) => {
-            console.error("Error uploading the audio file:", error);
-          });
-
-        // Stop and restart the media recorder to reset its internal state
-        mediaRecorder.stop();
-
-        setTimeout(() => {
-          // Restart recording after stopping, with a short delay
-          audioChunks.current = [];
-          mediaRecorder.start(1000); // Restart the recorder after stopping
-          setResetChunks(!resetChunks);
-        }, 200); // Add a short delay to ensure everything resets properly
-      } else {
-        console.warn("Recorded audio size is zero, skipping upload.");
-      }
-    } else {
-      console.warn("No audio data available.");
-    }
-  };
-
-  useEffect(() => {
-    // Set up the media recorder when the component mounts
-    if (location.pathname === "/credit/route-3") return;
-
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const recorder = new MediaRecorder(stream);
-
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.current.push(event.data);
-        }
-      };
-
-      // Set the media recorder and start recording once it's ready testing
-      setMediaRecorder(recorder);
-
-      // Start recording immediately after the recorder is set up with a timeslice of 1000ms
-      recorder.start(1000);
-      setIsRecording(true);
-    });
-
-    return () => {
-      // Clean up: Stop the media recorder and release resources
-      if (mediaRecorder && mediaRecorder.state !== "inactive") {
-        mediaRecorder.stop();
-      }
+  const handleUploadAudio = async (mediaBlobUrl) => {
+    const response = await fetch(mediaBlobUrl);
+    const audioBlob = await response.blob();
+    setAudioBlob(audioBlob);
+    const formData = new FormData();
+    formData.append("file", audioBlob, "audio_recording.mp3");
+    const payload = {
+      file: formData,
+      threadId: thread_id,
+      uploadFlag: uploadFlag,
+      state: next_state,
     };
-  }, [resetChunks]);
 
-  // Silence detection hook
+    dispatch(agentConversation(payload))
+      .then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setError(true);
+
+          return;
+        }
+        setError(false);
+        console.log(res?.payload?.data);
+
+        setAudioResponse(res?.payload?.data?.audio_file);
+        setMessageResponse(res?.payload?.data?.agent_message);
+        setCustomerDetails(res?.payload?.data?.customer_details);
+        setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
+        setNextState(res?.payload?.data?.next_state);
+        setTimeout(() => {
+          sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+        }, 300);
+        sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
+        clearBlobUrl();
+      })
+      .catch((error) => {
+        console.error("Error uploading the audio file:", error);
+      });
+  };
+
+  const {
+    status,
+    startRecording,
+    pauseRecording,
+    stopRecording,
+    resumeRecording,
+    mediaBlobUrl,
+    clearBlobUrl,
+  } = useReactMediaRecorder({
+    audio: true,
+    onStop: handleUploadAudio,
+  });
+
+  const handlePauseAudio = () => {
+    pauseRecording();
+    setIsPaused(true);
+  };
+
+  const handleResumeAudio = () => {
+    resumeRecording();
+    setIsPaused(false);
+  };
+
+  const handleStopRecording = () => {
+    stopRecording();
+    setIsRecording(false);
+  };
+  const handleStartRecording = () => {
+    startRecording();
+    setIsRecording(true);
+  };
+
+  const onSilence = () => {
+    console.log("Silence Detected");
+    handleStopRecording();
+    handleStartRecording();
+  };
+
+  /* INITIALIZING THE SILENCE DETECTER */
   useEffect(() => {
     const silenceDetector = createSilenceDetector({
       noiseThreshold: 10,
@@ -180,12 +153,14 @@ const CreditPage = () => {
         <Outlet />
       </OutletContainer>
       <PageFooter
-        mediaRecorder={mediaRecorder}
+        // mediaRecorder={mediaRecorder}
         handleStartRecording={handleStartRecording}
         handleStopRecording={handleStopRecording}
-        handlePauseResume={handlePauseResume}
+        handlePauseAudio={handlePauseAudio}
+        handleResumeAudio={handleResumeAudio}
         isRecording={isRecording}
         isPaused={isPaused}
+        audioBlob={audioBlob}
       />
     </CreditPageContainer>
   );

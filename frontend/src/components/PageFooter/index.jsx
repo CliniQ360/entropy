@@ -1,9 +1,19 @@
-import React from "react";
-import { Box, Divider, Fab, Stack, styled, Typography } from "@mui/material";
+import React, { useEffect, useRef } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  Fab,
+  Stack,
+  styled,
+  Typography,
+} from "@mui/material";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import CloseIcon from "@mui/icons-material/Close";
 import MicIcon from "@mui/icons-material/Mic";
 import { VisualizerLive } from "../LiveAudioWavelengthComponent";
+import Lottie from "lottie-react";
+import audioAnimation from "../../utils/lottieJson/audioAnimation.json";
 
 const FooterContainer = styled("footer")(({ theme }) => ({
   backgroundColor: "#EAF2FF",
@@ -46,9 +56,36 @@ const PageFooter = ({
   handlePauseResume,
   isRecording,
   isPaused,
+  handlePauseAudio,
+  handleResumeAudio,
+  audioBlob,
 }) => {
+  const handleDownloadAudio = () => {
+    if (audioBlob) {
+      const downloadLink = document.createElement("a");
+      downloadLink.href = URL.createObjectURL(audioBlob);
+      downloadLink.download = "recorded_audio.mp3"; // Set the file name
+      downloadLink.click();
+    }
+  };
+
+  const lottieRef = useRef(null);
+
+  useEffect(() => {
+    if (isRecording && !isPaused) {
+      lottieRef.current.play();
+    } else if (isPaused) {
+      lottieRef.current.stop();
+    }
+  }, [isRecording, isPaused]);
+
   return (
     <FooterContainer>
+      {audioBlob && (
+        <Button onClick={handleDownloadAudio} disabled={!audioBlob}>
+          Download Audio
+        </Button>
+      )}
       <FooterText>
         <Typography fontSize={12} color={"#535353"}>
           Lorem Ipsum has been the industry's standard dummy..
@@ -57,16 +94,40 @@ const PageFooter = ({
       <FooterActionContainer>
         {isRecording ? (
           <>
-            <CustomFabButton
+            {isPaused ? (
+              <CustomFabButton
+                onClick={handleResumeAudio}
+                bgcolor={"#E25341"}
+                size="large"
+                aria-label="mute"
+              >
+                <MicOffIcon sx={{ color: "white" }} />
+              </CustomFabButton>
+            ) : (
+              <CustomFabButton
+                onClick={handlePauseAudio}
+                bgcolor={"rgba(30,30,30,0.5)"}
+                size="large"
+                aria-label="mute"
+              >
+                <MicOffIcon sx={{ color: "white" }} />
+              </CustomFabButton>
+            )}
+            {/* <CustomFabButton
               onClick={handlePauseResume}
               bgcolor={!isPaused ? "rgba(30,30,30,0.5)" : "#E25341"}
               size="large"
               aria-label="mute"
             >
               <MicOffIcon sx={{ color: "white" }} />
-            </CustomFabButton>
-            <Box>
-              <VisualizerLive mediaRecorder={mediaRecorder} />
+            </CustomFabButton> */}
+
+            <Box sx={{ width: "30%" }}>
+              <Lottie
+                lottieRef={lottieRef}
+                animationData={audioAnimation}
+                autoPlay={true}
+              />{" "}
             </Box>
             <CustomFabButton
               onClick={handleStopRecording}
