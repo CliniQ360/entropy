@@ -228,11 +228,15 @@ def answer_user_query(state: OfferState):
     # user_query: {state.get("user_message")[-1]}"""
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
         offer_qna_instructions = GeminiPrompts().offer_qna_instructions
-        offer_qna_prompt = offer_qna_instructions.format(offer_list=offer_list)
+        offer_qna_prompt = offer_qna_instructions.format(
+            offer_list=offer_list, user_query=state.get("user_message")[-1]
+        )
         llm_response = llm_flash.invoke(offer_qna_prompt)
     else:
         offer_qna_instructions = OpenAIPrompts().offer_qna_instructions
-        offer_qna_prompt = offer_qna_instructions.format(offer_list=offer_list)
+        offer_qna_prompt = offer_qna_instructions.format(
+            offer_list=offer_list, user_query=state.get("user_message")[-1]
+        )
         llm_response = llm_4omini.invoke(offer_qna_prompt)
     answer = llm_response.content
     logging.info(f"{answer=}")

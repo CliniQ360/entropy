@@ -77,7 +77,7 @@ class OpenAIPrompts:
 
         self.offer_qna_instructions = """Offer details : {offer_list}.
         Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
-        user_query: {state.get("user_message")[-1]}"""
+        user_query: {user_query}"""
 
 
 class GeminiPrompts:
@@ -167,4 +167,4 @@ class GeminiPrompts:
 
         self.offer_qna_instructions = """Offer details : {offer_list}.
         Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
-        user_query: {state.get("user_message")[-1]}"""
+        user_query: {user_query}"""
