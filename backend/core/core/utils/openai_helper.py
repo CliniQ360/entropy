@@ -76,7 +76,14 @@ class WhisperHelper:
         try:
             audio_file = open(file_path, "rb")
             transcription = openai.audio.transcriptions.create(
-                model="whisper-1", file=audio_file, prompt=prompt
+                model="whisper-1",
+                file=audio_file,
+                extra_query={
+                    "language": "en",
+                    "compression_ratio_threshold": 2.0,
+                    "no_speech_threshold": 0.1,
+                },
+                prompt=prompt,
             )
             return {"transcription": transcription.text}
         except Exception as error:
