@@ -28,6 +28,8 @@ import { useLocation } from "react-router-dom";
 import { AudioDataContext } from "../../context/audioDataContext";
 import { useDispatch } from "react-redux";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
+import CustomLoader from "../../components/CustomLoader";
+import CustomTimer from "../../components/CustomTimer";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -155,12 +157,15 @@ const AvailableOffersPage = () => {
     const payload = {
       threadId: thread_id,
       uploadFlag: uploadFlag,
-      state: next_state,
+      state: "refresh_offer",
     };
 
-    dispatch(agentConversation(payload)).then((res) => {
-      setOfferDetails(res?.payload?.data?.offer_list);
-    });
+    const setTimeoutSeconds = showTimer ? 59000 : 2000;
+    setTimeout(() => {
+      dispatch(agentConversation(payload)).then((res) => {
+        setOfferDetails(res?.payload?.data?.offer_list);
+      });
+    }, setTimeoutSeconds);
   }, []);
 
   const filteredLoanOffers = offerDetails?.filter((offer) =>
@@ -378,8 +383,25 @@ const AvailableOffersPage = () => {
     },
   ];
 
+  const initialShowTimer =
+    sessionStorage.getItem("showTimer") === "true" ? true : false;
+  const [showTimer, setShowTimer] = useState(initialShowTimer);
+  const [showLoader, setShowLoader] = useState(false);
+  useEffect(() => {
+    sessionStorage.setItem("showTimer", showTimer);
+  }, [showTimer]);
+
   return (
     <>
+      {!showTimer ? (
+        <CustomLoader open={showLoader} />
+      ) : (
+        <CustomTimer
+          open={showTimer}
+          onClose={() => setShowLoader(false)}
+          setShowTimer={setShowTimer}
+        />
+      )}
       <AvailableOffersContainer>
         <DocumentHeaderSection>
           <Typography
