@@ -35,7 +35,7 @@ function App() {
           <Route path="availableOffers" element={<AvailableOffersPage />} />
           <Route path="customizeOffers" element={<CustomizeOfferPage />} />
           <Route path="route-3" element={<DocumentUploadPage />} />
-          <Route path="route-4" element={<KYCPage />} />
+          <Route path="kyc-page" element={<KYCPage />} />
           <Route path="route-5" element={<BankDetailsPage />} />
           <Route path="route-6" element={<EmandatePage />} />
           <Route path="route-7" element={<CreditOfferPage />} />
