@@ -264,6 +264,9 @@ class TextConversationController:
                     "offer_summary": workflow.get_state(thread).values.get(
                         "offer_summary"
                     ),
+                    "customer_details": workflow.get_state(thread).values.get(
+                        "customer_details", None
+                    ),
                 }
         except Exception as error:
             logging.error(f"Error in TextConversationController.get_state: {error}")
