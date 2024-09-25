@@ -55,11 +55,12 @@ const CreditPage = () => {
     setAudioBlob(audioBlob);
     const formData = new FormData();
     formData.append("file", audioBlob, "audio_recording.mp3");
+
     const payload = {
       file: formData,
       threadId: thread_id,
       uploadFlag: uploadFlag,
-      state: next_state,
+      state: sessionStorage.getItem("next_state"),
     };
 
     dispatch(agentConversation(payload))
