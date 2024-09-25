@@ -19,12 +19,15 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useLocation } from "react-router-dom";
+import { AudioDataContext } from "../../context/audioDataContext";
+import { useDispatch } from "react-redux";
+import { agentConversation } from "../CreditPage/audioAgent.slice";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -136,83 +139,32 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 
 const AvailableOffersPage = () => {
   const [selectedOffer, setSelectedOffer] = useState(null);
-  const [offers, setOffers] = useState([
-    {
-      offer_details: {
-        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72e",
-        item_price: "81132.23",
-        INTEREST_RATE: "26.99%",
-        TERM: "24 Months",
-        INSTALLMENT_AMOUNT: "3262.51 INR",
-      },
-      provider_details: {
-        name: "DMI FINANCE PRIVATE LIMITED",
-        images: [
-          {
-            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
-          },
-        ],
-      },
-    },
-    {
-      offer_details: {
-        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72f",
-        item_price: "81132.23",
-        INTEREST_RATE: "26.99%",
-        TERM: "24 Months",
-        INSTALLMENT_AMOUNT: "3262.51 INR",
-      },
-      provider_details: {
-        name: "DMI FINANCE PRIVATE LIMITED",
-        images: [
-          {
-            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
-          },
-        ],
-      },
-    },
-    {
-      offer_details: {
-        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72g",
-        item_price: "81132.23",
-        INTEREST_RATE: "26.99%",
-        TERM: "24 Months",
-        INSTALLMENT_AMOUNT: "3262.51 INR",
-      },
-      provider_details: {
-        name: "DMI FINANCE PRIVATE LIMITED",
-        images: [
-          {
-            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
-          },
-        ],
-      },
-    },
-    {
-      offer_details: {
-        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72h",
-        item_price: "81132.23",
-        INTEREST_RATE: "26.99%",
-        TERM: "24 Months",
-        INSTALLMENT_AMOUNT: "3262.51 INR",
-      },
-      provider_details: {
-        name: "Aditya Birla",
-        images: [
-          {
-            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
-          },
-        ],
-      },
-    },
-  ]);
+  const [offerDetails, setOfferDetails] = useState([]);
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const [openViewDetails, setOpenViewDetails] = useState(false);
   const scrollRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const filteredLoanOffers = offers.filter((offer) =>
-    offer.provider_details.name.toLowerCase().includes("")
+  /*APIS FOR REFERESH OFFER */
+  useEffect(() => {
+    const thread_id = sessionStorage.getItem("thread_id");
+    const uploadFlag = sessionStorage.getItem("document_upload_flag");
+    const next_state = sessionStorage.getItem("next_state");
+    const payload = {
+      threadId: thread_id,
+      uploadFlag: uploadFlag,
+      state: next_state,
+    };
+
+    dispatch(agentConversation(payload)).then((res) => {
+      setOfferDetails(res?.payload?.data?.offer_list);
+    });
+  }, []);
+
+  const filteredLoanOffers = offerDetails?.filter((offer) =>
+    offer?.provider_details?.name.toLowerCase().includes("")
   );
 
   const handleInputChange = (event, offer) => {
