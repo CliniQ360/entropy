@@ -51,6 +51,7 @@ const KYCPage = () => {
   let kyc_url;
 
   useEffect(() => {
+    setShowLoader(true);
     if (sessionStorage.getItem("next_state") === "resume_after_kyc_redirect") {
       setTimeout(() => {
         setConfirmationDialog(true);
@@ -63,10 +64,11 @@ const KYCPage = () => {
         selected_loan_amount: sessionStorage.getItem("selected_amt"),
       };
       dispatch(agentConversation(payload)).then((res) => {
+        setShowLoader(false);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
       });
     }
-  }, []);
+  }, [kycRedirectUrl]);
 
   const handleDialogSubmit = (value) => {
     if (value === "YES") {
@@ -87,6 +89,7 @@ const KYCPage = () => {
   };
 
   const fetchTransactionStatus = () => {
+    setShowLoader(true);
     const payload = {
       txnId: sessionStorage.getItem("txn_id"),
       offerId: sessionStorage.getItem("offer_item_id"),

@@ -83,14 +83,12 @@ const CreditPage = () => {
         setCustomerDetails(res?.payload?.data?.customer_details);
         setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
         setNextState(res?.payload?.data?.next_state);
-
-        setTimeout(() => {
-          sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
-        }, 300);
+        sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
 
         if (res?.payload?.data?.next_state === "resume_after_kyc_redirect") {
           navigate("/credit/kyc-page");
+          console.log("kyc_redirect_url", res?.payload?.data?.kyc_redirect_url);
           setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
         }
         clearBlobUrl();
