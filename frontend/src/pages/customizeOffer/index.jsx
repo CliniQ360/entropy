@@ -52,8 +52,8 @@ const CustomizeOfferPage = () => {
   const [offerDetails, setOfferDetails] = useState([]);
   const [showLoader, setShowLoader] = useState(false);
   const [newOfferValues, setNewOfferValues] = useState({});
-  const maxLoanAmount = offerDetails?.quote_details?.PRINCIPAL;
-  const minLoanAmount = offerDetails?.offer_details?.MIN_LOAN_AMOUNT;
+  const maxLoanAmount = offerDetails?.quote_details?.PRINCIPAL || 5000000;
+  const minLoanAmount = offerDetails?.offer_details?.MIN_LOAN_AMOUNT || 50000;
   const [loanAmount, setLoanAmount] = useState(0);
 
   const handleSliderChange = (event, newValue) => {
