@@ -39,7 +39,7 @@ function App() {
           <Route path="account-details" element={<BankDetailsPage />} />
           <Route path="emandate-page" element={<EmandatePage />} />
           <Route path="offer-page" element={<CreditOfferPage />} />
-          <Route path="route-8" element={<PreviewDocumentPage />} />
+          <Route path="preview-offer" element={<PreviewDocumentPage />} />
         </Route>
       </Routes>
     </div>
