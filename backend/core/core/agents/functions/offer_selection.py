@@ -436,37 +436,55 @@ def send_emdt_ack(state: OfferState):
 def summarise_loan_tnc(state: LoanDocumentState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     loan_document_url = f"{credit_base_url}/v1/credit/getLoanDocUrl"
+    get_txn_url = f"{credit_base_url}/v1/txn_details"
     txn_id = state.get("txn_id")
     offer_item_id = state.get("offer_item_id")
+    current_action = None
+    counter = 0
+    while current_action != "ON_CONFIRM":
+        if counter == 10:
+            logging.info("Did not receive ON_CONFIRM.")
+            break
+        get_txn_resp, get_txn_resp_code = APIInterface().get(
+            route=get_txn_url, params={"txn_id": txn_id}
+        )
+        current_action = get_txn_resp.get("current_action")
+        print(f"{current_action=}")
+        print("Sleeping for 5 seconds")
+        time.sleep(5)
     loan_document_resp, loan_document_resp_code = APIInterface().get(
         route=loan_document_url,
         params={"txn_id": txn_id, "offer_item_id": offer_item_id},
     )
     loan_agreement_url = loan_document_resp.get("loan_agreement_url")
-    file_content, _ = APIInterface().download_file(route=loan_agreement_url)
-    txn_id = state.get("txn_id")
-    file_name = f"{txn_id}.pdf"
-    open(file_name, "wb").write(file_content)
-    loader = PyPDFLoader(file_name)
-    pages = loader.load_and_split()
-    text = " ".join([page.page_content.replace("\t", " ") for page in pages])
-    if os.environ.get("LLM_CONFIG") == "GOOGLE":
-        summarise_loan_agreement_instruction = (
-            GeminiPrompts().summarise_loan_agreement_instructions
-        )
-        summarise_loan_agreement_prompt = summarise_loan_agreement_instruction.format(
-            text=text
-        )
-        llm_respose = llm_flash.invoke(summarise_loan_agreement_prompt)
+    if loan_agreement_url:
+        file_content, _ = APIInterface().download_file(route=loan_agreement_url)
+        txn_id = state.get("txn_id")
+        file_name = f"{txn_id}.pdf"
+        open(file_name, "wb").write(file_content)
+        loader = PyPDFLoader(file_name)
+        pages = loader.load_and_split()
+        text = " ".join([page.page_content.replace("\t", " ") for page in pages])
+        if os.environ.get("LLM_CONFIG") == "GOOGLE":
+            summarise_loan_agreement_instruction = (
+                GeminiPrompts().summarise_loan_agreement_instructions
+            )
+            summarise_loan_agreement_prompt = (
+                summarise_loan_agreement_instruction.format(text=text)
+            )
+            llm_respose = llm_flash.invoke(summarise_loan_agreement_prompt)
+        else:
+            summarise_loan_agreement_instruction = (
+                OpenAIPrompts().summarise_loan_agreement_instructions
+            )
+            summarise_loan_agreement_prompt = (
+                summarise_loan_agreement_instruction.format(text=text)
+            )
+            llm_respose = llm_4omini.invoke(summarise_loan_agreement_prompt)
+        loan_agreement_summary = llm_respose.content
     else:
-        summarise_loan_agreement_instruction = (
-            OpenAIPrompts().summarise_loan_agreement_instructions
-        )
-        summarise_loan_agreement_prompt = summarise_loan_agreement_instruction.format(
-            text=text
-        )
-        llm_respose = llm_4omini.invoke(summarise_loan_agreement_prompt)
-    loan_agreement_summary = llm_respose.content
+        loan_agreement_summary = ""
+        text = ""
     return {
         "loan_agreement_summary": loan_agreement_summary,
         "loan_agreement_text": text,
