@@ -38,6 +38,8 @@ class OfferState(TypedDict):
 
 class LoanDocumentState(TypedDict):
     txn_id: str
+    offer_item_id: str
+    offer_summary: str
     loan_signing_redirect_url: str
     loan_agreement_summary: str
     loan_agreement_text: str
