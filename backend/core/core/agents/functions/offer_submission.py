@@ -36,7 +36,13 @@ def submit_form(state: UserDetailsState):
             else:
                 collected_details = item.dict()
             for key, value in collected_details.items():
-                if value != None and value != " " and value != "None" and value != "NA":
+                if (
+                    value != None
+                    and value != " "
+                    and value != "None"
+                    and value != "NA"
+                    and value != 0
+                ):
                     customer_details[key] = value
         logging.info(customer_details)
     txn_id = search_resp.get("txn_id")

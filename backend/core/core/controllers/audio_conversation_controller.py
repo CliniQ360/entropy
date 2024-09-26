@@ -253,6 +253,7 @@ class AudioConversationController:
                                 and value != " "
                                 and value != "None"
                                 and value != "NA"
+                                and value != 0
                             ):
                                 customer_details[key] = value
                     print(f"Inside resume_conversation {customer_details=}")
@@ -272,6 +273,7 @@ class AudioConversationController:
                                 and value != " "
                                 and value != "None"
                                 and value != "NA"
+                                and value != 0
                             ):
                                 customer_account_details[key] = value
                     print(f"{customer_account_details=}")
