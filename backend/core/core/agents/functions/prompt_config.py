@@ -31,7 +31,7 @@ class OpenAIPrompts:
         2. Chain of Thought: Think step-by-step and carefully verify each piece of information before moving to the next.
             - Ask only for the missing information and avoid repeating questions for details that have already been collected.
         3. Final Validation: After going through the list, confirm that all details have been collected.
-            - If all required information is available, return: "ALL DATA COLLECTED"
+            - If all required information is available, reply only: "ALL DATA COLLECTED"
             - If there are still missing pieces of information, generate a question targeting those fields only.
         Now, proceed step-by-step and analyze {customer_info}.
         """
