@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import CustomLoader from "../../components/CustomLoader";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -58,6 +59,7 @@ const CustomizeOfferPage = () => {
 
   const handleSliderChange = (event, newValue) => {
     setLoanAmount(newValue);
+    sessionStorage.setItem("selected_amt", newValue);
   };
 
   const formatNumber = (num) => {
@@ -88,7 +90,6 @@ const CustomizeOfferPage = () => {
   return (
     <>
       <CustomLoader open={showLoader} />
-
       <AvailableOffersContainer>
         <DocumentHeaderSection>
           <Typography

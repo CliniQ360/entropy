@@ -82,13 +82,13 @@ const AssistantHomepage = () => {
   return (
     <PageWrapper>
       <ImageSectionWrapper>
-        <RedirectionContainer>
+        {/* <RedirectionContainer>
           <IconButton>
             <KeyboardArrowLeftIcon
               sx={{ fontSize: "2.2rem", color: "black" }}
             />
           </IconButton>
-        </RedirectionContainer>
+        </RedirectionContainer> */}
         <ImageContainerSection>
           <ImageIcon sx={{ color: "#B4DBFF", fontSize: "2.5rem" }} />
         </ImageContainerSection>

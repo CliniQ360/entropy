@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import CustomLoader from "../../components/CustomLoader";
 import { useNavigate } from "react-router-dom";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
+import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
 
 const ProfessionalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -76,6 +77,7 @@ const ProfessionalDetailsPage = () => {
   const { customerDetails, aaRedirectUrl } = useContext(AudioDataContext);
   const { nextState } = useContext(MediaContext);
   const [showLoader, setShowLoader] = useState(false);
+  const [redirectionVal, setRedirectionVal] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -119,14 +121,16 @@ const ProfessionalDetailsPage = () => {
       }, 1800);
       fetchTransactionStatus();
     } else {
-      setShowLoader(false);
+      setRedirectionVal(false);
       setConfirmationDialog(false);
       return;
     }
   };
 
   const fetchTransactionStatus = async (retryCount = 0) => {
-    setShowLoader(true);
+    setTimeout(() => {
+      setRedirectionVal(true);
+    }, 1100);
     if (retryCount >= 50) {
       console.log(
         "Maximum retry limit reached. Unable to get desired response."
@@ -142,13 +146,15 @@ const ProfessionalDetailsPage = () => {
         if (res?.payload?.redirection_status === "AA_APPROVED") {
           console.log("Desired response received:");
           form_aa_URL.close();
-          setShowLoader(false);
+          setRedirectionVal(false);
+          setShowLoader(true);
           const secondpayload = {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
             state: sessionStorage.getItem("next_state"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
+            setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
@@ -170,6 +176,7 @@ const ProfessionalDetailsPage = () => {
   return (
     <>
       <CustomLoader open={showLoader} />
+      <RedirectionDialogComponent open={redirectionVal} />
       <ProfessionalDetailsContainer>
         <DocumentHeaderSection>
           <Typography

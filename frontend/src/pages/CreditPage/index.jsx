@@ -38,8 +38,12 @@ const CreditPage = () => {
     setNextState,
     nextState,
   } = useContext(MediaContext);
-  const { setCustomerDetails, setAaRedirectUrl, setKycRedirectUrl } =
-    useContext(AudioDataContext);
+  const {
+    setCustomerDetails,
+    setAaRedirectUrl,
+    setKycRedirectUrl,
+    setEMandateRedirectUrl,
+  } = useContext(AudioDataContext);
   const audioChunks = useRef([]);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -90,6 +94,15 @@ const CreditPage = () => {
           navigate("/credit/kyc-page");
           console.log("kyc_redirect_url", res?.payload?.data?.kyc_redirect_url);
           setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
+        } else if (
+          res?.payload?.data?.next_state === "resume_after_emdt_redirect"
+        ) {
+          navigate("/credit/emandate-page");
+          setEMandateRedirectUrl(res?.payload?.data?.emndt_redirect_url);
+        } else if (
+          res?.payload?.data?.next_state === "human_loan_amount_selection"
+        ) {
+          navigate("/credit/customize-offers");
         }
         clearBlobUrl();
       })
