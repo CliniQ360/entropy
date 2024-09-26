@@ -79,10 +79,10 @@ class WhisperHelper:
                 model="whisper-1",
                 file=audio_file,
                 extra_query={
-                    "language": "en",
                     "compression_ratio_threshold": 2.0,
                     "no_speech_threshold": 0.1,
                 },
+                language="en",
                 prompt=prompt,
             )
             return {"transcription": transcription.text}
