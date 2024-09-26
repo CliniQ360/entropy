@@ -33,12 +33,12 @@ function App() {
           />
           <Route path="selectAA" element={<SelectAAPage />} />
           <Route path="availableOffers" element={<AvailableOffersPage />} />
-          <Route path="customizeOffers" element={<CustomizeOfferPage />} />
+          <Route path="customize-offers" element={<CustomizeOfferPage />} />
           <Route path="route-3" element={<DocumentUploadPage />} />
           <Route path="kyc-page" element={<KYCPage />} />
-          <Route path="route-5" element={<BankDetailsPage />} />
-          <Route path="route-6" element={<EmandatePage />} />
-          <Route path="route-7" element={<CreditOfferPage />} />
+          <Route path="account-details" element={<BankDetailsPage />} />
+          <Route path="emandate-page" element={<EmandatePage />} />
+          <Route path="offer-page" element={<CreditOfferPage />} />
           <Route path="route-8" element={<PreviewDocumentPage />} />
         </Route>
       </Routes>

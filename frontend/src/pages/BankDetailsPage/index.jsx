@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CustomNavbar from "../../components/CustomNavbar";
 import AgentHeader from "../../components/AgentHeaderComponent";
 import {
   Box,
+  Button,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   Grid,
   Radio,
@@ -14,6 +16,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { bankLoanDataResumeConversion } from "../CreditPage/audioAgent.slice";
+import CustomLoader from "../../components/CustomLoader";
+import { MediaContext } from "../../context/mediaContext";
 
 const BankDetailWrapper = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(5),
@@ -44,14 +50,25 @@ const RadioItemGroup = styled(Stack)(({ theme }) => ({
   borderRadius: "5px",
 }));
 
+const ErrorMessageBox = styled(FormHelperText)(({ theme }) => ({
+  margin: "4px 0",
+}));
+
 const BankDetailsPage = () => {
   const [formData, setFormData] = useState({
     accHolderName: "",
     acctype: "",
     accNo: "",
     ifscCode: "",
-    re_num: "",
   });
+  const [re_num, setRe_num] = useState("");
+  const [error, setError] = useState(false);
+  const [isMatched, setIsMatched] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+
+  /* USE DISPATCH */
+  const dispatch = useDispatch();
+  const { setAudioResponse, setMessageResponse } = useContext(MediaContext);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -69,10 +86,54 @@ const BankDetailsPage = () => {
   };
 
   useEffect(() => {
-    console.log(formData);
+    if (formData.accNo === re_num) {
+      setIsMatched(false);
+    } else {
+      setIsMatched(true);
+    }
   });
+
+  const checkError = () => {
+    if (
+      !formData.accHolderName ||
+      !formData.acctype ||
+      !formData.accNo ||
+      !formData.ifscCode ||
+      formData.accNo !== re_num
+    ) {
+      setError(true);
+      return true;
+    }
+    return false;
+  };
+
+  const handleReNumChange = (event) => {
+    setRe_num(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    let isError = checkError();
+    if (!isError) {
+      setShowLoader(true);
+      const payload = {
+        thread_id: sessionStorage.getItem("thread_id"),
+        user_message: [JSON.stringify(formData)],
+        state: sessionStorage.getItem("next_state"),
+      };
+      dispatch(bankLoanDataResumeConversion(payload)).then((res) => {
+        setShowLoader(false);
+        sessionStorage.setItem("next_state", res?.payload?.next_state);
+        setAudioResponse(res?.payload?.data?.audio_file);
+        setMessageResponse(res?.payload?.data?.agent_message);
+      });
+    } else {
+      console.log("Not Matched");
+    }
+  };
+
   return (
     <>
+      <CustomLoader open={showLoader} />
       <BankDetailWrapper>
         <BankDetailHeader>
           <Typography
@@ -97,10 +158,7 @@ const BankDetailsPage = () => {
         </BankDetailHeader>
         <BankFormWrapper container>
           <BankFormWrapperItem sm={12} xs={12}>
-            <FormControl
-              fullWidth
-              //   error={!formData.accHolderName && textFieldError}
-            >
+            <FormControl fullWidth error={!formData.accHolderName && error}>
               <FormLabel
                 sx={{
                   mb: 2,
@@ -121,18 +179,15 @@ const BankDetailsPage = () => {
                 name="accHolderName"
                 value={formData.accHolderName}
                 placeholder="Enter Your Bank Name"
-                // error={!formData.accHolderName && textFieldError}
+                error={!formData.accHolderName && error}
               />
-              {/* {!formData.accHolderName && textFieldError && (
+              {!formData.accHolderName && error && (
                 <ErrorMessageBox>Enter Your Bank Name</ErrorMessageBox>
-              )} */}
+              )}
             </FormControl>
           </BankFormWrapperItem>
           <BankFormWrapperItem sm={12} xs={12} width={"100%"}>
-            <FormControl
-              fullWidth
-              //   error={!formData.acctype && textFieldError}
-            >
+            <FormControl fullWidth error={!formData.acctype && error}>
               <FormLabel>
                 <Typography
                   sx={{
@@ -144,7 +199,7 @@ const BankDetailsPage = () => {
                   Account Type
                 </Typography>
               </FormLabel>
-              <RadioGroup
+              {/* <RadioGroup
                 onChange={handleRadioChange}
                 value={formData.acctype}
                 row
@@ -179,18 +234,76 @@ const BankDetailsPage = () => {
                     </Typography>
                   </Stack>
                 </RadioItemGroup>
+              </RadioGroup> */}
+              <RadioGroup
+                onChange={handleRadioChange}
+                value={formData.acctype}
+                row
+              >
+                <Box
+                  sx={{
+                    height: "56px",
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: { xs: "row", sm: "row" },
+                    marginBottom: { xs: "10px", sm: "0px" },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      height: "40px",
+                      width: "40%",
+                      border:
+                        !formData.acctype && error
+                          ? "1px solid red"
+                          : "1px solid lightGray",
+                      padding: "5px 10px",
+                      margin: {
+                        xs: "10px 15px 10px 5px",
+                        sm: "0px 15px 0px 5px",
+                      },
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <FormControlLabel
+                      value="Savings"
+                      name="Savings"
+                      control={<Radio />}
+                      label="Saving"
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      height: "40px",
+                      width: "40%",
+                      border:
+                        !formData.acctype && error
+                          ? "1px solid red"
+                          : "1px solid lightGray",
+                      padding: "5px 10px",
+                      margin: {
+                        xs: "10px 15px 10px 5px",
+                        sm: "0px 15px 0px 5px",
+                      },
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <FormControlLabel
+                      value="current"
+                      name="current"
+                      control={<Radio />}
+                      label="Current"
+                    />
+                  </Box>
+                </Box>
               </RadioGroup>
-
-              {/* {!formData.acctype && textFieldError && (
+              {!formData.acctype && error && (
                 <ErrorMessageBox>Select Account Type</ErrorMessageBox>
-              )} */}
+              )}
             </FormControl>
           </BankFormWrapperItem>
           <BankFormWrapperItem sm={12} xs={12}>
-            <FormControl
-              fullWidth
-              //   error={!formData.accHolderName && textFieldError}
-            >
+            <FormControl fullWidth error={!formData.ifscCode && error}>
               <FormLabel
                 sx={{
                   mb: 2,
@@ -211,18 +324,15 @@ const BankDetailsPage = () => {
                 name="ifscCode"
                 value={formData.ifscCode}
                 placeholder="Enter Your IFSC Code"
-                // error={!formData.accHolderName && textFieldError}
+                error={!formData.ifscCode && error}
               />
-              {/* {!formData.accHolderName && textFieldError && (
-                <ErrorMessageBox>Enter Your Bank Name</ErrorMessageBox>
-              )} */}
+              {!formData.ifscCode && error && (
+                <ErrorMessageBox>Enter IFSC Number</ErrorMessageBox>
+              )}
             </FormControl>
           </BankFormWrapperItem>
           <BankFormWrapperItem sm={12} xs={12}>
-            <FormControl
-              fullWidth
-              //   error={!formData.accHolderName && textFieldError}
-            >
+            <FormControl fullWidth error={!formData.accNo && error}>
               <FormLabel
                 sx={{
                   mb: 2,
@@ -243,18 +353,15 @@ const BankDetailsPage = () => {
                 name="accNo"
                 value={formData.accNo}
                 placeholder="Enter Your Account Number"
-                // error={!formData.accHolderName && textFieldError}
+                error={!formData.accNo && error}
               />
-              {/* {!formData.accHolderName && textFieldError && (
-                <ErrorMessageBox>Enter Your Bank Name</ErrorMessageBox>
-              )} */}
+              {!formData.accNo && error && (
+                <ErrorMessageBox>Enter Account Number</ErrorMessageBox>
+              )}
             </FormControl>
           </BankFormWrapperItem>
           <BankFormWrapperItem sm={12} xs={12}>
-            <FormControl
-              fullWidth
-              //   error={!formData.accHolderName && textFieldError}
-            >
+            <FormControl fullWidth error={!re_num && error}>
               <FormLabel
                 sx={{
                   mb: 2,
@@ -271,18 +378,34 @@ const BankDetailsPage = () => {
                 </Typography>
               </FormLabel>
               <TextField
-                onChange={handleInputChange}
+                onChange={handleReNumChange}
                 name="re_num"
-                value={formData.re_num}
+                value={re_num}
                 placeholder="Enter Your Re-Account Number"
-                // error={!formData.accHolderName && textFieldError}
+                error={!re_num && error}
               />
-              {/* {!formData.accHolderName && textFieldError && (
-                <ErrorMessageBox>Enter Your Bank Name</ErrorMessageBox>
-              )} */}
+              <Typography color={"red"}>
+                {isMatched && re_num !== "" && "Not matched"}
+              </Typography>
             </FormControl>
           </BankFormWrapperItem>
         </BankFormWrapper>
+        <Stack mt={5} justifyContent={"center"} alignItems={"flex-end"}>
+          <Button
+            sx={{
+              backgroundColor: "#0054BA",
+              boxShadow: "none",
+              textTransform: "none",
+              fontWeight: 500,
+              letterSpacing: "2px",
+              fontSize: "1.2rem",
+            }}
+            variant="contained"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </Stack>
       </BankDetailWrapper>
     </>
   );

@@ -34,6 +34,13 @@ export const startConversion = createAsyncThunk("startConversion", async () => {
   const response = await apiRequest("POST", apis?.startConversionApi);
   return response;
 });
+export const bankLoanDataResumeConversion = createAsyncThunk(
+  "startConversion",
+  async (payload) => {
+    const response = await apiRequest("POST", apis?.bankLoanDataApi, payload);
+    return response;
+  }
+);
 
 const audioAgentSlice = createSlice({
   name: "SearchVitals",

@@ -62,7 +62,7 @@ const RedirectionDialogComponent = ({ open, setOpen }) => {
               textAlign: "center",
             }}
           >
-            Please wait while we are fetching best loan offers for you
+            Please complete the redirection flow!
           </Typography>
         </DialogContentSection>
       </Dialog>

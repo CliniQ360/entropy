@@ -39,13 +39,17 @@ const CustomContainedButton = styled(Button)(({ theme, buttonType }) => ({
   fontSize: "1rem",
 }));
 
-const SubmitDialogBox = ({ open, setOpen }) => {
+const SubmitDialogBox = ({
+  confirmation,
+  setConfirmation,
+  handlePaymentDialogSubmit,
+}) => {
   const handleClose = () => {
-    setOpen(false);
+    setConfirmation(false);
   };
   return (
     <Dialog
-      open={open}
+      open={confirmation}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
@@ -76,10 +80,12 @@ const SubmitDialogBox = ({ open, setOpen }) => {
         </Typography>
       </DialogContentSection>
       <DialogActionSection>
-        <CustomOutlinedButton onClick={() => setOpen(false)}>
+        <CustomOutlinedButton onClick={() => setConfirmation(false)}>
           No
         </CustomOutlinedButton>
-        <CustomContainedButton>Yes, Submit</CustomContainedButton>
+        <CustomContainedButton onClick={() => handlePaymentDialogSubmit("YES")}>
+          Yes, Submit
+        </CustomContainedButton>
       </DialogActionSection>
     </Dialog>
   );

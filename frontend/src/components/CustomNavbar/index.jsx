@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
@@ -67,7 +67,7 @@ const CustomNavbar = () => {
 
   return (
     <ProgressBarWrapper>
-      <IconButton>
+      <IconButton onClick={() => navigate(-1)}>
         <LeftArrowIcon color={"black"} />
       </IconButton>
       {/* Adjusted value to 40 for better visibility */}

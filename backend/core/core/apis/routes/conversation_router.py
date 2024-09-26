@@ -50,7 +50,7 @@ async def upload_documents(files: Optional[List[UploadFile]] = File(None)):
 def get_state(thread_id: str):
     try:
         logging.info(f"Calling /v1/langgraph/state endpoint")
-        return AudioConversationController().get_state(thread_id=thread_id)
+        return TextConversationController().get_state(thread_id=thread_id)
     except Exception as error:
         logging.error(f"Error in /v1/langgraph/state endpoint: {error}")
         raise HTTPException(

@@ -17,6 +17,9 @@ import { useDispatch } from "react-redux";
 import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice";
 import CustomLoader from "../../components/CustomLoader";
 import { AudioDataContext } from "../../context/audioDataContext";
+import { useNavigate } from "react-router-dom";
+import { MediaContext } from "../../context/mediaContext";
+import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
 
 const KYCWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
@@ -42,31 +45,22 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 const KYCPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [confirmationDialog, setConfirmationDialog] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const [redirectionVal, setRedirectionVal] = useState(false);
   const { kycRedirectUrl } = useContext(AudioDataContext);
+  const { setAudioResponse, setMessageResponse } = useContext(MediaContext);
 
   let kyc_url;
 
   useEffect(() => {
-    setShowLoader(true);
     if (sessionStorage.getItem("next_state") === "resume_after_kyc_redirect") {
       setTimeout(() => {
         setConfirmationDialog(true);
       }, 4000);
-      const payload = {
-        threadId: sessionStorage.getItem("thread_id"),
-        uploadFlag: sessionStorage.getItem("document_upload_flag"),
-        state: sessionStorage.getItem("next_state"),
-        offer_item_id: sessionStorage.getItem("offer_item_id"),
-        selected_loan_amount: sessionStorage.getItem("selected_amt"),
-      };
-      dispatch(agentConversation(payload)).then((res) => {
-        setShowLoader(false);
-        sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
-      });
     }
   }, [kycRedirectUrl]);
 
@@ -82,14 +76,16 @@ const KYCPage = () => {
       }, 1800);
       fetchTransactionStatus();
     } else {
-      setShowLoader(false);
+      setRedirectionVal(false);
       setConfirmationDialog(false);
       return;
     }
   };
 
   const fetchTransactionStatus = () => {
-    setShowLoader(true);
+    setTimeout(() => {
+      setRedirectionVal(true);
+    }, 1100);
     const payload = {
       txnId: sessionStorage.getItem("txn_id"),
       offerId: sessionStorage.getItem("offer_item_id"),
@@ -99,8 +95,31 @@ const KYCPage = () => {
         const selectResponse = res?.payload;
         if (selectResponse?.redirection_status === "KYC_APPROVED") {
           kyc_url.close();
-          setShowLoader(false);
+          setRedirectionVal(false);
+          setShowLoader(true);
           clearInterval(id);
+          const secondpayload = {
+            threadId: sessionStorage.getItem("thread_id"),
+            uploadFlag: sessionStorage.getItem("document_upload_flag"),
+            state: sessionStorage.getItem("next_state"),
+            offer_item_id: sessionStorage.getItem("offer_item_id"),
+            selected_loan_amount: sessionStorage.getItem("selected_amt"),
+          };
+          dispatch(agentConversation(secondpayload)).then((res) => {
+            setShowLoader(false);
+            sessionStorage.setItem(
+              "next_state",
+              res?.payload?.data?.next_state
+            );
+            setAudioResponse(res?.payload?.data?.audio_file);
+            setMessageResponse(res?.payload?.data?.agent_message);
+            if (
+              res?.payload?.data?.next_state ===
+              "human_account_details_feedback"
+            ) {
+              navigate("/credit/account-details");
+            }
+          });
         } else {
           console.log("Error Occured");
         }
@@ -110,6 +129,7 @@ const KYCPage = () => {
   return (
     <>
       <CustomLoader open={showLoader} />
+      <RedirectionDialogComponent open={redirectionVal} />
       <KYCWrapper>
         <Stack gap={4}>
           <Typography

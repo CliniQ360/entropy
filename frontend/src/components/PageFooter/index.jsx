@@ -60,15 +60,6 @@ const PageFooter = ({
   handleResumeAudio,
   audioBlob,
 }) => {
-  const handleDownloadAudio = () => {
-    if (audioBlob) {
-      const downloadLink = document.createElement("a");
-      downloadLink.href = URL.createObjectURL(audioBlob);
-      downloadLink.download = "recorded_audio.mp3"; // Set the file name
-      downloadLink.click();
-    }
-  };
-
   const lottieRef = useRef(null);
 
   useEffect(() => {
@@ -81,11 +72,6 @@ const PageFooter = ({
 
   return (
     <FooterContainer>
-      {audioBlob && (
-        <Button onClick={handleDownloadAudio} disabled={!audioBlob}>
-          Download Audio
-        </Button>
-      )}
       <FooterText>
         <Typography fontSize={12} color={"#535353"}>
           Lorem Ipsum has been the industry's standard dummy..
