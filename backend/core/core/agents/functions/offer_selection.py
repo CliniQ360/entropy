@@ -189,6 +189,7 @@ def generate_account_details_questions(state: UserDetailsState):
     #         Now, proceed step-by-step and analyze {customer_info}.
     #    """
     master_dict = {}
+    customer_account_details_list = state.get("customer_account_details", None)
     if customer_account_details_list:
         for items in customer_account_details_list:
             print(items.dict())
@@ -205,14 +206,13 @@ def generate_account_details_questions(state: UserDetailsState):
     required_fields = ["accHolderName", "acctype", "accNo", "ifscCode"]
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
         collector_instructions = GeminiPrompts().account_collector_instructions
-        customer_account_details_list = state.get("customer_account_details", None)
+
         collector_prompt = collector_instructions.format(
             customer_info=master_dict, required_fields=required_fields
         )
         structured_llm = llm_pro.with_structured_output(GeneratedQuestion)
     else:
         collector_instructions = OpenAIPrompts().account_collector_instructions
-        customer_account_details_list = state.get("customer_account_details", None)
         collector_prompt = collector_instructions.format(
             customer_info=master_dict, required_fields=required_fields
         )
