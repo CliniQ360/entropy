@@ -8,11 +8,23 @@ import {
   Typography,
   Box,
   IconButton,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TablePagination,
+  Paper,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DownloadIcon from "../../utils/CustomIcons/DownloadIcon";
 import { useLocation } from "react-router-dom";
+import { useTheme } from "@emotion/react";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import LastPageIcon from "@mui/icons-material/LastPage";
 
 const CreditOfferWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
@@ -57,6 +69,15 @@ const PreviewBottomSection = styled("div")(({ theme }) => ({
   justifyContent: "space-between",
   alignItems: "center",
 }));
+
+const CustomTableContainer = styled(TableContainer)(({ theme }) => ({
+  overflowX: "auto",
+  width: 320,
+  [theme.breakpoints.up("sm")]: {
+    width: "100%",
+  },
+}));
+
 const CreditOfferPage = () => {
   // const pdfUrl =
   //   "https://pramaan.ondc.org/beta/preprod/mock/seller/document/agreement.pdf";
@@ -68,6 +89,79 @@ const CreditOfferPage = () => {
   // const [providerDetails, setProviderDetails] = useState([]);
   const [quoteDetails, setQuoteDetails] = useState([]);
   const [customerDetails, setCustomerdetails] = useState({});
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  function TablePaginationActions(props) {
+    const theme = useTheme();
+    const { count, page, rowsPerPage, onPageChange } = props;
+
+    const handleFirstPageButtonClick = (event) => {
+      onPageChange(event, 0);
+    };
+
+    const handleBackButtonClick = (event) => {
+      onPageChange(event, page - 1);
+    };
+
+    const handleNextButtonClick = (event) => {
+      onPageChange(event, page + 1);
+    };
+
+    const handleLastPageButtonClick = (event) => {
+      onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+    };
+
+    return (
+      <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+        <IconButton
+          onClick={handleFirstPageButtonClick}
+          disabled={page === 0}
+          aria-label="first page"
+        >
+          {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+        </IconButton>
+        <IconButton
+          onClick={handleBackButtonClick}
+          disabled={page === 0}
+          aria-label="previous page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowRight />
+          ) : (
+            <KeyboardArrowLeft />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleNextButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="next page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowLeft />
+          ) : (
+            <KeyboardArrowRight />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleLastPageButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="last page"
+        >
+          {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+        </IconButton>
+      </Box>
+    );
+  }
 
   useEffect(() => {
     setPdfUrl(location.state);
@@ -688,7 +782,7 @@ const CreditOfferPage = () => {
         </AccordionDetails>
       </CustomAccordian>
       {offerDetails && (
-        <CustomAccordian defaultExpanded={true}>
+        <CustomAccordian>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1-content"
@@ -885,6 +979,95 @@ const CreditOfferPage = () => {
           </AccordionDetails>
         </CustomAccordian>
       )}
+      <CustomAccordian>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+          sx={{ ml: "10px" }}
+        >
+          <Typography
+            fontWeight={700}
+            fontSize={"0.9rem"}
+            fontFamily={"plus jakarta sans"}
+          >
+            EMI Details
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <LoanDetailsWrapper overflow={"auto"} container>
+            {paymentDetails && (
+              <>
+                <CustomTableContainer component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="left">ID</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Date</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell>Type</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {(paymentDetails.length > 0 && rowsPerPage > 0
+                        ? paymentDetails.slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                        : paymentDetails
+                      )?.map(
+                        (offer, index) =>
+                          offer?.type === "POST_FULFILLMENT" && (
+                            <>
+                              <TableRow key={index}>
+                                <TableCell align="left">{offer?.id}</TableCell>
+                                <TableCell align="left">
+                                  {offer?.params?.amount}
+                                </TableCell>
+
+                                <TableCell align="left">
+                                  {offer?.time?.range
+                                    ? new Date(
+                                        offer?.time?.range?.start
+                                      ).toLocaleDateString()
+                                    : "-"}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {(offer?.status).split("-").join(" ")}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {(offer?.time?.label).split("_").join(" ")}
+                                </TableCell>
+                              </TableRow>
+                            </>
+                          )
+                      )}
+                    </TableBody>
+                  </Table>
+                </CustomTableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  component="div"
+                  colSpan={3}
+                  count={paymentDetails.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      "aria-label": "rows per page",
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </>
+            )}
+          </LoanDetailsWrapper>
+        </AccordionDetails>
+      </CustomAccordian>
     </CreditOfferWrapper>
   );
 };
