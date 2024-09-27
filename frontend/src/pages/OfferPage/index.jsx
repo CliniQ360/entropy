@@ -222,6 +222,33 @@ const AvailableOffersPage = () => {
     setOpenViewDetails(false);
   };
 
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, children } = scrollRef.current;
+      const newIndex = Array.from(children).findIndex(
+        (child) => child.offsetLeft >= scrollLeft
+      );
+      setCurrentSlide(newIndex);
+    }
+  };
+
+  useEffect(() => {
+    const ref = scrollRef.current;
+    if (ref) {
+      ref.addEventListener("scroll", handleScroll);
+      return () => {
+        ref.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   sessionStorage.setItem(
+  //     "offer_item_id",
+  //     offerDetails[currentSlide].offer_details.offer_item_id
+  //   );
+  // }, [currentSlide]);
+
   const pageName = "offerPage";
 
   const loanData =
