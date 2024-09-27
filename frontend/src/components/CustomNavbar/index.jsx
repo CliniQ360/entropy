@@ -44,6 +44,7 @@ const CustomNavbar = () => {
     setAudioResponse,
     setMessageResponse,
     nextState,
+    setProgressValue,
     progressValue,
   } = useContext(MediaContext);
   const thread_id = sessionStorage.getItem("thread_id");
@@ -56,8 +57,13 @@ const CustomNavbar = () => {
       state: sessionStorage.getItem("next_state"),
     };
     dispatch(agentConversation(payload)).then((res) => {
-      console.log(res?.payload?.data?.agent_audio_data);
+      if (res?.error && Object.keys(res?.error)?.length > 0) {
+        setError(true);
+        return;
+      }
+      setError(false);
       sessionStorage.setItem("document_upload_flag", false);
+      setProgressValue(20);
       sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
       setAudioResponse(res?.payload?.data?.agent_audio_data);
       setMessageResponse(res?.payload?.data?.agent_message);

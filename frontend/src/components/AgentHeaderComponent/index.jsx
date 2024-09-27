@@ -148,7 +148,8 @@ const AgentHeader = () => {
           alignItems={"center"}
           justifyContent={"center"}
           padding={2}
-          sx={{ overflowX: "auto" }}
+          sx={{ overflowX: "auto", whiteSpace: "nowrap" }} //
+          height={"25px"}
         >
           {!error ? (
             <Typography
@@ -156,6 +157,9 @@ const AgentHeader = () => {
                 color: "#535353",
                 fontSize: "1rem",
                 fontFamily: "source sans pro",
+                whiteSpace: "nowrap", // Prevent wrapping
+                overflow: "hidden", // Hide overflow content
+                textOverflow: "ellipsis",
               }}
             >
               {messageResponse}

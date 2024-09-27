@@ -68,8 +68,13 @@ const BankDetailsPage = () => {
 
   /* USE DISPATCH */
   const dispatch = useDispatch();
-  const { setAudioResponse, setMessageResponse, setError } =
-    useContext(MediaContext);
+  const {
+    setAudioResponse,
+    setMessageResponse,
+    setError,
+    setProgressValue,
+    setUserResponse,
+  } = useContext(MediaContext);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -118,7 +123,9 @@ const BankDetailsPage = () => {
       setShowLoader(true);
       const payload = {
         thread_id: sessionStorage.getItem("thread_id"),
-        user_message: [JSON.stringify(formData)],
+        user_message: [
+          `My Account Holder Name is ${formData?.accHolderName}, my account type is ${formData?.acctype}, my ifsc code is ${formData?.ifscCode} and my ACCOUNT NUMBER IS ${formData?.accNo}.`,
+        ],
         state: sessionStorage.getItem("next_state"),
       };
       dispatch(bankLoanDataResumeConversion(payload)).then((res) => {
@@ -127,11 +134,13 @@ const BankDetailsPage = () => {
           setError(true);
           return;
         }
+        setProgressValue(70);
         setError(false);
         setShowLoader(false);
         sessionStorage.setItem("next_state", res?.payload?.next_state);
-        setAudioResponse(res?.payload?.data?.audio_file);
-        setMessageResponse(res?.payload?.data?.agent_message);
+        setAudioResponse(res?.payload?.agent_audio_data);
+        setMessageResponse(res?.payload?.agent_message);
+        setUserResponse(res?.payload?.user_message);
       });
     } else {
       console.log("Not Matched");

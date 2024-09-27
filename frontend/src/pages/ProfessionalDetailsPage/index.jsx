@@ -75,8 +75,14 @@ const ProfessionalDetailsPage = () => {
   const [confirmationDialog, setConfirmationDialog] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const { customerDetails, aaRedirectUrl } = useContext(AudioDataContext);
-  const { nextState, setError, setAudioResponse, setMessageResponse } =
-    useContext(MediaContext);
+  const {
+    nextState,
+    setError,
+    setAudioResponse,
+    setMessageResponse,
+    setProgressValue,
+    setUserResponse,
+  } = useContext(MediaContext);
   const [showLoader, setShowLoader] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
   const dispatch = useDispatch();
@@ -166,12 +172,14 @@ const ProfessionalDetailsPage = () => {
             }
             setError(false);
             setShowLoader(false);
+            setProgressValue(30);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
             );
-            setAudioResponse(res?.payload?.data?.audio_file);
+            setAudioResponse(res?.payload?.data?.agent_audio_data);
             setMessageResponse(res?.payload?.data?.agent_message);
+            setUserResponse(res?.payload?.data?.user_message);
             sessionStorage.setItem("showTimer", true);
             navigate("/credit/availableOffers");
           });

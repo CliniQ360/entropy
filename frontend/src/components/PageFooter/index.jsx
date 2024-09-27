@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import { VisualizerLive } from "../LiveAudioWavelengthComponent";
 import Lottie from "lottie-react";
 import audioAnimation from "../../utils/lottieJson/audioAnimation.json";
+import { MediaContext } from "../../context/mediaContext";
 
 const FooterContainer = styled("footer")(({ theme }) => ({
   backgroundColor: "#EAF2FF",
@@ -70,13 +71,31 @@ const PageFooter = ({
     }
   }, [isRecording, isPaused]);
 
+  const { userResponse } = useContext(MediaContext);
+
   return (
     <FooterContainer>
-      <FooterText>
-        <Typography fontSize={12} color={"#535353"}>
-          Lorem Ipsum has been the industry's standard dummy..
-        </Typography>
-      </FooterText>
+      <Stack
+        alignItems={"center"}
+        justifyContent={"center"}
+        padding={2}
+        sx={{ overflowX: "auto", whiteSpace: "nowrap" }} // Enable horizontal scroll and prevent wrapping
+        height={"25px"}
+      >
+        <FooterText>
+          <Typography
+            fontSize={12}
+            color={"#535353"}
+            sx={{
+              whiteSpace: "nowrap", // Prevent text wrapping
+              overflow: "hidden", // Hide overflow content
+              textOverflow: "ellipsis", // Optionally show ellipsis for overflow
+            }}
+          >
+            {!userResponse ? "Welcome to Cliniq360 Sahayak" : userResponse}
+          </Typography>
+        </FooterText>
+      </Stack>
       <FooterActionContainer>
         {isRecording ? (
           <>

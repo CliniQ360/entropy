@@ -45,9 +45,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 const EmandatePage = () => {
-  const { eMandateRedirectUrl } = useContext(AudioDataContext);
-  const { setAudioResponse, setMessageResponse, setError } =
-    useContext(MediaContext);
+  const { eMandateRedirectUrl, setOfferList } = useContext(AudioDataContext);
+  const {
+    setAudioResponse,
+    setMessageResponse,
+    setError,
+    setProgressValue,
+    setUserResponse,
+  } = useContext(MediaContext);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -135,14 +140,16 @@ const EmandatePage = () => {
               setError(true);
               return;
             }
+            setProgressValue(80);
             setError(false);
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
             );
-            setAudioResponse(res?.payload?.data?.audio_file);
+            setAudioResponse(res?.payload?.data?.agent_audio_data);
             setMessageResponse(res?.payload?.data?.agent_message);
+            setUserResponse(res?.payload?.data?.user_message);
             setPaymentUrl(res?.payload?.data?.loan_signing_redirect_url);
             setTimeout(() => {
               setConfirmation(true);
@@ -171,6 +178,7 @@ const EmandatePage = () => {
           setRedirectionVal(false);
           setShowLoader(true);
           clearInterval(id);
+          setProgressValue(90);
           const secondpayload = {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
@@ -185,13 +193,16 @@ const EmandatePage = () => {
               return;
             }
             setError(false);
+            setProgressValue(100);
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
             );
-            setAudioResponse(res?.payload?.data?.audio_file);
+            setAudioResponse(res?.payload?.data?.agent_audio_data);
             setMessageResponse(res?.payload?.data?.agent_message);
+            setUserResponse(res?.payload?.data?.user_message);
+            setOfferList(res?.payload?.data?.offer_list);
             navigate("/credit/offer-page", {
               state: res?.payload?.data?.loan_agreement_url,
             });

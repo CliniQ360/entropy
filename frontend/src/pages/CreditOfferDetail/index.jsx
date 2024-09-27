@@ -17,7 +17,7 @@ import {
   TablePagination,
   Paper,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DownloadIcon from "../../utils/CustomIcons/DownloadIcon";
 import { useLocation } from "react-router-dom";
@@ -25,6 +25,7 @@ import { useTheme } from "@emotion/react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import { AudioDataContext } from "../../context/audioDataContext";
 
 const CreditOfferWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
@@ -79,18 +80,16 @@ const CustomTableContainer = styled(TableContainer)(({ theme }) => ({
 }));
 
 const CreditOfferPage = () => {
-  // const pdfUrl =
-  //   "https://pramaan.ondc.org/beta/preprod/mock/seller/document/agreement.pdf";
   const [showLoader, setShowLoader] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
   const location = useLocation();
   const [offerDetails, setOfferDetails] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
-  // const [providerDetails, setProviderDetails] = useState([]);
   const [quoteDetails, setQuoteDetails] = useState([]);
   const [customerDetails, setCustomerdetails] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const { offerList } = useContext(AudioDataContext);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -168,255 +167,14 @@ const CreditOfferPage = () => {
   });
 
   useEffect(() => {
-    const offerDetails = {
-      transaction_details: {
-        current_stage: "ORDER_CNF",
-        domain: "ONDC:FIS12",
-        txn_id: "c4f6d3d1-7d13-4b0e-8180-b4d7f327174b",
-        user_id: 99,
-        status: "COMPLETED",
-        current_action: "ON_CONFIRM",
-        redirection_status: "LOAN_AGRMT_APPROVED",
-        customer_id: 109,
-        environment: null,
-        created_at: "2024-09-27T14:07:32.364268",
-        updated_at: "2024-09-27T14:12:04.340282",
-      },
-      offer_list: [
-        {
-          offer_details: {
-            offer_item_id: "3b55859a-0d94-427e-b1ef-9deab8cb6928",
-            offer_row_id: 10089,
-            order_id: "659f261e-5994-492b-89d7-b2ad523e30f3",
-            loan_status: "INITIATED",
-            item_price: "442300",
-            INTEREST_RATE: "12%",
-            TERM: "5 months",
-            INTEREST_RATE_TYPE: "FIXED",
-            APPLICATION_FEE: "0",
-            FORECLOSURE_FEE: "0.5%",
-            INTEREST_RATE_CONVERSION_CHARGE: "0",
-            DELAY_PENALTY_FEE: "5%",
-            OTHER_PENALTY_FEE: "1%",
-            ANNUAL_PERCENTAGE_RATE: "5%",
-            REPAYMENT_FREQUENCY: "MONTHLY",
-            NUMBER_OF_INSTALLMENTS_OF_REPAYMENT: "5",
-            TNC_LINK:
-              "https://pramaan.ondc.org/beta/preprod/mock/seller/document/tnc.pdf",
-            COOL_OFF_PERIOD: "PT5M",
-            INSTALLMENT_AMOUNT: "88460.00",
-            CONSENT_HANDLER: "0849681d-07f9-4aaa-9a8d-88ae1e198187",
-            MIN_INTEREST_RATE: "9%",
-            MAX_INTEREST_RATE: "15%",
-            MIN_TENURE: "5 months",
-            MAX_TENURE: "5 years",
-            MIN_LOAN_AMOUNT: "50000",
-            MAX_LOAN_AMOUNT: "5000000",
-          },
-          provider_details: {
-            images: [
-              {
-                size_type: "sm",
-                url: "https://ondc.org/assets/theme/images/ondc_registered_logo.svg?v=399788fda7",
-              },
-            ],
-            long_desc: "ONDC Bank Ltd, India.",
-            name: "ONDC Bank",
-            short_desc: "Ondc Bank Ltd",
-            GRO_NAME: "ONDC",
-            GRO_EMAIL: "lifeline@ondc.com",
-            GRO_CONTACT_NUMBER: "1860 266 7766",
-            GRO_DESIGNATION: "Nodal Grievance Redressal Officer",
-            GRO_ADDRESS:
-              "One Indiabulls centre, Tower 1, 18th Floor Jupiter mill compound 841, Senapati Bapat Marg, Elphinstone Road, Mumbai 400013",
-            CUSTOMER_SUPPORT_LINK:
-              "https://buy.ondc.org/buy/GrievanceRedStep.htm?execution=e1s1",
-            CUSTOMER_SUPPORT_CONTACT_NUMBER: "1800 1080",
-            CUSTOMER_SUPPORT_EMAIL: "customer.care@ondc.com",
-            LSP_NAME: "ONDC_BANK_LSP",
-            LSP_EMAIL: "lsp@ondcbank.com",
-            LSP_CONTACT_NUMBER: "1860 266 7766",
-            LSP_ADDRESS:
-              "One Indiabulls centre, Tower 1, 18th Floor Jupiter mill compound 841, Senapati Bapat Marg, Elphinstone Road, Mumbai 400013",
-          },
-          quote_details: {
-            PRINCIPAL: "400000",
-            INTEREST: "40000",
-            PROCESSING_FEE: "1800",
-            OTHER_UPFRONT_CHARGES: "0",
-            INSURANCE_CHARGES: "500",
-            NET_DISBURSED_AMOUNT: "397700",
-            OTHER_CHARGES: "0",
-            quote_price: "442300",
-          },
-          payment_details: [
-            {
-              id: "7e20bbcb-fa71-4512-8bdc-6508971cd925",
-              type: "ON_ORDER",
-              status: "NOT-PAID",
-              collected_by: "BPP",
-              tags: [
-                {
-                  descriptor: {
-                    code: "BUYER_FINDER_FEES",
-                  },
-                  display: false,
-                  list: [
-                    {
-                      descriptor: {
-                        code: "BUYER_FINDER_FEES_TYPE",
-                      },
-                      value: "percent-annualized",
-                    },
-                    {
-                      descriptor: {
-                        code: "BUYER_FINDER_FEES_PERCENTAGE",
-                      },
-                      value: "1",
-                    },
-                  ],
-                },
-                {
-                  descriptor: {
-                    code: "SETTLEMENT_TERMS",
-                  },
-                  display: false,
-                  list: [
-                    {
-                      descriptor: {
-                        code: "SETTLEMENT_WINDOW",
-                      },
-                      value: "PT60M",
-                    },
-                    {
-                      descriptor: {
-                        code: "SETTLEMENT_BASIS",
-                      },
-                      value: "INVOICE_RECEIPT",
-                    },
-                    {
-                      descriptor: {
-                        code: "MANDATORY_ARBITRATION",
-                      },
-                      value: "TRUE",
-                    },
-                    {
-                      descriptor: {
-                        code: "COURT_JURISDICTION",
-                      },
-                      value: "New Delhi",
-                    },
-                    {
-                      descriptor: {
-                        code: "STATIC_TERMS",
-                      },
-                      value:
-                        "https://bpp.credit.becknprotocol.org/personal-banking/loans/personal-loan",
-                    },
-                    {
-                      descriptor: {
-                        code: "OFFLINE_CONTRACT",
-                      },
-                      value: "true",
-                    },
-                    {
-                      descriptor: {
-                        code: "SETTLEMENT_AMOUNT",
-                      },
-                      value: "1666.67",
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              id: "1",
-              type: "POST_FULFILLMENT",
-              params: {
-                amount: "88460.00",
-                currency: "INR",
-              },
-              status: "NOT-PAID",
-              time: {
-                label: "INSTALLMENT",
-                range: {
-                  start: "2024-10-01T08:41:40.454Z",
-                  end: "2024-10-31T08:41:40.454Z",
-                },
-              },
-            },
-            {
-              id: "2",
-              type: "POST_FULFILLMENT",
-              params: {
-                amount: "88460.00",
-                currency: "INR",
-              },
-              status: "NOT-PAID",
-              time: {
-                label: "INSTALLMENT",
-                range: {
-                  start: "2024-11-01T08:41:40.454Z",
-                  end: "2024-11-30T08:41:40.454Z",
-                },
-              },
-            },
-            {
-              id: "3",
-              type: "POST_FULFILLMENT",
-              params: {
-                amount: "88460.00",
-                currency: "INR",
-              },
-              status: "NOT-PAID",
-              time: {
-                label: "INSTALLMENT",
-                range: {
-                  start: "2024-12-01T08:41:40.454Z",
-                  end: "2024-12-31T08:41:40.454Z",
-                },
-              },
-            },
-            {
-              id: "4",
-              type: "POST_FULFILLMENT",
-              params: {
-                amount: "88460.00",
-                currency: "INR",
-              },
-              status: "NOT-PAID",
-              time: {
-                label: "INSTALLMENT",
-                range: {
-                  start: "2024-01-01T08:41:40.454Z",
-                  end: "2024-01-31T08:41:40.454Z",
-                },
-              },
-            },
-            {
-              id: "5",
-              type: "POST_FULFILLMENT",
-              params: {
-                amount: "88460.00",
-                currency: "INR",
-              },
-              status: "NOT-PAID",
-              time: {
-                label: "INSTALLMENT",
-                range: {
-                  start: "2025-02-01T08:41:40.454Z",
-                  end: "2025-02-28T08:41:40.454Z",
-                },
-              },
-            },
-          ],
-        },
-      ],
-    };
-    setOfferDetails(offerDetails?.offer_list[0]?.offer_details);
-    setPaymentDetails(offerDetails?.offer_list[0]?.payment_details);
-    setQuoteDetails(offerDetails?.offer_list[0]?.quote_details);
-    setCustomerdetails(JSON.parse(sessionStorage.getItem("customer_details")));
+    if (offerList) {
+      setOfferDetails(offerList[0]?.offer_details);
+      setPaymentDetails(offerList[0]?.payment_details);
+      setQuoteDetails(offerList[0]?.quote_details);
+      setCustomerdetails(
+        JSON.parse(sessionStorage.getItem("customer_details"))
+      );
+    }
   }, [location.pathname]);
 
   const handleDownload = async () => {

@@ -7,6 +7,7 @@ const AudioContextProvider = ({ children }) => {
   const [aaRedirectUrl, setAaRedirectUrl] = useState("");
   const [kycRedirectUrl, setKycRedirectUrl] = useState("");
   const [eMandateRedirectUrl, setEMandateRedirectUrl] = useState("");
+  const [offerList, setOfferList] = useState([]);
 
   return (
     <AudioDataContext.Provider
@@ -19,6 +20,8 @@ const AudioContextProvider = ({ children }) => {
         setKycRedirectUrl,
         eMandateRedirectUrl,
         setEMandateRedirectUrl,
+        offerList,
+        setOfferList,
       }}
     >
       {children}

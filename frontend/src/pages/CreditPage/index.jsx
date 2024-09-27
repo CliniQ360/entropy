@@ -37,6 +37,8 @@ const CreditPage = () => {
     setMessageResponse,
     setNextState,
     nextState,
+    setProgressValue,
+    setUserResponse,
   } = useContext(MediaContext);
   const {
     setCustomerDetails,
@@ -82,9 +84,10 @@ const CreditPage = () => {
           return;
         }
         setError(false);
-        setAudioResponse(res?.payload?.data?.audio_file);
+        setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setCustomerDetails(res?.payload?.data?.customer_details);
+        setUserResponse(res?.payload?.data?.user_message);
         setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
         setNextState(res?.payload?.data?.next_state);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
@@ -103,6 +106,9 @@ const CreditPage = () => {
           res?.payload?.data?.next_state === "human_loan_amount_selection"
         ) {
           navigate("/credit/customize-offers");
+          setProgressValue(50);
+        } else if (res?.payload?.data?.next_state === "human_selection") {
+          setProgressValue(40);
         }
         clearBlobUrl();
       })

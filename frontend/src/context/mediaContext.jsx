@@ -5,6 +5,7 @@ const MediaContext = createContext();
 const MediaContextProvider = ({ children }) => {
   const [audioResponse, setAudioResponse] = useState("");
   const [messageResponse, setMessageResponse] = useState("");
+  const [userResponse, setUserResponse] = useState("");
   const [nextState, setNextState] = useState("");
   const [error, setError] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
@@ -22,6 +23,8 @@ const MediaContextProvider = ({ children }) => {
         setNextState,
         progressValue,
         setProgressValue,
+        userResponse,
+        setUserResponse,
       }}
     >
       {children}

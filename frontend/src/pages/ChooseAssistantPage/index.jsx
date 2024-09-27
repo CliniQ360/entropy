@@ -114,8 +114,14 @@ const FooterButton = styled(Button)(({ theme }) => ({
 const ChooseAssistant = () => {
   const [activeButton, setActiveButton] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
-  const { setAudioResponse, setMessageResponse, setNextState, setError } =
-    useContext(MediaContext);
+  const {
+    setAudioResponse,
+    setMessageResponse,
+    setNextState,
+    setError,
+    setProgressValue,
+    setUserResponse,
+  } = useContext(MediaContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -130,8 +136,10 @@ const ChooseAssistant = () => {
         return;
       }
       setError(false);
+      setProgressValue(10);
       setAudioResponse(res?.payload?.agent_audio_data);
       setMessageResponse(res?.payload?.agent_message);
+      setUserResponse(res?.payload?.user_message);
       sessionStorage.setItem("next_state", res?.payload?.next_state);
       setNextState(res?.payload?.next_state);
       sessionStorage.setItem("thread_id", res?.payload?.thread_id);

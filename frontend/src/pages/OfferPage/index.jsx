@@ -143,8 +143,13 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 const AvailableOffersPage = () => {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [offerDetails, setOfferDetails] = useState([]);
-  const { nextState, setError, setAudioResponse, setMessageResponse } =
-    useContext(MediaContext);
+  const {
+    nextState,
+    setError,
+    setAudioResponse,
+    setMessageResponse,
+    setUserResponse,
+  } = useContext(MediaContext);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const [openViewDetails, setOpenViewDetails] = useState(false);
@@ -172,9 +177,11 @@ const AvailableOffersPage = () => {
           return;
         }
         setError(false);
-        setAudioResponse(res?.payload?.data?.audio_file);
+        setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setOfferDetails(res?.payload?.data?.offer_list);
+        setUserResponse(res?.payload?.data?.user_message);
+
         sessionStorage.setItem(
           "customer_details",
           JSON.stringify(res?.payload?.data?.customer_details)

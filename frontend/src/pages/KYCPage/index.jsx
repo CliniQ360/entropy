@@ -52,8 +52,13 @@ const KYCPage = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
   const { kycRedirectUrl } = useContext(AudioDataContext);
-  const { setAudioResponse, setMessageResponse, setError } =
-    useContext(MediaContext);
+  const {
+    setAudioResponse,
+    setMessageResponse,
+    setError,
+    setProgressValue,
+    setUserResponse,
+  } = useContext(MediaContext);
 
   let kyc_url;
 
@@ -114,12 +119,14 @@ const KYCPage = () => {
             }
             setError(false);
             setShowLoader(false);
+            setProgressValue(60);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
             );
-            setAudioResponse(res?.payload?.data?.audio_file);
+            setAudioResponse(res?.payload?.data?.agent_audio_data);
             setMessageResponse(res?.payload?.data?.agent_message);
+            setUserResponse(res?.payload?.data?.user_message);
             if (
               res?.payload?.data?.next_state ===
               "human_account_details_feedback"
