@@ -13,6 +13,8 @@ class ElevenLabsHelper:
         self.api_key = os.environ.get("ELEVENLABS_API_KEY")
 
     def text_to_speech_generator(text: str, output_path: str):
+        print("Inside TTS 11labs")
+        print(f"{os.environ.get("ELEVENLABS_API_KEY")=}")
         client = ElevenLabs(
             api_key=os.environ.get("ELEVENLABS_API_KEY"),
         )
