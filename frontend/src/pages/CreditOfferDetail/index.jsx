@@ -604,7 +604,7 @@ const CreditOfferPage = () => {
           <LoanDetailsWrapper container>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Patient Name
+                Order ID
               </Typography>
               <Typography
                 sx={{
@@ -615,12 +615,12 @@ const CreditOfferPage = () => {
                   mb: 1,
                 }}
               >
-                Full Name
+                {offerDetails?.order_id}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Gender
+                Principal
               </Typography>
               <Typography
                 sx={{
@@ -631,71 +631,7 @@ const CreditOfferPage = () => {
                   mb: 1,
                 }}
               >
-                Male
-              </Typography>
-            </LoanDetailsItem>
-            <LoanDetailsItem xs={5.8} sm={5.8}>
-              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Date of Birth
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.1rem",
-                  color: "#171717",
-                  fontWeight: 700,
-                  mt: 1,
-                  mb: 1,
-                }}
-              >
-                05/10/1990
-              </Typography>
-            </LoanDetailsItem>
-            <LoanDetailsItem xs={5.8} sm={5.8}>
-              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Email Address{" "}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.1rem",
-                  color: "#171717",
-                  fontWeight: 700,
-                  mt: 1,
-                  mb: 1,
-                }}
-              >
-                abc@gmail.com
-              </Typography>
-            </LoanDetailsItem>
-            <LoanDetailsItem xs={5.8} sm={5.8}>
-              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Order ID{" "}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.1rem",
-                  color: "#171717",
-                  fontWeight: 700,
-                  mt: 1,
-                  mb: 1,
-                }}
-              >
-                1231313213213
-              </Typography>
-            </LoanDetailsItem>
-            <LoanDetailsItem xs={5.8} sm={5.8}>
-              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Principal{" "}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.1rem",
-                  color: "#171717",
-                  fontWeight: 700,
-                  mt: 1,
-                  mb: 1,
-                }}
-              >
-                123456789000
+                {quoteDetails?.PRINCIPAL}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -711,7 +647,103 @@ const CreditOfferPage = () => {
                   mb: 1,
                 }}
               >
-                123456789000
+                {quoteDetails?.INTEREST}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Net Disbursed Amount
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {quoteDetails?.NET_DISBURSED_AMOUNT}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Other Upfront Charges
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {quoteDetails?.OTHER_UPFRONT_CHARGES}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Insurance Charges
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {quoteDetails?.INSURANCE_CHARGES}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Other Charges
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {quoteDetails?.OTHER_CHARGES}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Processing Fee
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {quoteDetails?.PROCESSING_FEE}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Final Price
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {quoteDetails?.quote_price}
               </Typography>
             </LoanDetailsItem>
           </LoanDetailsWrapper>
