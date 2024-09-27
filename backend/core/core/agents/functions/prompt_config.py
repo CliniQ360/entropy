@@ -50,7 +50,7 @@ class OpenAIPrompts:
         Your result must be detailed and atleast 2 paragraphs. 
         When summarizing, directly dive into the descriptions from the text without using introductory phrases.
         Directly address the loan details, important terms and conditions, and repayment stategies, encapsulating the essence and 
-        significant details from the text. Keep a conversational tone.
+        significant details from the text. Keep a conversational tone. Generate the summary in 25 words only.
         Passage:
         ```{text}```
         SUMMARY:

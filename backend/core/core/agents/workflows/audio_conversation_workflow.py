@@ -151,7 +151,8 @@ def build_workflow():
         ["loan_agreement_signing_pending", "confirm_loan"],
     )
     builder.add_edge("loan_agreement_signing_pending", "resume_loan_agreement_signing")
-    builder.add_edge("confirm_loan", "summarise_loan_tnc")
+    builder.add_edge("confirm_loan", "get_offers")
+    builder.add_edge("get_offers", "summarise_loan_tnc")
     builder.add_edge("summarise_loan_tnc", "human_loan_tnc_feedback")
     builder.add_conditional_edges(
         "human_loan_tnc_feedback",
