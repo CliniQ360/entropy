@@ -43,6 +43,7 @@ class LoanDocumentState(TypedDict):
     loan_signing_redirect_url: str
     loan_agreement_summary: str
     loan_agreement_text: str
+    loan_agreement_url: str
     user_query: Annotated[list, operator.add]
     engine_answer: Annotated[list, operator.add]
     dummy: str

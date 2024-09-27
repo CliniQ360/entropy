@@ -284,6 +284,9 @@ class AudioConversationController:
                 loan_signing_redirect_url = workflow.get_state(thread).values.get(
                     "loan_signing_redirect_url"
                 )
+                loan_agreement_url = workflow.get_state(thread).values.get(
+                    "loan_agreement_url"
+                )
                 offer_list = workflow.get_state(thread).values.get("offer_list")
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
                 return {
@@ -308,6 +311,9 @@ class AudioConversationController:
                     ),
                     "offer_list": offer_list if offer_list else [],
                     "offer_summary": offer_summary if offer_summary else "None",
+                    "loan_agreement_url": (
+                        loan_agreement_url if loan_agreement_url else "None"
+                    ),
                 }
         except Exception as error:
             logging.error(

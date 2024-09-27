@@ -489,6 +489,7 @@ def summarise_loan_tnc(state: LoanDocumentState):
         "loan_agreement_summary": loan_agreement_summary,
         "loan_agreement_text": text,
         "agent_message": [loan_agreement_summary],
+        "loan_agreement_url":loan_agreement_url,
     }
 
 
