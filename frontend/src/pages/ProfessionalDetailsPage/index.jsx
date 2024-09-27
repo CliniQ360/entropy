@@ -75,7 +75,8 @@ const ProfessionalDetailsPage = () => {
   const [confirmationDialog, setConfirmationDialog] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const { customerDetails, aaRedirectUrl } = useContext(AudioDataContext);
-  const { nextState } = useContext(MediaContext);
+  const { nextState, setError, setAudioResponse, setMessageResponse } =
+    useContext(MediaContext);
   const [showLoader, setShowLoader] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
   const dispatch = useDispatch();
@@ -143,6 +144,10 @@ const ProfessionalDetailsPage = () => {
         txnId: sessionStorage.getItem("txn_id"),
       };
       dispatch(creditStatusCheck(payload)).then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setError(true);
+          return;
+        }
         if (res?.payload?.redirection_status === "AA_APPROVED") {
           console.log("Desired response received:");
           form_aa_URL.close();
@@ -154,11 +159,17 @@ const ProfessionalDetailsPage = () => {
             state: sessionStorage.getItem("next_state"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
+            if (res?.error && Object.keys(res?.error)?.length > 0) {
+              setError(true);
+              return;
+            }
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
             );
+            setAudioResponse(res?.payload?.data?.audio_file);
+            setMessageResponse(res?.payload?.data?.agent_message);
             sessionStorage.setItem("showTimer", true);
             navigate("/credit/availableOffers");
           });

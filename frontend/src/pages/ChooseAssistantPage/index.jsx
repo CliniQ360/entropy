@@ -114,7 +114,7 @@ const FooterButton = styled(Button)(({ theme }) => ({
 const ChooseAssistant = () => {
   const [activeButton, setActiveButton] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
-  const { setAudioResponse, setMessageResponse, setNextState } =
+  const { setAudioResponse, setMessageResponse, setNextState, setError } =
     useContext(MediaContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -125,6 +125,10 @@ const ChooseAssistant = () => {
 
   const handleInitConversion = () => {
     dispatch(startConversion()).then((res) => {
+      if (res?.error && Object.keys(res?.error)?.length > 0) {
+        setError(true);
+        return;
+      }
       setAudioResponse(res?.payload?.agent_audio_data);
       setMessageResponse(res?.payload?.agent_message);
       sessionStorage.setItem("next_state", res?.payload?.next_state);

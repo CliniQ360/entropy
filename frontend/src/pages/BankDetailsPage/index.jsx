@@ -62,13 +62,14 @@ const BankDetailsPage = () => {
     ifscCode: "",
   });
   const [re_num, setRe_num] = useState("");
-  const [error, setError] = useState(false);
+  const [validateError, setValidateError] = useState(false);
   const [isMatched, setIsMatched] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
 
   /* USE DISPATCH */
   const dispatch = useDispatch();
-  const { setAudioResponse, setMessageResponse } = useContext(MediaContext);
+  const { setAudioResponse, setMessageResponse, setError } =
+    useContext(MediaContext);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -101,7 +102,7 @@ const BankDetailsPage = () => {
       !formData.ifscCode ||
       formData.accNo !== re_num
     ) {
-      setError(true);
+      setValidateError(true);
       return true;
     }
     return false;
@@ -121,6 +122,11 @@ const BankDetailsPage = () => {
         state: sessionStorage.getItem("next_state"),
       };
       dispatch(bankLoanDataResumeConversion(payload)).then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setShowLoader(false);
+          setError(true);
+          return;
+        }
         setShowLoader(false);
         sessionStorage.setItem("next_state", res?.payload?.next_state);
         setAudioResponse(res?.payload?.data?.audio_file);
@@ -158,7 +164,10 @@ const BankDetailsPage = () => {
         </BankDetailHeader>
         <BankFormWrapper container>
           <BankFormWrapperItem sm={12} xs={12}>
-            <FormControl fullWidth error={!formData.accHolderName && error}>
+            <FormControl
+              fullWidth
+              error={!formData.accHolderName && validateError}
+            >
               <FormLabel
                 sx={{
                   mb: 2,
@@ -179,15 +188,15 @@ const BankDetailsPage = () => {
                 name="accHolderName"
                 value={formData.accHolderName}
                 placeholder="Enter Your Bank Name"
-                error={!formData.accHolderName && error}
+                error={!formData.accHolderName && validateError}
               />
-              {!formData.accHolderName && error && (
+              {!formData.accHolderName && validateError && (
                 <ErrorMessageBox>Enter Your Bank Name</ErrorMessageBox>
               )}
             </FormControl>
           </BankFormWrapperItem>
           <BankFormWrapperItem sm={12} xs={12} width={"100%"}>
-            <FormControl fullWidth error={!formData.acctype && error}>
+            <FormControl fullWidth error={!formData.acctype && validateError}>
               <FormLabel>
                 <Typography
                   sx={{
@@ -254,7 +263,7 @@ const BankDetailsPage = () => {
                       height: "40px",
                       width: "40%",
                       border:
-                        !formData.acctype && error
+                        !formData.acctype && validateError
                           ? "1px solid red"
                           : "1px solid lightGray",
                       padding: "5px 10px",
@@ -277,7 +286,7 @@ const BankDetailsPage = () => {
                       height: "40px",
                       width: "40%",
                       border:
-                        !formData.acctype && error
+                        !formData.acctype && validateError
                           ? "1px solid red"
                           : "1px solid lightGray",
                       padding: "5px 10px",
@@ -297,13 +306,13 @@ const BankDetailsPage = () => {
                   </Box>
                 </Box>
               </RadioGroup>
-              {!formData.acctype && error && (
+              {!formData.acctype && validateError && (
                 <ErrorMessageBox>Select Account Type</ErrorMessageBox>
               )}
             </FormControl>
           </BankFormWrapperItem>
           <BankFormWrapperItem sm={12} xs={12}>
-            <FormControl fullWidth error={!formData.ifscCode && error}>
+            <FormControl fullWidth error={!formData.ifscCode && validateError}>
               <FormLabel
                 sx={{
                   mb: 2,
@@ -324,15 +333,15 @@ const BankDetailsPage = () => {
                 name="ifscCode"
                 value={formData.ifscCode}
                 placeholder="Enter Your IFSC Code"
-                error={!formData.ifscCode && error}
+                error={!formData.ifscCode && validateError}
               />
-              {!formData.ifscCode && error && (
+              {!formData.ifscCode && validateError && (
                 <ErrorMessageBox>Enter IFSC Number</ErrorMessageBox>
               )}
             </FormControl>
           </BankFormWrapperItem>
           <BankFormWrapperItem sm={12} xs={12}>
-            <FormControl fullWidth error={!formData.accNo && error}>
+            <FormControl fullWidth error={!formData.accNo && validateError}>
               <FormLabel
                 sx={{
                   mb: 2,
@@ -353,15 +362,15 @@ const BankDetailsPage = () => {
                 name="accNo"
                 value={formData.accNo}
                 placeholder="Enter Your Account Number"
-                error={!formData.accNo && error}
+                error={!formData.accNo && validateError}
               />
-              {!formData.accNo && error && (
+              {!formData.accNo && validateError && (
                 <ErrorMessageBox>Enter Account Number</ErrorMessageBox>
               )}
             </FormControl>
           </BankFormWrapperItem>
           <BankFormWrapperItem sm={12} xs={12}>
-            <FormControl fullWidth error={!re_num && error}>
+            <FormControl fullWidth error={!re_num && validateError}>
               <FormLabel
                 sx={{
                   mb: 2,
@@ -382,7 +391,7 @@ const BankDetailsPage = () => {
                 name="re_num"
                 value={re_num}
                 placeholder="Enter Your Re-Account Number"
-                error={!re_num && error}
+                error={!re_num && validateError}
               />
               <Typography color={"red"}>
                 {isMatched && re_num !== "" && "Not matched"}

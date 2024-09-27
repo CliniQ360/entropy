@@ -52,7 +52,8 @@ const KYCPage = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
   const { kycRedirectUrl } = useContext(AudioDataContext);
-  const { setAudioResponse, setMessageResponse } = useContext(MediaContext);
+  const { setAudioResponse, setMessageResponse, setError } =
+    useContext(MediaContext);
 
   let kyc_url;
 
@@ -106,6 +107,12 @@ const KYCPage = () => {
             selected_loan_amount: sessionStorage.getItem("selected_amt"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
+            if (res?.error && Object.keys(res?.error)?.length > 0) {
+              setShowLoader(false);
+              setError(true);
+              return;
+            }
+
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",

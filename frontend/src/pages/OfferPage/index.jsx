@@ -30,6 +30,7 @@ import { useDispatch } from "react-redux";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
 import CustomLoader from "../../components/CustomLoader";
 import CustomTimer from "../../components/CustomTimer";
+import { MediaContext } from "../../context/mediaContext";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -142,7 +143,8 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 const AvailableOffersPage = () => {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [offerDetails, setOfferDetails] = useState([]);
-
+  const { nextState, setError, setAudioResponse, setMessageResponse } =
+    useContext(MediaContext);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const [openViewDetails, setOpenViewDetails] = useState(false);
@@ -161,13 +163,16 @@ const AvailableOffersPage = () => {
       state: "refresh_offer",
     };
 
-    const setTimeoutSeconds = showTimer ? 59000 : 0;
+    const setTimeoutSeconds = showTimer ? 52000 : 0;
     setTimeout(() => {
       dispatch(agentConversation(payload)).then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
           setShowLoader(false);
+          setError(true);
           return;
         }
+        setAudioResponse(res?.payload?.data?.audio_file);
+        setMessageResponse(res?.payload?.data?.agent_message);
         setOfferDetails(res?.payload?.data?.offer_list);
         setShowLoader(false);
         setTimeout(() => {

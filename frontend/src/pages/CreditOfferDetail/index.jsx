@@ -6,10 +6,12 @@ import {
   Stack,
   styled,
   Typography,
+  Box,
+  IconButton,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
+import DownloadIcon from "../../utils/CustomIcons/DownloadIcon";
 
 const CreditOfferWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
@@ -27,6 +29,7 @@ const CustomAccordian = styled(Accordion)(({ theme }) => ({
   borderBottomLeftRadius: "10px",
   borderBottomRightRadius: "10px",
   marginBottom: "10px",
+  marginTop: "20px",
 }));
 const LoanDetailsWrapper = styled(Grid)(({ theme }) => ({
   gap: theme.spacing(2),
@@ -35,7 +38,47 @@ const LoanDetailsWrapper = styled(Grid)(({ theme }) => ({
 const LoanDetailsItem = styled(Grid)(({ theme }) => ({
   gap: theme.spacing(2),
 }));
+
+const PDFPreviewSection = styled("div")(({ theme }) => ({
+  flexDirection: "column",
+  boxShadow: "0 0 10px 3px #d2d2d278",
+  height: "250px",
+  width: "100%",
+}));
+const PdfPreview = styled("div")(({ theme }) => ({
+  height: "80%",
+  flex: 1,
+}));
+const PreviewBottomSection = styled("div")(({ theme }) => ({
+  backgroundColor: "#F8F8F8",
+  height: "20%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));
 const CreditOfferPage = () => {
+  const pdfUrl =
+    "https://pramaan.ondc.org/beta/preprod/mock/seller/document/agreement.pdf";
+  const [showLoader, setShowLoader] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      setShowLoader(true);
+      const response = await fetch(pdfUrl);
+      const blob = await response.blob();
+      setShowLoader(false);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Loan Agreement.pdf";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+    }
+  };
   return (
     <CreditOfferWrapper>
       <CreditHeaderSection>
@@ -60,6 +103,25 @@ const CreditOfferPage = () => {
           industry
         </Typography>
       </CreditHeaderSection>
+      <PDFPreviewSection>
+        <PdfPreview>
+          <iframe src={pdfUrl} title="PDF Preview" width="100%" height="100%" />
+        </PdfPreview>
+        <PreviewBottomSection>
+          <Box ml={5}>
+            <Typography
+              sx={{ fontFamily: "source sans pro", fontSize: "1.1rem" }}
+            >
+              Loan Agreement.pdf
+            </Typography>
+          </Box>
+          <Stack mr={6}>
+            <IconButton onClick={handleDownload}>
+              <DownloadIcon width={"18"} />
+            </IconButton>
+          </Stack>
+        </PreviewBottomSection>
+      </PDFPreviewSection>
       <CustomAccordian defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}

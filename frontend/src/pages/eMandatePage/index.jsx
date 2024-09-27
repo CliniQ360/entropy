@@ -46,7 +46,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 const EmandatePage = () => {
   const { eMandateRedirectUrl } = useContext(AudioDataContext);
-  const { setAudioResponse, setMessageResponse } = useContext(MediaContext);
+  const { setAudioResponse, setMessageResponse, setError } =
+    useContext(MediaContext);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -129,6 +130,11 @@ const EmandatePage = () => {
             selected_loan_amount: sessionStorage.getItem("selected_amt"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
+            if (res?.error && Object.keys(res?.error)?.length > 0) {
+              setShowLoader(false);
+              setError(true);
+              return;
+            }
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
@@ -172,6 +178,11 @@ const EmandatePage = () => {
             selected_loan_amount: sessionStorage.getItem("selected_amt"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
+            if (res?.error && Object.keys(res?.error)?.length > 0) {
+              setShowLoader(false);
+              setError(true);
+              return;
+            }
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
