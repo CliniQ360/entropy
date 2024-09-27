@@ -171,9 +171,14 @@ const AvailableOffersPage = () => {
           setError(true);
           return;
         }
+        setError(false);
         setAudioResponse(res?.payload?.data?.audio_file);
         setMessageResponse(res?.payload?.data?.agent_message);
         setOfferDetails(res?.payload?.data?.offer_list);
+        sessionStorage.setItem(
+          "customer_details",
+          JSON.stringify(res?.payload?.data?.customer_details)
+        );
         setShowLoader(false);
         setTimeout(() => {
           sessionStorage.setItem("next_state", res?.payload?.data?.next_state);

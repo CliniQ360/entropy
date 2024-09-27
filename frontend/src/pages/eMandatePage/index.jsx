@@ -135,6 +135,7 @@ const EmandatePage = () => {
               setError(true);
               return;
             }
+            setError(false);
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
@@ -183,6 +184,7 @@ const EmandatePage = () => {
               setError(true);
               return;
             }
+            setError(false);
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
@@ -190,7 +192,9 @@ const EmandatePage = () => {
             );
             setAudioResponse(res?.payload?.data?.audio_file);
             setMessageResponse(res?.payload?.data?.agent_message);
-            navigate("/credit/offer-page");
+            navigate("/credit/offer-page", {
+              state: res?.payload?.data?.loan_agreement_url,
+            });
           });
         } else {
           console.log("Error Occured");

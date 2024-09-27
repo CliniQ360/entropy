@@ -129,6 +129,7 @@ const ChooseAssistant = () => {
         setError(true);
         return;
       }
+      setError(false);
       setAudioResponse(res?.payload?.agent_audio_data);
       setMessageResponse(res?.payload?.agent_message);
       sessionStorage.setItem("next_state", res?.payload?.next_state);

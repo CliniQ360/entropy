@@ -127,6 +127,7 @@ const BankDetailsPage = () => {
           setError(true);
           return;
         }
+        setError(false);
         setShowLoader(false);
         sessionStorage.setItem("next_state", res?.payload?.next_state);
         setAudioResponse(res?.payload?.data?.audio_file);

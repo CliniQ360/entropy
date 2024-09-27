@@ -148,6 +148,7 @@ const ProfessionalDetailsPage = () => {
           setError(true);
           return;
         }
+        setError(false);
         if (res?.payload?.redirection_status === "AA_APPROVED") {
           console.log("Desired response received:");
           form_aa_URL.close();
@@ -163,6 +164,7 @@ const ProfessionalDetailsPage = () => {
               setError(true);
               return;
             }
+            setError(false);
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",

@@ -112,7 +112,7 @@ const KYCPage = () => {
               setError(true);
               return;
             }
-
+            setError(false);
             setShowLoader(false);
             sessionStorage.setItem(
               "next_state",
