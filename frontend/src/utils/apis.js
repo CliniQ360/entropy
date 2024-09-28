@@ -4,4 +4,5 @@ export const apis = {
   resumeConversionApi: "v1/sahayak/resume_conversation",
   creditStatusCheck: "v1/txn_details",
   bankLoanDataApi: "v1/langgraph/resume_conversation",
+  documentUploadApi: "v1/sahayak/upload_documents",
 };

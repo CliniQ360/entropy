@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Stack, styled, Typography } from "@mui/material";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Button, Stack, styled, Typography } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -7,6 +7,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BackupTableIcon from "@mui/icons-material/BackupTable";
 import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "../../utils/CustomIcons/UploadIcon";
+import { useDispatch } from "react-redux";
+import {
+  agentConversation,
+  documentUpload,
+} from "../CreditPage/audioAgent.slice";
+import { useNavigate } from "react-router-dom";
+import { MediaContext } from "../../context/mediaContext";
+import { AudioDataContext } from "../../context/audioDataContext";
+import CustomLoader from "../../components/CustomLoader";
 
 const UploadDocumentWrapper = styled("div")(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -57,12 +66,26 @@ const DocumentUploadPage = () => {
   const filePanInputRef = useRef(null);
   const [images, setImages] = useState([]);
   const [panImages, setPanImages] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };
   const handlePanUploadClick = () => {
     filePanInputRef.current.click();
   };
+
+  const {
+    setError,
+    setAudioResponse,
+    setMessageResponse,
+    nextState,
+    setProgressValue,
+    progressValue,
+  } = useContext(MediaContext);
+  const { setCustomerDetails } = useContext(AudioDataContext);
+  const [showLoader, setShowLoader] = useState(false);
+  const [uploadRestriction, setUploadRestriction] = useState(false);
 
   /*FOR ADDHAR CARD*/
   const handleFileChange = (event) => {
@@ -97,8 +120,67 @@ const DocumentUploadPage = () => {
     setPanImages(updatedImages);
   };
 
+  const handleUploadImages = () => {
+    setShowLoader(true);
+    const formData = new FormData();
+
+    images.map((item) => {
+      formData.append("files", item);
+    });
+
+    panImages.map((item) => {
+      formData.append("files", item);
+    });
+
+    const payload = {
+      threadId: sessionStorage.getItem("thread_id"),
+      files: formData,
+    };
+
+    dispatch(documentUpload(payload)).then((res) => {
+      if (res?.error && Object.keys(res?.error)?.length > 0) {
+        setError(true);
+        setShowLoader(false);
+        return;
+      }
+      if (res?.payload) {
+        sessionStorage.setItem("document_upload_flag", true);
+        const secondpayload = {
+          threadId: sessionStorage.getItem("thread_id"),
+          uploadFlag: true,
+          state: sessionStorage.getItem("next_state"),
+        };
+        dispatch(agentConversation(secondpayload)).then((res) => {
+          if (res?.error && Object.keys(res?.error)?.length > 0) {
+            setError(true);
+            setShowLoader(false);
+            return;
+          }
+          setError(false);
+          sessionStorage.setItem("document_upload_flag", false);
+          setProgressValue(20);
+          sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+          setAudioResponse(res?.payload?.data?.agent_audio_data);
+          setMessageResponse(res?.payload?.data?.agent_message);
+          setCustomerDetails(res?.payload?.data?.customer_details);
+          navigate("/credit/personal-Detail");
+          setShowLoader(false);
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (images.length > 0 || panImages.length > 0) {
+      setUploadRestriction(false);
+    } else {
+      setUploadRestriction(true);
+    }
+  }, [images, panImages]);
+
   return (
     <>
+      <CustomLoader open={showLoader} />
       <UploadDocumentWrapper>
         <DocumentHeaderSection>
           <Typography
@@ -213,6 +295,15 @@ const DocumentUploadPage = () => {
             </AccordionDetails>
           </CustomAccordian>
         </UploadDocumentContainer>
+        <Stack mt={4} mb={3} justifyContent={"center"} alignItems={"flex-end"}>
+          <Button
+            variant="contained"
+            onClick={handleUploadImages}
+            disabled={uploadRestriction}
+          >
+            Upload
+          </Button>
+        </Stack>
       </UploadDocumentWrapper>
     </>
   );

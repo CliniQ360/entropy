@@ -29,11 +29,37 @@ export const agentConversation = createAsyncThunk(
     }
   }
 );
+export const documentUpload = createAsyncThunk(
+  "agentConversation",
+  async (payload) => {
+    try {
+      const response = await axios.post(
+        BASE_URL +
+          `/${apis?.documentUploadApi}?` +
+          `thread_id=${payload?.threadId}`,
+        payload?.files,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers":
+              "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      throw Error(error.response.data.message);
+    }
+  }
+);
 
 export const startConversion = createAsyncThunk("startConversion", async () => {
   const response = await apiRequest("POST", apis?.startConversionApi);
   return response;
 });
+
 export const bankLoanDataResumeConversion = createAsyncThunk(
   "startConversion",
   async (payload) => {
