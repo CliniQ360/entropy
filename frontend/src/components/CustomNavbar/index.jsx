@@ -78,7 +78,7 @@ const CustomNavbar = () => {
       </IconButton>
       {/* Adjusted value to 40 for better visibility */}
       <BorderLinearProgress variant="determinate" value={progressValue} />
-      <IconButton>
+      <IconButton onClick={() => navigate(+1)}>
         <MultipleFilesIcon color={"#0054BA"} />
       </IconButton>
       {location.pathname === "/credit/route-3" && (

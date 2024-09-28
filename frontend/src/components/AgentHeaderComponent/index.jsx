@@ -37,12 +37,30 @@ const ProfileIcon = styled("div")(({ theme }) => ({
   backgroundPosition: "center",
 }));
 
+const styles = `
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%); // Start from off-screen right
+  }
+  100% {
+    transform: translateX(-100%); // Move to off-screen left
+  }
+}
+`;
+
+// Inject the keyframes into the document dynamically
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
+
 const AgentHeader = () => {
   const { audioResponse, messageResponse, error } = useContext(MediaContext);
   const [audioSrc, setAudioSrc] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const audioRef = useRef(null);
   const previousAudioUrlRef = useRef(null);
+  const [checkLenght, setCheckLenght] = useState(false);
 
   const base64ToBlob = (base64Data, contentType) => {
     const byteCharacters = atob(base64Data);
@@ -100,6 +118,14 @@ const AgentHeader = () => {
     }
   }, [audioSrc]);
 
+  useEffect(() => {
+    if (messageResponse && messageResponse.length > 40) {
+      setCheckLenght(true);
+    } else {
+      setCheckLenght(false);
+    }
+  }, [messageResponse]);
+
   return (
     <HeaderComponentWrapper>
       <HeaderComponent>
@@ -148,8 +174,11 @@ const AgentHeader = () => {
           alignItems={"center"}
           justifyContent={"center"}
           padding={2}
-          sx={{ overflowX: "auto", whiteSpace: "nowrap" }} //
-          height={"25px"}
+          sx={{
+            overflow: "hidden", // Hide text overflow
+            whiteSpace: "nowrap", // Ensure text stays on one line
+            height: "25px",
+          }}
         >
           {!error ? (
             <Typography
@@ -157,9 +186,14 @@ const AgentHeader = () => {
                 color: "#535353",
                 fontSize: "1rem",
                 fontFamily: "source sans pro",
-                whiteSpace: "nowrap", // Prevent wrapping
-                overflow: "hidden", // Hide overflow content
+                whiteSpace: "nowrap",
+                overflow: "hidden",
                 textOverflow: "ellipsis",
+                position: "relative",
+                display: "inline-block",
+                animation: checkLenght
+                  ? "scrollText 20s linear infinite"
+                  : "none",
               }}
             >
               {messageResponse}
