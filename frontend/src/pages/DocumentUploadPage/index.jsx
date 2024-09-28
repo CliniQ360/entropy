@@ -157,7 +157,7 @@ const DocumentUploadPage = () => {
             return;
           }
           setError(false);
-          sessionStorage.setItem("document_upload_flag", false);
+          sessionStorage.setItem("document_upload_flag", true);
           setProgressValue(20);
           sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
           setAudioResponse(res?.payload?.data?.agent_audio_data);
