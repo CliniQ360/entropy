@@ -140,6 +140,7 @@ const CreditPage = () => {
   const handleStopRecording = () => {
     stopRecording();
     setIsRecording(false);
+    setIsListening(false);
   };
   const handleStartRecording = () => {
     startRecording();

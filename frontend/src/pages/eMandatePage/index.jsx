@@ -202,7 +202,7 @@ const EmandatePage = () => {
             setAudioResponse(res?.payload?.data?.agent_audio_data);
             setMessageResponse(res?.payload?.data?.agent_message);
             setUserResponse(res?.payload?.data?.user_message);
-            setOfferList(res?.payload?.data?.offer_list);
+            setOfferList(res?.payload?.data?.final_offer);
             navigate("/credit/offer-page", {
               state: res?.payload?.data?.loan_agreement_url,
             });

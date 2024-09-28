@@ -145,9 +145,9 @@ const BankDetailsPage = () => {
         setAudioResponse(res?.payload?.agent_audio_data);
         setMessageResponse(res?.payload?.agent_message);
         setUserResponse(res?.payload?.user_message);
-        if (res?.payload?.data?.next_state === "resume_after_emdt_redirect") {
+        if (res?.payload?.next_state === "resume_after_emdt_redirect") {
           navigate("/credit/emandate-page");
-          setEMandateRedirectUrl(res?.payload?.data?.emndt_redirect_url);
+          setEMandateRedirectUrl(res?.payload?.emndt_redirect_url);
         }
       });
     } else {
