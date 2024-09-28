@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { startConversion } from "../CreditPage/audioAgent.slice";
 import { MediaContext } from "../../context/mediaContext";
 import { useNavigate } from "react-router-dom";
+import CustomLoader from "../../components/CustomLoader";
 
 const PageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -124,17 +125,20 @@ const ChooseAssistant = () => {
   } = useContext(MediaContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showLoader, setShowLoader] = useState(false);
 
   const handleButtonClick = (index) => {
     setActiveButton(index);
   };
 
   const handleInitConversion = () => {
+    setShowLoader(true);
     dispatch(startConversion()).then((res) => {
       if (res?.error && Object.keys(res?.error)?.length > 0) {
         setError(true);
         return;
       }
+      setShowLoader(false);
       setError(false);
       setProgressValue(10);
       setAudioResponse(res?.payload?.agent_audio_data);
@@ -148,6 +152,7 @@ const ChooseAssistant = () => {
   };
   return (
     <PageWrapper>
+      <CustomLoader open={showLoader} />
       <RedirectionContainer>
         <IconButton>
           <KeyboardArrowLeftIcon sx={{ fontSize: "2.2rem", color: "black" }} />

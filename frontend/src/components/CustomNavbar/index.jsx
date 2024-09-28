@@ -36,6 +36,7 @@ const ProgressBarWrapper = styled("div")(({ theme }) => ({
 }));
 
 const CustomNavbar = () => {
+  const { setShowLoader } = useContext(MediaContext);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,6 +52,7 @@ const CustomNavbar = () => {
   const uploadFlag = sessionStorage.getItem("document_upload_flag");
   const next_state = sessionStorage.getItem("next_state");
   const handleSkip = () => {
+    setShowLoader(true);
     const payload = {
       threadId: thread_id,
       uploadFlag: false,
@@ -68,6 +70,7 @@ const CustomNavbar = () => {
       setAudioResponse(res?.payload?.data?.agent_audio_data);
       setMessageResponse(res?.payload?.data?.agent_message);
       navigate("/credit/personal-Detail");
+      setShowLoader(false);
     });
   };
 
