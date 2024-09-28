@@ -19,7 +19,7 @@ class ElevenLabsHelper:
             api_key=os.environ.get("ELEVENLABS_API_KEY"),
         )
         result = client.text_to_speech.convert(
-            voice_id="pMsXgVXv3BLzUgSXRplE",
+            voice_id="zT03pEAEi0VHKciJODfn",
             optimize_streaming_latency="0",
             output_format="mp3_22050_32",
             text=text,

@@ -46,4 +46,5 @@ class LoanDocumentState(TypedDict):
     loan_agreement_url: str
     user_query: Annotated[list, operator.add]
     engine_answer: Annotated[list, operator.add]
+    offer_list: list
     dummy: str
