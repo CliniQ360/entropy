@@ -73,23 +73,34 @@ const PageFooter = ({
 
   const { userResponse } = useContext(MediaContext);
 
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = 0; // Force scroll to start (left side)
+    }
+  }, []);
+
   return (
     <FooterContainer>
       <Stack
         alignItems={"center"}
         justifyContent={"center"}
         padding={2}
-        sx={{ overflowX: "auto", whiteSpace: "nowrap" }} // Enable horizontal scroll and prevent wrapping
+        sx={{ whiteSpace: "nowrap" }}
+        width={"100%"}
         height={"25px"}
+        ref={scrollRef} // Attach ref to the Stack
       >
         <FooterText>
           <Typography
             fontSize={12}
             color={"#535353"}
             sx={{
-              whiteSpace: "nowrap", // Prevent text wrapping
-              overflow: "hidden", // Hide overflow content
-              textOverflow: "ellipsis", // Optionally show ellipsis for overflow
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "100%",
             }}
           >
             {!userResponse ? "Welcome to Cliniq360 Sahayak" : userResponse}

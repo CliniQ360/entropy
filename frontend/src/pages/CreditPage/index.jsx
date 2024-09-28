@@ -1,18 +1,16 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import PageFooter from "../../components/PageFooter";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import AgentHeader from "../../components/AgentHeaderComponent";
 import CustomNavbar from "../../components/CustomNavbar";
 import { styled } from "@mui/material";
 import { createSilenceDetector } from "../../components/SilenceDetectorComponent";
 import { useDispatch } from "react-redux";
 import { agentConversation } from "./audioAgent.slice";
-import { MediaContext, useMediaContext } from "../../context/mediaContext";
+import { MediaContext } from "../../context/mediaContext";
 import { AudioDataContext } from "../../context/audioDataContext";
-import {
-  ReactMediaRecorder,
-  useReactMediaRecorder,
-} from "react-media-recorder-2";
+import { useReactMediaRecorder } from "react-media-recorder-2";
+import CustomLoader from "../../components/CustomLoader";
 
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -27,30 +25,23 @@ const OutletContainer = styled("div")(({ theme }) => ({
 }));
 
 const CreditPage = () => {
+  const { showLoader, setShowLoader } = useContext(MediaContext);
   const thread_id = sessionStorage.getItem("thread_id");
   const uploadFlag = sessionStorage.getItem("document_upload_flag");
-  const next_state = sessionStorage.getItem("next_state");
 
   const {
     setError,
     setAudioResponse,
     setMessageResponse,
     setNextState,
-    nextState,
     setProgressValue,
     setUserResponse,
+    setIsListening,
   } = useContext(MediaContext);
-  const {
-    setCustomerDetails,
-    setAaRedirectUrl,
-    setKycRedirectUrl,
-    setEMandateRedirectUrl,
-  } = useContext(AudioDataContext);
-  const audioChunks = useRef([]);
+  const { setCustomerDetails, setAaRedirectUrl, setKycRedirectUrl } =
+    useContext(AudioDataContext);
   const dispatch = useDispatch();
-  const location = useLocation();
   const navigate = useNavigate();
-
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
@@ -58,6 +49,7 @@ const CreditPage = () => {
   /* CONFIGURING REACT MEdiA RECORDER COMPONENT */
 
   const handleUploadAudio = async (mediaBlobUrl) => {
+    // setShowLoader(true);
     const response = await fetch(mediaBlobUrl);
     const audioBlob = await response.blob();
     setAudioBlob(audioBlob);
@@ -92,16 +84,11 @@ const CreditPage = () => {
         setNextState(res?.payload?.data?.next_state);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
-
+        setShowLoader(false);
         if (res?.payload?.data?.next_state === "resume_after_kyc_redirect") {
           navigate("/credit/kyc-page");
           console.log("kyc_redirect_url", res?.payload?.data?.kyc_redirect_url);
           setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
-        } else if (
-          res?.payload?.data?.next_state === "resume_after_emdt_redirect"
-        ) {
-          navigate("/credit/emandate-page");
-          setEMandateRedirectUrl(res?.payload?.data?.emndt_redirect_url);
         } else if (
           res?.payload?.data?.next_state === "human_loan_amount_selection"
         ) {
@@ -133,6 +120,7 @@ const CreditPage = () => {
   const handlePauseAudio = () => {
     pauseRecording();
     setIsPaused(true);
+    setIsListening(false);
   };
 
   const handleResumeAudio = () => {
@@ -143,6 +131,7 @@ const CreditPage = () => {
   const handleStopRecording = () => {
     stopRecording();
     setIsRecording(false);
+    setIsListening(false);
   };
   const handleStartRecording = () => {
     startRecording();
@@ -152,6 +141,7 @@ const CreditPage = () => {
   const onSilence = () => {
     console.log("Silence Detected");
     handleStopRecording();
+    setIsListening(false);
     handleStartRecording();
   };
 
@@ -161,6 +151,12 @@ const CreditPage = () => {
       noiseThreshold: 10,
       silenceDurationThreshold: 3000,
       onSilence,
+      onSound: (isSoundDetected) => {
+        if (isSoundDetected) {
+          console.log("Sound Recording on");
+          setIsListening(true);
+        }
+      },
     });
 
     if (isRecording && !isPaused) {
@@ -176,6 +172,7 @@ const CreditPage = () => {
 
   return (
     <CreditPageContainer>
+      <CustomLoader open={showLoader} />
       <CustomNavbar />
       <AgentHeader />
       <OutletContainer>

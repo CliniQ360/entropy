@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useState } from "react";
 
 const MediaContext = createContext();
 
@@ -9,6 +9,8 @@ const MediaContextProvider = ({ children }) => {
   const [nextState, setNextState] = useState("");
   const [error, setError] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
+  const [listening, setIsListening] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
 
   return (
     <MediaContext.Provider
@@ -25,6 +27,10 @@ const MediaContextProvider = ({ children }) => {
         setProgressValue,
         userResponse,
         setUserResponse,
+        listening,
+        setIsListening,
+        showLoader,
+        setShowLoader,
       }}
     >
       {children}

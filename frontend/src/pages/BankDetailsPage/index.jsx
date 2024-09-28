@@ -20,6 +20,8 @@ import { useDispatch } from "react-redux";
 import { bankLoanDataResumeConversion } from "../CreditPage/audioAgent.slice";
 import CustomLoader from "../../components/CustomLoader";
 import { MediaContext } from "../../context/mediaContext";
+import { AudioDataContext } from "../../context/audioDataContext";
+import { useNavigate } from "react-router-dom";
 
 const BankDetailWrapper = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(5),
@@ -65,6 +67,7 @@ const BankDetailsPage = () => {
   const [validateError, setValidateError] = useState(false);
   const [isMatched, setIsMatched] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const navigate = useNavigate();
 
   /* USE DISPATCH */
   const dispatch = useDispatch();
@@ -75,6 +78,7 @@ const BankDetailsPage = () => {
     setProgressValue,
     setUserResponse,
   } = useContext(MediaContext);
+  const { setEMandateRedirectUrl } = useContext(AudioDataContext);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -141,6 +145,10 @@ const BankDetailsPage = () => {
         setAudioResponse(res?.payload?.agent_audio_data);
         setMessageResponse(res?.payload?.agent_message);
         setUserResponse(res?.payload?.user_message);
+        if (res?.payload?.next_state === "resume_after_emdt_redirect") {
+          navigate("/credit/emandate-page");
+          setEMandateRedirectUrl(res?.payload?.emndt_redirect_url);
+        }
       });
     } else {
       console.log("Not Matched");
