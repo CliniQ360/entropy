@@ -252,23 +252,45 @@ class TextConversationController:
                 )
                 print("Workflow compiled")
                 return {
-                    "user_message": workflow.get_state(thread).values.get(
-                        "user_message"
-                    ),
-                    "agent_message": workflow.get_state(thread).values.get(
-                        "agent_message"
-                    ),
-                    "txn_id": workflow.get_state(thread).values.get("txn_id"),
-                    "url": workflow.get_state(thread).values.get("urls"),
-                    "offer_list": workflow.get_state(thread).values.get("offer_list"),
-                    "offer_summary": workflow.get_state(thread).values.get(
-                        "offer_summary"
-                    ),
-                    "customer_details": workflow.get_state(thread).values.get(
-                        "customer_details", None
-                    ),
-                    "state": workflow.get_state(thread),
+                    "state": workflow.get_state(thread).values,
                 }
+        except Exception as error:
+            logging.error(f"Error in TextConversationController.get_state: {error}")
+            raise error
+
+    def get_workflow(self, thread_id: str):
+        try:
+            thread = {"configurable": {"thread_id": thread_id}}
+            with ConnectionPool(
+                conninfo=self.DB_URI,
+                max_size=20,
+                kwargs={"autocommit": True, "prepare_threshold": 0},
+            ) as conn:
+                builder = build_workflow()
+                PostgresSaver(conn).setup()
+                checkpointer = PostgresSaver(conn=conn)
+                workflow = builder.compile(
+                    interrupt_before=[
+                        "human_document_upload_feedback",
+                        "human_feedback",
+                        "human_verification_feedback",
+                        "human_update_feedback",
+                        "human_selection",
+                        "human_loan_amount_selection",
+                        "human_recheck_approval",
+                        "human_account_details_feedback",
+                        "resume_after_kyc_redirect",
+                        # "human_account_details_verification_feedback",
+                        "resume_after_emdt_redirect",
+                        "human_loan_tnc_feedback",
+                        "resume_loan_agreement_signing",
+                    ],
+                    interrupt_after=["submit_form", "send_ack", "human_refreh_offer"],
+                    checkpointer=checkpointer,
+                )
+                print("Workflow compiled")
+                img_bytes = workflow.get_graph(xray=1).draw_mermaid_png()
+                return img_bytes
         except Exception as error:
             logging.error(f"Error in TextConversationController.get_state: {error}")
             raise error

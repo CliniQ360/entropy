@@ -11,7 +11,7 @@ DB_URI = os.getenv("DB_URI")
 
 
 def build_workflow():
-    builder = StateGraph(UserDetailsState)
+    builder = StateGraph(SahayakState)
     builder.add_node("welcome_message", welcome_message)
     builder.add_node("human_document_upload_feedback", human_document_upload_feedback)
     builder.add_node("process_user_document", process_user_document)
@@ -158,9 +158,9 @@ def build_workflow():
     )
     builder.add_edge("loan_agreement_signing_pending", "resume_loan_agreement_signing")
     # builder.add_edge("confirm_loan", "summarise_loan_tnc")
-    builder.add_edge("confirm_loan", "finalize_offer")
-    builder.add_edge("finalize_offer", "summarise_loan_tnc")
-    builder.add_edge("summarise_loan_tnc", "human_loan_tnc_feedback")
+    builder.add_edge("confirm_loan", "summarise_loan_tnc")
+    builder.add_edge("summarise_loan_tnc", "finalize_offer")
+    builder.add_edge("finalize_offer", "human_loan_tnc_feedback")
     builder.add_conditional_edges(
         "human_loan_tnc_feedback",
         user_intent_1,

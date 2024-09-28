@@ -1,10 +1,11 @@
-from core.agents.schemas.state_schemas import UserDetailsState, OfferState
+from core.agents.schemas.state_schemas import SahayakState, SahayakState
 from core.agents.schemas.output_schemas import (
     UserDetailsResponse,
     UserDocumentDetails,
     GeneratedQuestion,
     UserIntent,
 )
+import re
 from core.utils.external_call import APIInterface
 import os, json, time, base64
 from core.utils.vertex_ai_helper.gemini_helper import llm_flash
@@ -16,7 +17,7 @@ from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
 logging = logger(__name__)
 
 
-def submit_form(state: UserDetailsState):
+def submit_form(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     search_url = f"{credit_base_url}/v1/credit/search"
     submit_url = f"{credit_base_url}/v1/credit/submitForm"
@@ -49,10 +50,16 @@ def submit_form(state: UserDetailsState):
     logging.info("Sleeping for 5 seconds")
     time.sleep(5)
     user_contact_number = customer_details.get("contactNumber")
+    user_contact_number = re.sub("[^A-Za-z0-9]+", "", user_contact_number)
     finvu_user_id = f"{user_contact_number}@finvu"
     user_income = customer_details.get("income")
     customer_details.update(
-        {"bureauConsent": True, "aa_id": finvu_user_id, "income": str(user_income)}
+        {
+            "bureauConsent": True,
+            "aa_id": finvu_user_id,
+            "income": str(user_income),
+            "contactNumber": user_contact_number,
+        }
     )
     submit_payload = {"loanForm": customer_details}
     logging.info(f"{submit_payload=}")
@@ -96,15 +103,15 @@ def submit_form(state: UserDetailsState):
         }
 
 
-def collect_updated_details(state: UserDetailsState):
+def collect_updated_details(state: SahayakState):
     return {"agent_message": ["Please let me know what do u want to update."]}
 
 
-def human_update_feedback(state: UserDetailsState):
+def human_update_feedback(state: SahayakState):
     pass
 
 
-def send_ack(state: OfferState):
+def send_ack(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     select_consent_url = f"{credit_base_url}/v1/credit/selectConsent"
     txn_id = state.get("txn_id")
@@ -118,7 +125,7 @@ def send_ack(state: OfferState):
     }
 
 
-def is_aa_approved(state: OfferState):
+def is_aa_approved(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     get_txn_url = f"{credit_base_url}/v1/txn_details"
     txn_id = state.get("txn_id")
@@ -131,7 +138,7 @@ def is_aa_approved(state: OfferState):
     return "approval_pending"
 
 
-def approval_pending(state: OfferState):
+def approval_pending(state: SahayakState):
     return {
         "agent_message": [
             "To proceed further, please provide an approval for account aggregator flow."
@@ -139,11 +146,11 @@ def approval_pending(state: OfferState):
     }
 
 
-def resume_after_aa_redirect(state: OfferState):
+def resume_after_aa_redirect(state: SahayakState):
     pass
 
 
-def refresh_offer(state: OfferState):
+def refresh_offer(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     get_txn_url = f"{credit_base_url}/v1/txn_details"
     txn_id = state.get("txn_id")
@@ -154,7 +161,7 @@ def refresh_offer(state: OfferState):
     return {"status": current_action}
 
 
-def is_offer_received(state: OfferState):
+def is_offer_received(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     get_txn_url = f"{credit_base_url}/v1/txn_details"
     txn_id = state.get("txn_id")
@@ -167,7 +174,7 @@ def is_offer_received(state: OfferState):
     return "human_refreh_offer"
 
 
-def get_offers(state: OfferState):
+def get_offers(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     get_offer_details_url = f"{credit_base_url}/v1/credit/getOfferDetails"
     txn_id = state.get("txn_id")
@@ -178,13 +185,13 @@ def get_offers(state: OfferState):
     return {"offer_list": offer_list}
 
 
-def human_selection(state: OfferState):
+def human_selection(state: SahayakState):
     logging.info("Inside human_selection")
 
     pass
 
 
-def summarise_offers(state: OfferState):
+def summarise_offers(state: SahayakState):
     offer_list = state.get("offer_list")
     # Generate summary
     # summary_prompt = f"""Offer details: {offer_list}.
@@ -203,7 +210,7 @@ def summarise_offers(state: OfferState):
     return {"offer_summary": offer_summary, "agent_message": [offer_summary]}
 
 
-def user_intent(state: OfferState):
+def user_intent(state: SahayakState):
     logging.info("Inside user_intent")
 
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
@@ -226,7 +233,7 @@ def user_intent(state: OfferState):
     return "select_offer"
 
 
-def answer_user_query(state: OfferState):
+def answer_user_query(state: SahayakState):
     offer_list = state.get("offer_list")
     logging.info("Inside answer_user_query")
     # qna_prompt = f"""Offer details : {offer_list}.
@@ -249,7 +256,7 @@ def answer_user_query(state: OfferState):
     return {"agent_message": [answer]}
 
 
-def select_offer(state: OfferState):
+def select_offer(state: SahayakState):
     logging.info("Inside select_offer")
     offer_item_id = state.get("offer_item_id")
     offer_list = state.get("offer_list")
@@ -266,5 +273,5 @@ def select_offer(state: OfferState):
     }
 
 
-def human_loan_amount_selection(state: OfferState):
+def human_loan_amount_selection(state: SahayakState):
     pass

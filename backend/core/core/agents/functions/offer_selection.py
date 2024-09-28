@@ -1,7 +1,7 @@
 from core.agents.schemas.state_schemas import (
-    UserDetailsState,
-    OfferState,
-    LoanDocumentState,
+    SahayakState,
+    SahayakState,
+    SahayakState,
 )
 from core.agents.schemas.output_schemas import (
     GeneratedQuestion,
@@ -20,7 +20,7 @@ from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
 logging = logger(__name__)
 
 
-def submit_loan_amount(state: OfferState):
+def submit_loan_amount(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     submit_loan_amount_url = f"{credit_base_url}/v1/credit/submitForm"
     select_load_amount_url = f"{credit_base_url}/v1/credit/select"
@@ -76,11 +76,11 @@ def submit_loan_amount(state: OfferState):
     }
 
 
-def human_refreh_offer(state: OfferState):
+def human_refreh_offer(state: SahayakState):
     return {"agent_message": ["Getting more offers for you."]}
 
 
-def is_amount_valid(state: OfferState):
+def is_amount_valid(state: SahayakState):
     selected_loan_amount = state.get("selected_loan_amount")
     offer_item_id = state.get("offer_item_id")
     offer_list = state.get("offer_list")
@@ -99,11 +99,11 @@ def is_amount_valid(state: OfferState):
     return "human_invalid_loan_amount_selection"
 
 
-def human_recheck_approval(state: OfferState):
+def human_recheck_approval(state: SahayakState):
     pass
 
 
-def human_invalid_loan_amount_selection(state: OfferState):
+def human_invalid_loan_amount_selection(state: SahayakState):
     offer_item_id = state.get("offer_item_id")
     offer_list = state.get("offer_list")
     for offer in offer_list:
@@ -119,11 +119,11 @@ def human_invalid_loan_amount_selection(state: OfferState):
     }
 
 
-def resume_after_kyc_redirect(state: OfferState):
+def resume_after_kyc_redirect(state: SahayakState):
     pass
 
 
-def is_kyc_approved(state: OfferState):
+def is_kyc_approved(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     get_txn_url = f"{credit_base_url}/v1/txn_details"
     txn_id = state.get("txn_id")
@@ -136,11 +136,11 @@ def is_kyc_approved(state: OfferState):
     return "kyc_approval_pending"
 
 
-def kyc_approval_pending(state: OfferState):
+def kyc_approval_pending(state: SahayakState):
     pass
 
 
-def send_kyc_ack(state: OfferState):
+def send_kyc_ack(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     credit_init_url = f"{credit_base_url}/v1/credit/init"
     get_txn_url = f"{credit_base_url}/v1/txn_details"
@@ -168,7 +168,7 @@ def send_kyc_ack(state: OfferState):
     return {"status": current_action}
 
 
-def generate_account_details_questions(state: UserDetailsState):
+def generate_account_details_questions(state: SahayakState):
     #     collector_instructions = """
     #         You are a helpful assistant tasked with collecting customer information in order to complete a loan application form.
     #         The information you need to collect includes: {required_fields}
@@ -229,11 +229,11 @@ def generate_account_details_questions(state: UserDetailsState):
     }
 
 
-def human_account_details_feedback(state: OfferState):
+def human_account_details_feedback(state: SahayakState):
     pass
 
 
-def extract_user_account_details(state: OfferState):
+def extract_user_account_details(state: SahayakState):
     logging.info("Inside extract_user_account_details")
     """Extract user account details"""
     # extractor_instructions = f"""You are tasked with extracting the user details from the customer's response.
@@ -264,7 +264,7 @@ def extract_user_account_details(state: OfferState):
     return {"customer_account_details": extracted_data.userAccountDetails}
 
 
-# def verify_user_account_details(state: OfferState):
+# def verify_user_account_details(state: SahayakState):
 #     return {
 #         "agent_message": [
 #             "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
@@ -272,11 +272,11 @@ def extract_user_account_details(state: OfferState):
 #     }
 
 
-# def human_account_details_verification_feedback(state: OfferState):
+# def human_account_details_verification_feedback(state: SahayakState):
 #     pass
 
 
-def submit_account_details_form(state: OfferState):
+def submit_account_details_form(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     submit_loan_amount_url = f"{credit_base_url}/v1/credit/submitForm"
     offer_init_url = f"{credit_base_url}/v1/credit/init"
@@ -348,14 +348,14 @@ def submit_account_details_form(state: OfferState):
     }
 
 
-# def should_verify_account_details(state: UserDetailsState):
+# def should_verify_account_details(state: SahayakState):
 #     # Check if human feedback
 #     if state.get("agent_message")[-1] == "ALL DATA COLLECTED":
 #         return "verify_user_account_details"
 #     return "human_account_details_feedback"
 
 
-def should_submit_account_details(state: UserDetailsState):
+def should_submit_account_details(state: SahayakState):
     # Check if human feedback
     # intent_classification_prompt = f"""You are tasked to identify the intent from the user message.
     #     The user could either agree to the information or ask for updates. Classify the intent accordingly.
@@ -383,11 +383,11 @@ def should_submit_account_details(state: UserDetailsState):
     return "extract_user_account_details"
 
 
-def resume_after_emdt_redirect(state: OfferState):
+def resume_after_emdt_redirect(state: SahayakState):
     pass
 
 
-def is_emdt_approved(state: OfferState):
+def is_emdt_approved(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     get_txn_url = f"{credit_base_url}/v1/txn_details"
     txn_id = state.get("txn_id")
@@ -400,7 +400,7 @@ def is_emdt_approved(state: OfferState):
     return "emdt_approval_pending"
 
 
-def emdt_approval_pending(state: OfferState):
+def emdt_approval_pending(state: SahayakState):
     return {
         "agent_message": [
             "To proceed further, please provide an approval for eMandate flow."
@@ -408,7 +408,7 @@ def emdt_approval_pending(state: OfferState):
     }
 
 
-def send_emdt_ack(state: OfferState):
+def send_emdt_ack(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     offer_init_url = f"{credit_base_url}/v1/credit/init"
     get_txn_url = f"{credit_base_url}/v1/txn_details"
@@ -439,7 +439,7 @@ def send_emdt_ack(state: OfferState):
     return {"loan_signing_redirect_url": loan_signing_redirect_url}
 
 
-def summarise_loan_tnc(state: LoanDocumentState):
+def summarise_loan_tnc(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     loan_document_url = f"{credit_base_url}/v1/credit/getLoanDocUrl"
     get_txn_url = f"{credit_base_url}/v1/txn_details"
@@ -491,6 +491,8 @@ def summarise_loan_tnc(state: LoanDocumentState):
     else:
         loan_agreement_summary = ""
         text = ""
+    final_offer = state.get("final_offer")
+    logging.info(f"{final_offer=}")
     return {
         "loan_agreement_summary": loan_agreement_summary,
         "loan_agreement_text": text,
@@ -499,22 +501,25 @@ def summarise_loan_tnc(state: LoanDocumentState):
     }
 
 
-def finalize_offer(state: LoanDocumentState):
+def finalize_offer(state: SahayakState):
+    logging.info("Inside finalize_offer")
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     get_offer_details_url = f"{credit_base_url}/v1/credit/getOfferDetails"
     txn_id = state.get("txn_id")
     get_offer_details_resp, get_offer_details_resp_code = APIInterface().get(
         route=get_offer_details_url, params={"txn_id": txn_id}
     )
+    logging.info(f"{get_offer_details_resp=}")
     offer_list = get_offer_details_resp.get("offer_list")
+    logging.info(f"{offer_list=}")
     return {"final_offer": offer_list}
 
 
-def human_loan_tnc_feedback(state: LoanDocumentState):
+def human_loan_tnc_feedback(state: SahayakState):
     pass
 
 
-def answer_tnc_query(state: LoanDocumentState):
+def answer_tnc_query(state: SahayakState):
     user_query = state.get("user_message")[-1]
     loan_agreement_text = state.get("loan_agreement_text")
     # qna_prompt = f"""
@@ -544,38 +549,39 @@ def answer_tnc_query(state: LoanDocumentState):
     return {"agent_message": [answer]}
 
 
-def user_intent_1(state: LoanDocumentState):
+def user_intent_1(state: SahayakState):
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
         structured_llm = llm_flash.with_structured_output(UserIntent)
         user_intent_instructions = GeminiPrompts().user_intent_1_instructions
         user_intent_prompt = user_intent_instructions.format(
-            user_message=state.get("user_message")
+            user_message=state.get("user_message")[-1]
         )
         llm_response = structured_llm.invoke(user_intent_prompt)
     else:
         structured_llm = llm_4omini.with_structured_output(UserIntent)
         user_intent_instructions = OpenAIPrompts().user_intent_1_instructions
         user_intent_prompt = user_intent_instructions.format(
-            user_message=state.get("user_message")
+            user_message=state.get("user_message")[-1]
         )
         llm_response = structured_llm.invoke(user_intent_prompt)
     user_intent = llm_response.user_intent
+    logging.info(f"{user_intent=}")
     if user_intent.lower().strip() == "question":
         return "answer_tnc_query"
     return "END"
 
 
-def resume_loan_agreement_signing(state: OfferState):
+def resume_loan_agreement_signing(state: SahayakState):
     pass
 
 
-def loan_agreement_signing_pending(state: OfferState):
+def loan_agreement_signing_pending(state: SahayakState):
     return {
         "user_message": ["Please sign your loan agreeement form to proceed further."]
     }
 
 
-def is_loan_agreement_signed(state: OfferState):
+def is_loan_agreement_signed(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     get_txn_url = f"{credit_base_url}/v1/txn_details"
     txn_id = state.get("txn_id")
@@ -588,7 +594,7 @@ def is_loan_agreement_signed(state: OfferState):
     return "loan_agreement_signing_pending"
 
 
-def confirm_loan(state: OfferState):
+def confirm_loan(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     offer_confirm_url = f"{credit_base_url}/v1/credit/confirm"
     txn_id = state.get("txn_id")

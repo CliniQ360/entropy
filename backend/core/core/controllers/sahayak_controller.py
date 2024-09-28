@@ -8,7 +8,6 @@ from fastapi import Response
 from datetime import datetime
 from core.utils.groq.stt import GroqHelper
 from core.utils.elevenlabs.tts import ElevenLabsHelper
-from core.apis.schemas.conversation_input_schema import ConversationResume
 from core.controllers.audio_conversation_controller import AudioConversationController
 from core.utils.vertex_ai_helper.gemini_helper import transcribe
 from core.utils.vertex_ai_helper.gcs_helper import upload_blob_string

@@ -1,4 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, UploadFile, File
+
+from fastapi.responses import Response
 from typing import List, Optional
 import asyncio
 import openai
@@ -71,6 +73,23 @@ def resume_conversation(request: ConversationResume):
         return AudioConversationController().resume_conversation(**request_dict)
     except Exception as error:
         logging.error(f"Error in /v1/langgraph/resume_conversation endpoint: {error}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(error),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+@conversation_router.get("/v1/langgraph/workflow")
+def get_workflow(thread_id: str):
+    try:
+        logging.info(f"Calling /v1/langgraph/workflow endpoint")
+        image_bytes: bytes = TextConversationController().get_workflow(
+            thread_id=thread_id
+        )
+        return Response(content=image_bytes, media_type="image/png")
+    except Exception as error:
+        logging.error(f"Error in /v1/langgraph/workflow endpoint: {error}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(error),

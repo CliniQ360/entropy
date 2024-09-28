@@ -1,4 +1,4 @@
-from core.agents.schemas.state_schemas import UserDetailsState
+from core.agents.schemas.state_schemas import SahayakState
 from core.agents.schemas.output_schemas import (
     UserDetailsResponse,
     UserDocumentDetails,
@@ -12,7 +12,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
 
 
-def welcome_message(state: UserDetailsState):
+def welcome_message(state: SahayakState):
     return {
         "agent_message": [
             "Welcome to the CliniQ 360. I am your credit sahayak and will assist you with your credit journey. Let's get started. For ease of application, would you like to upload your Aadhaar and PAN card?"
@@ -20,19 +20,19 @@ def welcome_message(state: UserDetailsState):
     }
 
 
-def human_document_upload_feedback(state: UserDetailsState):
+def human_document_upload_feedback(state: SahayakState):
     """No-op node that should be interrupted on"""
     pass
 
 
-def is_document_present(state: UserDetailsState):
+def is_document_present(state: SahayakState):
     document_upload_flag = state.get("document_upload_flag")
     if document_upload_flag:
         return "process_user_document"
     return "generate_questions"
 
 
-def process_user_document(state: UserDetailsState):
+def process_user_document(state: SahayakState):
     document_list = state.get("document_list")
     image_message_list = []
     for image_file_path in document_list:
@@ -92,7 +92,7 @@ def process_user_document(state: UserDetailsState):
     return {"customer_details": [filtered_details]}
 
 
-def generate_questions(state: UserDetailsState):
+def generate_questions(state: SahayakState):
     """Generate questions to collect user details"""
     # human_analyst_feedback=state.get('human_analyst_feedback', '')
     # collector_instructions = """
@@ -171,7 +171,7 @@ def generate_questions(state: UserDetailsState):
     return {"agent_message": [generated_data.text]}
 
 
-def extract_user_details(state: UserDetailsState):
+def extract_user_details(state: SahayakState):
     """Extract user details"""
 
     # human_analyst_feedback=state.get('human_analyst_feedback', '')
@@ -201,12 +201,12 @@ def extract_user_details(state: UserDetailsState):
     return {"customer_details": extracted_data.userDetails}
 
 
-def human_feedback(state: UserDetailsState):
+def human_feedback(state: SahayakState):
     """No-op node that should be interrupted on"""
     pass
 
 
-def should_submit(state: UserDetailsState):
+def should_submit(state: SahayakState):
     # Check if human feedback
     # intent_classification_prompt = f"""You are tasked to identify the intent from the user message.
     #     The user could either agree to the information or ask for updates. Classify the intent accordingly.
@@ -234,14 +234,14 @@ def should_submit(state: UserDetailsState):
     return "collect_updated_details"
 
 
-def should_verify(state: UserDetailsState):
+def should_verify(state: SahayakState):
     # Check if human feedback
     if state.get("agent_message")[-1] == "ALL DATA COLLECTED":
         return "verify_user_details"
     return "human_feedback"
 
 
-def verify_user_details(state: UserDetailsState):
+def verify_user_details(state: SahayakState):
     return {
         "agent_message": [
             "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
@@ -249,6 +249,6 @@ def verify_user_details(state: UserDetailsState):
     }
 
 
-def human_verification_feedback(state: UserDetailsState):
+def human_verification_feedback(state: SahayakState):
     """No-op node that should be interrupted on"""
     pass
