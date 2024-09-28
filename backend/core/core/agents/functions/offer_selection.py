@@ -234,6 +234,7 @@ def human_account_details_feedback(state: OfferState):
 
 
 def extract_user_account_details(state: OfferState):
+    logging.info("Inside extract_user_account_details")
     """Extract user account details"""
     # extractor_instructions = f"""You are tasked with extracting the user details from the customer's response.
     # If values are not present, return None.
@@ -258,7 +259,7 @@ def extract_user_account_details(state: OfferState):
         structured_llm = llm_4omini.with_structured_output(UserAccountDetailsResponse)
     # Generate question
     extracted_data = structured_llm.invoke([extractor_prompt])
-
+    logging.info(f"{extracted_data.userAccountDetails=}")
     # Write the list of analysis to state
     return {"customer_account_details": extracted_data.userAccountDetails}
 
