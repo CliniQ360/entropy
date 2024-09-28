@@ -49,7 +49,8 @@ def process_user_document(state: UserDetailsState):
     text_message = {
         "type": "text",
         "text": f"""User has attached {available_documents}. From the given images, extract all the information available. 
-        Only extract the information that is visible in the images. If information is not available, return 'None' for the field in output.""",
+        Only extract the information that is visible in the images.
+        If information is not available, return 'None' for the field in output.""",
     }
     image_message_list.extend(text_message)
     structured_llm = llm_pro.with_structured_output(UserDocumentDetails)
@@ -79,6 +80,15 @@ def process_user_document(state: UserDetailsState):
     del filtered_details["middleNamePan"]
     del filtered_details["firstNamePan"]
     del filtered_details["lastNamePan"]
+    dob = filtered_details.get("dob")
+    if dob:
+        dob = dob.replace("/", "-")
+        # converted_date = llm_flash.invoke(
+        #     [
+        #         f"Input Date: {filtered_details.get('dob')}. Convert the date into DD-MM-YYYY format."
+        #     ]
+        # )
+        filtered_details["dob"] = dob
     return {"customer_details": [filtered_details]}
 
 

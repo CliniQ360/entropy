@@ -121,13 +121,17 @@ class AudioConversationController:
                     print(f"{state=}")
                     if kwargs.get("document_upload_flag"):
                         print("updating workflow state")
+                        base_path = f"/app/data/CUSTOMER_DATA/{thread_id}"
+                        file_path_list = []
+                        for file in os.listdir(base_path):
+                            file_path_list.append(f"{base_path}/{file}")
                         workflow.update_state(
                             thread,
                             {
                                 "document_upload_flag": kwargs.get(
                                     "document_upload_flag"
                                 ),
-                                "document_list": kwargs.get("file_path_list"),
+                                "document_list": file_path_list,
                             },
                             as_node=state,
                         )

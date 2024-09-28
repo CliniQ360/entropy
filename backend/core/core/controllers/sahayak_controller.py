@@ -36,6 +36,25 @@ class SahayakController:
             #     Let us make securing your personal loan simple, fast, and hassle-free!"""
             # }
 
+    async def upload_documents(self, thread_id, files):
+        try:
+            logging.info(f"SahayakController: upload_documents")
+            file_path_list = []
+            for document in files:
+                document_name = document.filename
+                logging.info(f"{document_name=}")
+                document_data = await document.read()
+                document_path = f"/app/data/CUSTOMER_DATA/{thread_id}"
+                os.makedirs(document_path, exist_ok=True)
+                document_key = f"{document_path}/{document_name}"
+                with open(document_key, "wb") as f:
+                    f.write(document_data)
+                file_path_list.append(document_key)
+            return {"file_path_list": file_path_list}
+        except Exception as error:
+            logging.error(f"Error in SahayakController.upload_documents: {error}")
+            raise error
+
     def start_audio_conversation(self):
         thread_id = str(uuid.uuid4())
         logging.debug(f"{thread_id=}")

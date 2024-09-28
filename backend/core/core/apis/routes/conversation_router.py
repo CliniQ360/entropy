@@ -32,18 +32,18 @@ async def start_conversation():
         )
 
 
-@conversation_router.post("/v1/langgraph/upload_documents")
-async def upload_documents(files: Optional[List[UploadFile]] = File(None)):
-    try:
-        logging.info(f"Calling /v1/langgraph/upload_documents endpoint")
-        return AudioConversationController().upload_documents(files=files)
-    except Exception as error:
-        logging.error(f"Error in /v1/langgraph/upload_documents endpoint: {error}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(error),
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+# @conversation_router.post("/v1/langgraph/upload_documents")
+# async def upload_documents(files: Optional[List[UploadFile]] = File(None)):
+#     try:
+#         logging.info(f"Calling /v1/langgraph/upload_documents endpoint")
+#         return AudioConversationController().upload_documents(files=files)
+#     except Exception as error:
+#         logging.error(f"Error in /v1/langgraph/upload_documents endpoint: {error}")
+#         raise HTTPException(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             detail=str(error),
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
 
 
 @conversation_router.get("/v1/langgraph/state")

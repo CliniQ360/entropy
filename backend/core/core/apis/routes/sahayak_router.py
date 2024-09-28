@@ -32,7 +32,6 @@ async def resume_conversation(
     state: str,
     translate: bool = False,
     document_upload_flag: bool = False,
-    file_path_list: list = [],
     file: UploadFile | None = None,
     offer_item_id: str = None,
     selected_loan_amount: str = None,
@@ -51,7 +50,6 @@ async def resume_conversation(
             "state": state,
             "translate": translate,
             "document_upload_flag": document_upload_flag,
-            "file_path_list": file_path_list,
             "audio_data": audio_data,
             "audio_file_name": audio_file_name,
             "offer_item_id": offer_item_id,
@@ -67,28 +65,44 @@ async def resume_conversation(
         )
 
 
-@sahayak_router.post("/v1/chatbot")
-async def init_conversation(
-    thread_id: str = None,
-    audio_file: UploadFile = File(None),
-    translate: bool = True,
-    state: str = None,
-):
+@sahayak_router.post("/v1/sahayak/upload_documents")
+async def upload_documents(thread_id: str, files: List[UploadFile]):
     try:
-        logging.info(f"Calling /v1/conversation/init endpoint")
-        logging.debug(f"{thread_id=}")
-        audio_file_data = await audio_file.read()
-        audio_file_name = audio_file.filename
-        return ConversationController().conversation_init(
-            audio_file_data=audio_file_data,
-            audio_file_name=audio_file_name,
-            translate=translate,
+        logging.info(f"Calling /v1/sahayak/upload_documents endpoint")
+        return await SahayakController().upload_documents(
+            thread_id=thread_id, files=files
         )
-
     except Exception as error:
-        logging.error(f"Error in /v1/conversation/init endpoint: {error}")
+        logging.error(f"Error in /v1/sahayak/upload_documents endpoint: {error}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(error),
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+
+# @sahayak_router.post("/v1/chatbot")
+# async def init_conversation(
+#     thread_id: str = None,
+#     audio_file: UploadFile = File(None),
+#     translate: bool = True,
+#     state: str = None,
+# ):
+#     try:
+#         logging.info(f"Calling /v1/conversation/init endpoint")
+#         logging.debug(f"{thread_id=}")
+#         audio_file_data = await audio_file.read()
+#         audio_file_name = audio_file.filename
+#         return ConversationController().conversation_init(
+#             audio_file_data=audio_file_data,
+#             audio_file_name=audio_file_name,
+#             translate=translate,
+#         )
+
+#     except Exception as error:
+#         logging.error(f"Error in /v1/conversation/init endpoint: {error}")
+#         raise HTTPException(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             detail=str(error),
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
