@@ -39,6 +39,7 @@ const CreditPage = () => {
     nextState,
     setProgressValue,
     setUserResponse,
+    setIsListening,
   } = useContext(MediaContext);
   const {
     setCustomerDetails,
@@ -98,11 +99,6 @@ const CreditPage = () => {
           console.log("kyc_redirect_url", res?.payload?.data?.kyc_redirect_url);
           setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
         } else if (
-          res?.payload?.data?.next_state === "resume_after_emdt_redirect"
-        ) {
-          navigate("/credit/emandate-page");
-          setEMandateRedirectUrl(res?.payload?.data?.emndt_redirect_url);
-        } else if (
           res?.payload?.data?.next_state === "human_loan_amount_selection"
         ) {
           navigate("/credit/customize-offers");
@@ -133,6 +129,7 @@ const CreditPage = () => {
   const handlePauseAudio = () => {
     pauseRecording();
     setIsPaused(true);
+    setIsListening(false);
   };
 
   const handleResumeAudio = () => {
@@ -152,6 +149,7 @@ const CreditPage = () => {
   const onSilence = () => {
     console.log("Silence Detected");
     handleStopRecording();
+    setIsListening(false);
     handleStartRecording();
   };
 
@@ -161,6 +159,12 @@ const CreditPage = () => {
       noiseThreshold: 10,
       silenceDurationThreshold: 3000,
       onSilence,
+      onSound: (isSoundDetected) => {
+        if (isSoundDetected) {
+          console.log("Sound Recording on");
+          setIsListening(true);
+        }
+      },
     });
 
     if (isRecording && !isPaused) {

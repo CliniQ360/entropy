@@ -2,12 +2,14 @@ export const createSilenceDetector = ({
   noiseThreshold = 10,
   silenceDurationThreshold = 3000,
   onSilence,
+  onSound,
 }) => {
   const audioContextRef = { current: null };
   const analyserRef = { current: null };
   const silenceStart = { current: null };
-  let running = false; // Flag to control detection
-  let silenceDetected = false; // New flag to track silence detection
+  let running = false;
+  let silenceDetected = false;
+  let soundDetected = false;
 
   const initAudioAnalyser = () => {
     return navigator.mediaDevices
@@ -28,7 +30,7 @@ export const createSilenceDetector = ({
   };
 
   const checkForSilence = () => {
-    if (!running) return; // Stop the loop if not running
+    if (!running) return;
 
     const analyser = analyserRef.current;
     if (!analyser) return;
@@ -45,28 +47,35 @@ export const createSilenceDetector = ({
 
     if (isSilent && !silenceDetected) {
       if (!silenceStart.current) {
-        silenceStart.current = Date.now(); // Start the silence timer
+        silenceStart.current = Date.now();
       } else if (Date.now() - silenceStart.current > silenceDurationThreshold) {
-        onSilence(); // Trigger onSilence only once
-        silenceDetected = true; // Set silence detected flag to prevent multiple calls
-        silenceStart.current = null; // Reset silence start time
+        onSilence();
+        silenceDetected = true;
+        silenceStart.current = null;
       }
     } else if (!isSilent) {
-      silenceStart.current = null; // Reset the timer if sound is detected
-      silenceDetected = false; // Reset silence detection flag
+      silenceStart.current = null;
+      silenceDetected = false;
+
+      if (!soundDetected) {
+        onSound(true);
+        soundDetected = true;
+      }
+    } else {
+      soundDetected = false;
     }
 
-    requestAnimationFrame(checkForSilence); // Continue looping
+    requestAnimationFrame(checkForSilence);
   };
 
   const start = async () => {
     await initAudioAnalyser();
-    running = true; // Mark detector as running
+    running = true;
     checkForSilence();
   };
 
   const stop = () => {
-    running = false; // Mark detector as not running
+    running = false;
     if (audioContextRef.current) {
       audioContextRef.current.close();
     }

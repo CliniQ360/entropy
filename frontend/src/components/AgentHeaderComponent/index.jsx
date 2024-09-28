@@ -1,4 +1,4 @@
-import { Divider, Stack, styled, Typography } from "@mui/material";
+import { Divider, keyframes, Stack, styled, Typography } from "@mui/material";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
@@ -48,6 +48,27 @@ const styles = `
 }
 `;
 
+const ellipsisAnimation = keyframes`
+  0%, 100% {
+    content: '.';
+  }
+  33% {
+    content: '..';
+  }
+  66% {
+    content: '...';
+  }
+`;
+
+const DotsAnimationContainer = styled("span")(({ theme }) => ({
+  "&::after": {
+    content: '"."',
+    display: "inline-block",
+    width: "1em",
+    animation: `${ellipsisAnimation} 1.5s infinite steps(1, end)`,
+  },
+}));
+
 // Inject the keyframes into the document dynamically
 const styleSheet = document.createElement("style");
 styleSheet.type = "text/css";
@@ -55,7 +76,8 @@ styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
 const AgentHeader = () => {
-  const { audioResponse, messageResponse, error } = useContext(MediaContext);
+  const { audioResponse, messageResponse, error, listening } =
+    useContext(MediaContext);
   const [audioSrc, setAudioSrc] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const audioRef = useRef(null);
@@ -126,6 +148,10 @@ const AgentHeader = () => {
     }
   }, [messageResponse]);
 
+  useEffect(() => {
+    console.log("listening", listening);
+  });
+
   return (
     <HeaderComponentWrapper>
       <HeaderComponent>
@@ -181,23 +207,36 @@ const AgentHeader = () => {
           }}
         >
           {!error ? (
-            <Typography
-              sx={{
-                color: "#535353",
-                fontSize: "1rem",
-                fontFamily: "source sans pro",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                position: "relative",
-                display: "inline-block",
-                animation: checkLenght
-                  ? "scrollText 20s linear infinite"
-                  : "none",
-              }}
-            >
-              {messageResponse}
-            </Typography>
+            listening ? (
+              <Typography
+                sx={{
+                  color: "#535353",
+                  fontSize: "1rem",
+                  fontFamily: "source sans pro",
+                }}
+              >
+                Llistening
+                <DotsAnimationContainer className={"dotsAnimation"} />
+              </Typography>
+            ) : (
+              <Typography
+                sx={{
+                  color: "#535353",
+                  fontSize: "1rem",
+                  fontFamily: "source sans pro",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  position: "relative",
+                  display: "inline-block",
+                  animation: checkLenght
+                    ? "scrollText 20s linear infinite"
+                    : "none",
+                }}
+              >
+                {messageResponse}
+              </Typography>
+            )
           ) : (
             <Typography
               sx={{
@@ -205,6 +244,12 @@ const AgentHeader = () => {
                 fontSize: "1rem",
                 fontFamily: "source sans pro",
                 textAlign: "center",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                position: "relative",
+                display: "inline-block",
+                animation: "scrollText 20s linear infinite",
               }}
             >
               Oops! Please bring the mic closer to your mouth for better
