@@ -289,6 +289,7 @@ class AudioConversationController:
                 )
                 offer_list = workflow.get_state(thread).values.get("offer_list")
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
+                final_offer = workflow.get_state(thread).values.get("final_offer")
                 return {
                     "thread_id": thread_id,
                     "user_message": user_message,
@@ -314,6 +315,7 @@ class AudioConversationController:
                     "loan_agreement_url": (
                         loan_agreement_url if loan_agreement_url else "None"
                     ),
+                    "final_offer": final_offer if final_offer else [],
                 }
         except Exception as error:
             logging.error(

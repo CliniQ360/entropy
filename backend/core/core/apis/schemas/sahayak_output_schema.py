@@ -17,3 +17,4 @@ class SahayakOutput(BaseModel):
     offer_summary: str = None
     agent_audio_data: bytes
     loan_agreement_url: str = None
+    final_offer: list = []
