@@ -19,7 +19,7 @@ def transcribe(gcs_uri: str, input_prompt: str = None):
     if input_prompt:
         prompt = input_prompt
     else:
-        prompt = "Transcribe the audio file."
+        prompt = "Transcribe the audio verbatim. Ignore any background noise and transcribe only the primary audio."
     message = HumanMessage(
         [
             prompt,
@@ -30,5 +30,5 @@ def transcribe(gcs_uri: str, input_prompt: str = None):
             },
         ]
     )
-    response = llm_flash.invoke([message])
+    response = llm_pro.invoke([message])
     return {"transcription": response.content}

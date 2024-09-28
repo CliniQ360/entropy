@@ -188,40 +188,45 @@ def generate_account_details_questions(state: UserDetailsState):
     #             - If there are still missing pieces of information, generate a question targeting those fields only.
     #         Now, proceed step-by-step and analyze {customer_info}.
     #    """
-    master_dict = {}
-    customer_account_details_list = state.get("customer_account_details", None)
-    if customer_account_details_list:
-        for items in customer_account_details_list:
-            print(items.dict())
-            for key, value in items.dict().items():
-                if (
-                    value != None
-                    and value != " "
-                    and value != "None"
-                    and value != "NA"
-                    and value != 0
-                ):
-                    master_dict[key] = value
-        print(master_dict)
-    required_fields = ["accHolderName", "acctype", "accNo", "ifscCode"]
-    if os.environ.get("LLM_CONFIG") == "GOOGLE":
-        collector_instructions = GeminiPrompts().account_collector_instructions
+    # master_dict = {}
+    # customer_account_details_list = state.get("customer_account_details", None)
+    # if customer_account_details_list:
+    #     for items in customer_account_details_list:
+    #         print(items.dict())
+    #         for key, value in items.dict().items():
+    #             if (
+    #                 value != None
+    #                 and value != " "
+    #                 and value != "None"
+    #                 and value != "NA"
+    #                 and value != 0
+    #             ):
+    #                 master_dict[key] = value
+    #     print(master_dict)
+    # required_fields = ["accHolderName", "acctype", "accNo", "ifscCode"]
+    # if os.environ.get("LLM_CONFIG") == "GOOGLE":
+    #     collector_instructions = GeminiPrompts().account_collector_instructions
 
-        collector_prompt = collector_instructions.format(
-            customer_info=master_dict, required_fields=required_fields
-        )
-        structured_llm = llm_pro.with_structured_output(GeneratedQuestion)
-    else:
-        collector_instructions = OpenAIPrompts().account_collector_instructions
-        collector_prompt = collector_instructions.format(
-            customer_info=master_dict, required_fields=required_fields
-        )
-        structured_llm = llm_4o.with_structured_output(GeneratedQuestion)
-    # Generate question
-    generated_data = structured_llm.invoke(collector_prompt)
+    #     collector_prompt = collector_instructions.format(
+    #         customer_info=master_dict, required_fields=required_fields
+    #     )
+    #     structured_llm = llm_pro.with_structured_output(GeneratedQuestion)
+    # else:
+    #     collector_instructions = OpenAIPrompts().account_collector_instructions
+    #     collector_prompt = collector_instructions.format(
+    #         customer_info=master_dict, required_fields=required_fields
+    #     )
+    #     structured_llm = llm_4o.with_structured_output(GeneratedQuestion)
+    # # Generate question
+    # generated_data = structured_llm.invoke(collector_prompt)
 
-    # Write the list of analysis to state
-    return {"agent_message": [generated_data.text]}
+    # # Write the list of analysis to state
+    # return {"agent_message": [generated_data.text]}
+    return {
+        "agent_message": [
+            "Please provide your bank account details and click on submit to proceed further."
+        ]
+    }
 
 
 def human_account_details_feedback(state: OfferState):
@@ -258,16 +263,16 @@ def extract_user_account_details(state: OfferState):
     return {"customer_account_details": extracted_data.userAccountDetails}
 
 
-def verify_user_account_details(state: OfferState):
-    return {
-        "agent_message": [
-            "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
-        ]
-    }
+# def verify_user_account_details(state: OfferState):
+#     return {
+#         "agent_message": [
+#             "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
+#         ]
+#     }
 
 
-def human_account_details_verification_feedback(state: OfferState):
-    pass
+# def human_account_details_verification_feedback(state: OfferState):
+#     pass
 
 
 def submit_account_details_form(state: OfferState):
@@ -342,11 +347,11 @@ def submit_account_details_form(state: OfferState):
     }
 
 
-def should_verify_account_details(state: UserDetailsState):
-    # Check if human feedback
-    if state.get("agent_message")[-1] == "ALL DATA COLLECTED":
-        return "verify_user_account_details"
-    return "human_account_details_feedback"
+# def should_verify_account_details(state: UserDetailsState):
+#     # Check if human feedback
+#     if state.get("agent_message")[-1] == "ALL DATA COLLECTED":
+#         return "verify_user_account_details"
+#     return "human_account_details_feedback"
 
 
 def should_submit_account_details(state: UserDetailsState):
@@ -489,8 +494,19 @@ def summarise_loan_tnc(state: LoanDocumentState):
         "loan_agreement_summary": loan_agreement_summary,
         "loan_agreement_text": text,
         "agent_message": [loan_agreement_summary],
-        "loan_agreement_url":loan_agreement_url,
+        "loan_agreement_url": loan_agreement_url,
     }
+
+
+def finalize_offer(state: LoanDocumentState):
+    credit_base_url = os.environ["CREDIT_BASE_URL"]
+    get_offer_details_url = f"{credit_base_url}/v1/credit/getOfferDetails"
+    txn_id = state.get("txn_id")
+    get_offer_details_resp, get_offer_details_resp_code = APIInterface().get(
+        route=get_offer_details_url, params={"txn_id": txn_id}
+    )
+    offer_list = get_offer_details_resp.get("offer_list")
+    return {"final_offer": offer_list}
 
 
 def human_loan_tnc_feedback(state: LoanDocumentState):
