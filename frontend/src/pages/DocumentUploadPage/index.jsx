@@ -1,14 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Stack, styled, Typography } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
-import AccordionActions from "@mui/material/AccordionActions";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BackupTableIcon from "@mui/icons-material/BackupTable";
 import CloseIcon from "@mui/icons-material/Close";
-import CustomNavbar from "../../components/CustomNavbar";
-import AgentHeader from "../../components/AgentHeaderComponent";
 import UploadIcon from "../../utils/CustomIcons/UploadIcon";
 
 const UploadDocumentWrapper = styled("div")(({ theme }) => ({
@@ -102,7 +99,6 @@ const DocumentUploadPage = () => {
 
   return (
     <>
-      {" "}
       <UploadDocumentWrapper>
         <DocumentHeaderSection>
           <Typography
