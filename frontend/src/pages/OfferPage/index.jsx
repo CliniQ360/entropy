@@ -202,6 +202,7 @@ const AvailableOffersPage = () => {
     event.preventDefault();
     setSelectedOfferId(offer.offer_details.offer_item_id); // Set the selected offer's ID
     sessionStorage.setItem("offer_item_id", offer.offer_details.offer_item_id);
+    sessionStorage.setItem("selected_offer", JSON.stringify(offer));
     console.log(offer);
   };
 
