@@ -40,6 +40,7 @@ const HomePageContentWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   padding: "40px 20px",
+  marginBottom: "20px",
 }));
 const TextFeildWrapper = styled(Stack)(({ theme }) => ({
   display: "flex",
@@ -68,7 +69,7 @@ const FooterButton = styled(Button)(({ theme }) => ({
 }));
 
 const FooterButtonWrapper = styled(Stack)(({ theme }) => ({
-  position: "absolute",
+  position: "fixed",
   bottom: 25,
   left: 0,
   justifyContent: "center",
@@ -161,15 +162,12 @@ const AssistantHomepage = () => {
             </Typography>
           </ActionContainerItem>
         </ActionWrapper>
-        <FooterButtonWrapper>
-          <FooterButton
-            variant="contained"
-            onClick={() => navigate("/route-2")}
-          >
-            Get Started
-          </FooterButton>
-        </FooterButtonWrapper>
-      </HomePageContentWrapper>
+      </HomePageContentWrapper>{" "}
+      <FooterButtonWrapper>
+        <FooterButton variant="contained" onClick={() => navigate("/route-2")}>
+          Get Started
+        </FooterButton>
+      </FooterButtonWrapper>
     </PageWrapper>
   );
 };

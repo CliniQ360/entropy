@@ -65,9 +65,9 @@ const PageFooter = ({
 
   useEffect(() => {
     if (isRecording && !isPaused) {
-      lottieRef.current.play();
+      lottieRef?.current?.play();
     } else if (isPaused) {
-      lottieRef.current.stop();
+      lottieRef?.current?.stop();
     }
   }, [isRecording, isPaused]);
 

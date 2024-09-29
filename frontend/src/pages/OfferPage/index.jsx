@@ -259,12 +259,14 @@ const AvailableOffersPage = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   sessionStorage.setItem(
-  //     "offer_item_id",
-  //     offerDetails[currentSlide].offer_details.offer_item_id
-  //   );
-  // }, [currentSlide]);
+  useEffect(() => {
+    if (offerDetails.length > 0) {
+      sessionStorage.setItem(
+        "offer_item_id",
+        offerDetails?.[currentSlide]?.offer_details?.offer_item_id
+      );
+    }
+  }, [currentSlide, offerDetails]);
 
   const pageName = "offerPage";
 

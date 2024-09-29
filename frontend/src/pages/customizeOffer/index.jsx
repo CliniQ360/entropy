@@ -69,6 +69,7 @@ const CustomizeOfferPage = () => {
 
   useEffect(() => {
     setLoanAmount(maxLoanAmount / 2);
+    sessionStorage.setItem("selected_amt", maxLoanAmount / 2);
   }, [maxLoanAmount]);
 
   useEffect(() => {
