@@ -49,3 +49,6 @@ elevenlabs
 python-dotenv
 scikit-learn
 google-cloud-storage
+google-generativeai
+langchain-google-genai
+num2words

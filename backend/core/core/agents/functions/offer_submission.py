@@ -5,6 +5,7 @@ from core.agents.schemas.output_schemas import (
     GeneratedQuestion,
     UserIntent,
 )
+from num2words import num2words
 import re
 from core.utils.external_call import APIInterface
 import os, json, time, base64
@@ -94,17 +95,22 @@ def submit_form(state: SahayakState):
             "agent_message": [
                 f"Your details are successfully submitted. Please click proceed to complete account aggregator flow."
             ],
+            "modified": False,
         }
     else:
         return {
             "aa_url": None,
             "txn_id": txn_id,
             "agent_message": [f"Error in submitting the form. Please try again later."],
+            "modified": False,
         }
 
 
 def collect_updated_details(state: SahayakState):
-    return {"agent_message": ["Please let me know what do u want to update."]}
+    return {
+        "agent_message": ["Please let me know what do u want to update."],
+        "modified": False,
+    }
 
 
 def human_update_feedback(state: SahayakState):
@@ -124,6 +130,7 @@ def send_ack(state: SahayakState):
             "Please wait while negotiate with the banks to get the best offer for you."
         ],
         "status": "FETCHING_OFFERS",
+        "modified": False,
     }
 
 
@@ -160,7 +167,7 @@ def refresh_offer(state: SahayakState):
         route=get_txn_url, params={"txn_id": txn_id}
     )
     current_action = get_txn_resp.get("current_action")
-    return {"status": current_action}
+    return {"status": current_action, "modified": False}
 
 
 def is_offer_received(state: SahayakState):
@@ -184,7 +191,10 @@ def get_offers(state: SahayakState):
         route=get_offer_details_url, params={"txn_id": txn_id}
     )
     offer_list = get_offer_details_resp.get("offer_list")
-    return {"offer_list": offer_list}
+    return {
+        "offer_list": offer_list,
+        "modified": False,
+    }
 
 
 def human_selection(state: SahayakState):
@@ -203,13 +213,24 @@ def summarise_offers(state: SahayakState):
         offer_summary_instructions = GeminiPrompts().offer_summary_instructions
         offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
         offer_summary = llm_flash.invoke(offer_summary_prompt)
+        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
+        summary_in_words = llm_flash.invoke(prompt)
+        print(summary_in_words.content)
     else:
         offer_summary_instructions = OpenAIPrompts().offer_summary_instructions
         offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
         offer_summary = llm_4omini.invoke(offer_summary_prompt)
+        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
+        summary_in_words = llm_4omini.invoke(prompt)
+        print(summary_in_words.content)
     offer_summary = offer_summary.content
     # Write the list of analysis to state
-    return {"offer_summary": offer_summary, "agent_message": [offer_summary]}
+    return {
+        "offer_summary": offer_summary,
+        "agent_message": [offer_summary],
+        "agent_message_modified": summary_in_words.content,
+        "modified": True,
+    }
 
 
 def user_intent(state: SahayakState):
@@ -247,15 +268,25 @@ def answer_user_query(state: SahayakState):
             offer_list=offer_list, user_query=state.get("user_message")[-1]
         )
         llm_response = llm_flash.invoke(offer_qna_prompt)
+        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {llm_response.content}"
+        llm_response_in_words = llm_flash.invoke(prompt)
+        print(llm_response_in_words.content)
     else:
         offer_qna_instructions = OpenAIPrompts().offer_qna_instructions
         offer_qna_prompt = offer_qna_instructions.format(
             offer_list=offer_list, user_query=state.get("user_message")[-1]
         )
         llm_response = llm_4omini.invoke(offer_qna_prompt)
+        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {llm_response.content}"
+        llm_response_in_words = llm_4omini.invoke(prompt)
+        print(llm_response_in_words.content)
     answer = llm_response.content
     logging.info(f"{answer=}")
-    return {"agent_message": [answer]}
+    return {
+        "agent_message": [answer],
+        "agent_message_modified": llm_response_in_words.content,
+        "modified": True,
+    }
 
 
 def select_offer(state: SahayakState):
@@ -267,11 +298,16 @@ def select_offer(state: SahayakState):
             selected_offer = offer
             break
     min_loan_amt = selected_offer.get("offer_details").get("MIN_LOAN_AMOUNT")
+    min_loan_amt = re.sub("[^A-Za-z0-9]+", "", min_loan_amt)
+    min_loan_amt_words = num2words(min_loan_amt)
     max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
+    max_loan_amt = re.sub("[^A-Za-z0-9]+", "", max_loan_amt)
+    max_loan_amt_words = num2words(max_loan_amt)
     return {
         "agent_message": [
-            f"Please select the loan amount you want to avail. You can select any amount between {min_loan_amt} rupees and {max_loan_amt} rupees."
-        ]
+            f"Please select the loan amount you want to avail. You can select any amount between {min_loan_amt_words} rupees and {max_loan_amt_words} rupees."
+        ],
+        "modified": False,
     }
 
 

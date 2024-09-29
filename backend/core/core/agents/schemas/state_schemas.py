@@ -53,6 +53,7 @@ import operator
 
 
 class SahayakState(TypedDict):
+    thread_id: str
     document_upload_flag: bool
     document_list: list
     customer_extracted_details: dict
@@ -78,3 +79,5 @@ class SahayakState(TypedDict):
     loan_agreement_url: str
     user_query: Annotated[list, operator.add]
     engine_answer: Annotated[list, operator.add]
+    agent_message_modified: str
+    modified: bool = False

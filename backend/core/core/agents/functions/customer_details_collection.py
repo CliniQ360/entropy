@@ -16,7 +16,8 @@ def welcome_message(state: SahayakState):
     return {
         "agent_message": [
             "Welcome to the CliniQ 360. I am your credit sahayak and will assist you with your credit journey. Let's get started. For ease of application, would you like to upload your Aadhaar and PAN card?"
-        ]
+        ],
+        "modified": False,
     }
 
 
@@ -89,7 +90,7 @@ def process_user_document(state: SahayakState):
         #     ]
         # )
         filtered_details["dob"] = dob
-    return {"customer_details": [filtered_details]}
+    return {"customer_details": [filtered_details], "modified": False}
 
 
 # def generate_questions(state: SahayakState):
@@ -261,7 +262,7 @@ def generate_questions(state: SahayakState):
     generated_data = structured_llm.invoke(collector_prompt)
     print(f"{generated_data.text=}")
     # Write the list of analysis to state
-    return {"agent_message": [generated_data.text]}
+    return {"agent_message": [generated_data.text], "modified": False}
 
 
 def extract_user_details(state: SahayakState):
@@ -291,7 +292,7 @@ def extract_user_details(state: SahayakState):
     extracted_data = structured_llm.invoke([extractor_prompt])
     print(f"Inside Extract User Details {extracted_data.userDetails=}")
     # Write the list of analysis to state
-    return {"customer_details": extracted_data.userDetails}
+    return {"customer_details": extracted_data.userDetails, "modified": False}
 
 
 def human_feedback(state: SahayakState):
@@ -338,7 +339,8 @@ def verify_user_details(state: SahayakState):
     return {
         "agent_message": [
             "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
-        ]
+        ],
+        "modified": False,
     }
 
 

@@ -155,7 +155,7 @@ class GeminiPrompts:
         self.summarise_loan_agreement_instructions = """
         You will be given different passages from a loan agreement document one by one. 
         Act as a financial advisor and provide a summary of the following text. 
-        Your result must be detailed and atleast 2 paragraphs. 
+        Your result must be detailed but brief. Only focus on the key points and important details.
         When summarizing, directly dive into the descriptions from the text without using introductory phrases.
         Directly address the loan details, important terms and conditions, and repayment stategies, encapsulating the essence and 
         significant details from the text. Keep a conversational tone.

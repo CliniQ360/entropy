@@ -1,8 +1,9 @@
 from core.agents.workflows.text_conversation_workflow import build_workflow
 from psycopg_pool import ConnectionPool
 from langgraph.checkpoint.postgres import PostgresSaver
+from core.utils.elevenlabs.tts import ElevenLabsHelper
 from core import logger
-import os
+import os, base64
 
 logging = logger(__name__)
 
@@ -45,7 +46,9 @@ class AudioConversationController:
                 )
 
                 thread = {"configurable": {"thread_id": thread_id}}
-                for event in workflow.stream({"agent_message": ["Hello!"]}, thread):
+                for event in workflow.stream(
+                    {"agent_message": ["Hello!"], "thread_id": thread_id}, thread
+                ):
                     agent_message = event.get("agent_message", "")
                     logging.info(f"{agent_message=}")
                     user_message = event.get("user_message", "")
@@ -121,7 +124,9 @@ class AudioConversationController:
                     print(f"{state=}")
                     if kwargs.get("document_upload_flag"):
                         print("updating workflow state")
-                        base_path = f"/app/data/CUSTOMER_DATA/{thread_id}"
+                        base_path = (
+                            f"/app/data/CUSTOMER_DATA/{thread_id}/PERSONAL_DOCUMENTS"
+                        )
                         file_path_list = []
                         for file in os.listdir(base_path):
                             file_path_list.append(f"{base_path}/{file}")
@@ -294,6 +299,20 @@ class AudioConversationController:
                 offer_list = workflow.get_state(thread).values.get("offer_list")
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
                 final_offer = workflow.get_state(thread).values.get("final_offer")
+                modified = workflow.get_state(thread).values.get("modified")
+                agent_message_modified = workflow.get_state(thread).values.get(
+                    "agent_message_modified"
+                )
+                if modified:
+                    agent_message = agent_message_modified
+                logging.info(f"executing text to speech function")
+
+                agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
+                    text=agent_message
+                )
+                # Encode audio bytes as base64
+                audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+                # audio_base64 = ""
                 return {
                     "thread_id": thread_id,
                     "user_message": user_message,
@@ -320,6 +339,11 @@ class AudioConversationController:
                         loan_agreement_url if loan_agreement_url else "None"
                     ),
                     "final_offer": final_offer if final_offer else [],
+                    "modified": modified if modified else False,
+                    "agent_message_modified": (
+                        agent_message_modified if agent_message_modified else "None"
+                    ),
+                    "agent_audio_data": audio_base64,
                 }
         except Exception as error:
             logging.error(

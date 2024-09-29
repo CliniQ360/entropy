@@ -73,6 +73,7 @@ def submit_loan_amount(state: SahayakState):
         "agent_message": [
             "Your details are successfully submitted. Please click proceed to complete your KYC."
         ],
+        "modified": False,
     }
 
 
@@ -115,7 +116,8 @@ def human_invalid_loan_amount_selection(state: SahayakState):
     return {
         "agent_message": [
             f"Minimum loan amount is {min_loan_amt} and maximum loan amount is {max_loan_amt}. Please select the loan amount within the range provided"
-        ]
+        ],
+        "modified": False,
     }
 
 
@@ -165,7 +167,7 @@ def send_kyc_ack(state: SahayakState):
         print(f"{current_action=}")
         print("Sleeping for 5 seconds")
         time.sleep(5)
-    return {"status": current_action}
+    return {"status": current_action, "modified": False}
 
 
 def generate_account_details_questions(state: SahayakState):
@@ -225,7 +227,8 @@ def generate_account_details_questions(state: SahayakState):
     return {
         "agent_message": [
             "Please provide your bank account details and click on submit to proceed further."
-        ]
+        ],
+        "modified": False,
     }
 
 
@@ -261,7 +264,10 @@ def extract_user_account_details(state: SahayakState):
     extracted_data = structured_llm.invoke([extractor_prompt])
     logging.info(f"{extracted_data.userAccountDetails=}")
     # Write the list of analysis to state
-    return {"customer_account_details": extracted_data.userAccountDetails}
+    return {
+        "customer_account_details": extracted_data.userAccountDetails,
+        "modified": False,
+    }
 
 
 # def verify_user_account_details(state: SahayakState):
@@ -345,6 +351,7 @@ def submit_account_details_form(state: SahayakState):
         "agent_message": [
             "Your details are successfully submitted. Please click proceed to setup your e-mandate."
         ],
+        "modified": False,
     }
 
 
@@ -404,7 +411,8 @@ def emdt_approval_pending(state: SahayakState):
     return {
         "agent_message": [
             "To proceed further, please provide an approval for eMandate flow."
-        ]
+        ],
+        "modified": False,
     }
 
 
@@ -436,7 +444,7 @@ def send_emdt_ack(state: SahayakState):
         params={"offer_item_id": offer_item_id, "txn_id": txn_id},
     )
     loan_signing_redirect_url = get_loan_agrmt_resp.get("form_url")
-    return {"loan_signing_redirect_url": loan_signing_redirect_url}
+    return {"loan_signing_redirect_url": loan_signing_redirect_url, "modified": False}
 
 
 def summarise_loan_tnc(state: SahayakState):
@@ -444,6 +452,7 @@ def summarise_loan_tnc(state: SahayakState):
     loan_document_url = f"{credit_base_url}/v1/credit/getLoanDocUrl"
     get_txn_url = f"{credit_base_url}/v1/txn_details"
     txn_id = state.get("txn_id")
+    thread_id = state.get("thread_id")
     offer_item_id = state.get("offer_item_id")
     current_action = None
     counter = 0
@@ -466,8 +475,10 @@ def summarise_loan_tnc(state: SahayakState):
     if loan_agreement_url:
         file_content, _ = APIInterface().download_file(route=loan_agreement_url)
         txn_id = state.get("txn_id")
+        file_path = f"/app/data/CUSTOMER_DATA/{thread_id}/LOAN_DOCUMENTS"
+        os.makedirs(file_path, exist_ok=True)
         file_name = f"{txn_id}.pdf"
-        open(file_name, "wb").write(file_content)
+        open(f"{file_path}/{file_name}", "wb").write(file_content)
         loader = PyPDFLoader(file_name)
         pages = loader.load_and_split()
         text = " ".join([page.page_content.replace("\t", " ") for page in pages])
@@ -498,6 +509,7 @@ def summarise_loan_tnc(state: SahayakState):
         "loan_agreement_text": text,
         "agent_message": [loan_agreement_summary],
         "loan_agreement_url": loan_agreement_url,
+        "modified": False,
     }
 
 
@@ -512,7 +524,7 @@ def finalize_offer(state: SahayakState):
     logging.info(f"{get_offer_details_resp=}")
     offer_list = get_offer_details_resp.get("offer_list")
     logging.info(f"{offer_list=}")
-    return {"final_offer": offer_list}
+    return {"final_offer": offer_list, "modified": False}
 
 
 def human_loan_tnc_feedback(state: SahayakState):
@@ -546,7 +558,7 @@ def answer_tnc_query(state: SahayakState):
         )
         llm_response = llm_4omini.invoke(qna_prompt)
     answer = llm_response.content
-    return {"agent_message": [answer]}
+    return {"agent_message": [answer], "modified": False}
 
 
 def user_intent_1(state: SahayakState):
@@ -577,7 +589,8 @@ def resume_loan_agreement_signing(state: SahayakState):
 
 def loan_agreement_signing_pending(state: SahayakState):
     return {
-        "user_message": ["Please sign your loan agreeement form to proceed further."]
+        "user_message": ["Please sign your loan agreeement form to proceed further."],
+        "modified": False,
     }
 
 
@@ -606,5 +619,6 @@ def confirm_loan(state: SahayakState):
     return {
         "agent_message": [
             "Your loan has been confirmed. Thank you for choosing CliniQ 360. Have a great day ahead!"
-        ]
+        ],
+        "modified": False,
     }

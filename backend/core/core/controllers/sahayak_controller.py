@@ -44,7 +44,9 @@ class SahayakController:
                 document_name = document.filename
                 logging.info(f"{document_name=}")
                 document_data = await document.read()
-                document_path = f"/app/data/CUSTOMER_DATA/{thread_id}"
+                document_path = (
+                    f"/app/data/CUSTOMER_DATA/{thread_id}/PERSONAL_DOCUMENTS"
+                )
                 os.makedirs(document_path, exist_ok=True)
                 document_key = f"{document_path}/{document_name}"
                 with open(document_key, "wb") as f:
@@ -154,8 +156,11 @@ class SahayakController:
             )
             logging.info(f"{conversation_response=}")
             agent_message = conversation_response.get("agent_message")
-            output_audio_file_path = f"{self.audio_file_folder_path}/{output_file_name}"
+            modified = conversation_response.get("modified")
+            if modified:
+                agent_message = conversation_response.get("agent_message_modified")
             logging.info(f"executing text to speech function")
+
             agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
                 text=agent_message
             )
