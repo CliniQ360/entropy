@@ -82,20 +82,37 @@ class OpenAIPrompts:
 
 class GeminiPrompts:
     def __init__(self):
+
+        # self.collector_instructions = """
+        # You are a helpful assistant tasked with collecting customer information in order to complete a loan application form.
+        # The information you need to collect includes: {required_fields}
+        # Here’s how you should proceed:
+        # 1. Initial Check: Analyze the already collected information provided in {customer_info} and identify missing values.
+        # 2. Sequential Processing: For each required detail (in the list above), check if it has been provided.
+        #     - If the detail is missing, ask the customer a follow-up question to gather the information for that specific field.
+        #     - If the detail is present, move to the next field without prompting for it again.
+        # 3. Handle End-of-Sequence Issues: Pay special attention to the last element in the list (Income, Address Line 2) and ensure that it is properly processed, even if it is at the end.
+        #     - If Income or Address Line 2 is already provided, do not ask for it again. If it's missing, generate a question specifically for it.
+        #     - Use explicit end-sequence handling to ensure that no details are missed due to an indexing or sequence error.
+        # 4. Chain of Thought: Think step-by-step and carefully verify each piece of information before moving to the next.
+        #     - Ask only for the missing information and avoid repeating questions for details that have already been collected.
+        # 5. Final Validation: After going through the list, confirm that all details have been collected.
+        #     - If all required information is available, return: "ALL DATA COLLECTED"
+        #     - If there are still missing pieces of information, generate a question targeting those fields only.
+        # Now, proceed step-by-step and analyze {customer_info}.
+        # """
         self.collector_instructions = """
         You are a helpful assistant tasked with collecting customer information in order to complete a loan application form.
-        The information you need to collect includes: {required_fields}
+        The required_fields: {required_fields}. This is divided into the following sections: personal_information,contact_information, address_information, employment_information, and other_information.
         Here’s how you should proceed:
-        1. Initial Check: Analyze the already collected information provided in {customer_info} and identify missing values.
-        2. Sequential Processing: For each required detail (in the list above), check if it has been provided.
-            - If the detail is missing, ask the customer a follow-up question to gather the information for that specific field.
-            - If the detail is present, move to the next field without prompting for it again.
-        3. Handle End-of-Sequence Issues: Pay special attention to the last element in the list (Income, Address Line 2) and ensure that it is properly processed, even if it is at the end.
-            - If Income or Address Line 2 is already provided, do not ask for it again. If it's missing, generate a question specifically for it.
-            - Use explicit end-sequence handling to ensure that no details are missed due to an indexing or sequence error.
-        4. Chain of Thought: Think step-by-step and carefully verify each piece of information before moving to the next.
+        1. Initial Check: Analyze the already collected information customer_info in {customer_info} and identify missing values.
+        2. Sequential Processing: For each required field in required_fields , check if value is already collected for all the keys in the sections.
+            - If the value is missing, ask the customer a follow-up question to gather the information for all the missing fields in a section together.
+            - If the detail is present, move to the next key without prompting for it again.
+            - If all the values for a section are already collected, move to the next section.
+        3. Chain of Thought: Think step-by-step and carefully verify each piece of information before moving to the next.
             - Ask only for the missing information and avoid repeating questions for details that have already been collected.
-        5. Final Validation: After going through the list, confirm that all details have been collected.
+        4. Final Validation: After going through the list, confirm that all details have been collected.
             - If all required information is available, return: "ALL DATA COLLECTED"
             - If there are still missing pieces of information, generate a question targeting those fields only.
         Now, proceed step-by-step and analyze {customer_info}.
@@ -128,6 +145,7 @@ class GeminiPrompts:
             - If all required information is available, return: "ALL DATA COLLECTED"
             - If there are still missing pieces of information, generate a question targeting those fields only.
         Now, proceed step-by-step and analyze {customer_info}.
+        Keep a conversational tone.
         """
 
         self.account_extractor_instructions = """You are tasked with extracting the user details from the customer's response. 

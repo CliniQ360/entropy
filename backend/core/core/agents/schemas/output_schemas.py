@@ -74,5 +74,5 @@ class UserIntent(BaseModel):
 
 class UserIntentClassification(BaseModel):
     user_intent: str = Field(
-        description="Intent of the user in the audio file from the given options: 'ok', 'edit'"
+        description="Intent of the user in the audio file from the given options: 'submit', 'edit'"
     )
