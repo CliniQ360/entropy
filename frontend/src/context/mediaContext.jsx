@@ -11,6 +11,7 @@ const MediaContextProvider = ({ children }) => {
   const [progressValue, setProgressValue] = useState(0);
   const [listening, setIsListening] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   return (
     <MediaContext.Provider
@@ -31,6 +32,8 @@ const MediaContextProvider = ({ children }) => {
         setIsListening,
         showLoader,
         setShowLoader,
+        processing,
+        setProcessing,
       }}
     >
       {children}

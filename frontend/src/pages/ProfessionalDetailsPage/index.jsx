@@ -82,6 +82,7 @@ const ProfessionalDetailsPage = () => {
     setMessageResponse,
     setProgressValue,
     setUserResponse,
+    setProcessing,
   } = useContext(MediaContext);
   const [showLoader, setShowLoader] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
@@ -160,6 +161,7 @@ const ProfessionalDetailsPage = () => {
           form_aa_URL.close();
           setRedirectionVal(false);
           setShowLoader(true);
+          setProcessing(true);
           const secondpayload = {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
@@ -168,11 +170,13 @@ const ProfessionalDetailsPage = () => {
           dispatch(agentConversation(secondpayload)).then((res) => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
               setError(true);
+              setProcessing(false);
               return;
             }
             setError(false);
             setShowLoader(false);
             setProgressValue(30);
+            setProcessing(false);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
@@ -197,7 +201,10 @@ const ProfessionalDetailsPage = () => {
   return (
     <>
       <CustomLoader open={showLoader} />
-      <RedirectionDialogComponent open={redirectionVal} />
+      <RedirectionDialogComponent
+        open={redirectionVal}
+        setOpen={setRedirectionVal}
+      />
       <ProfessionalDetailsContainer>
         <DocumentHeaderSection>
           <Typography

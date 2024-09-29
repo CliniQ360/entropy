@@ -76,7 +76,7 @@ styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
 const AgentHeader = () => {
-  const { audioResponse, messageResponse, error, listening } =
+  const { audioResponse, messageResponse, error, listening, processing } =
     useContext(MediaContext);
   const [audioSrc, setAudioSrc] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
@@ -197,8 +197,8 @@ const AgentHeader = () => {
         </HeaderIconSection>
         <Divider />
         <Stack
-          alignItems={"center"}
-          justifyContent={"center"}
+          alignItems="center"
+          justifyContent="center"
           padding={2}
           sx={{
             overflow: "hidden", // Hide text overflow
@@ -207,7 +207,7 @@ const AgentHeader = () => {
           }}
         >
           {!error ? (
-            listening ? (
+            processing ? (
               <Typography
                 sx={{
                   color: "#535353",
@@ -215,8 +215,19 @@ const AgentHeader = () => {
                   fontFamily: "source sans pro",
                 }}
               >
-                Llistening
-                <DotsAnimationContainer className={"dotsAnimation"} />
+                Processing
+                <DotsAnimationContainer className="dotsAnimation" />
+              </Typography>
+            ) : listening ? (
+              <Typography
+                sx={{
+                  color: "#535353",
+                  fontSize: "1rem",
+                  fontFamily: "source sans pro",
+                }}
+              >
+                Listening
+                <DotsAnimationContainer className="dotsAnimation" />
               </Typography>
             ) : (
               <Typography

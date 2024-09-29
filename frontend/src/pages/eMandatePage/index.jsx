@@ -52,6 +52,7 @@ const EmandatePage = () => {
     setError,
     setProgressValue,
     setUserResponse,
+    setProcessing,
   } = useContext(MediaContext);
 
   const dispatch = useDispatch();
@@ -127,6 +128,7 @@ const EmandatePage = () => {
           setRedirectionVal(false);
           setShowLoader(true);
           clearInterval(id);
+          setProcessing(true);
           const secondpayload = {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
@@ -138,11 +140,13 @@ const EmandatePage = () => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
               setShowLoader(false);
               setError(true);
+              setProcessing(false);
               return;
             }
             setProgressValue(80);
             setError(false);
             setShowLoader(false);
+            setProcessing(false);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
@@ -179,6 +183,7 @@ const EmandatePage = () => {
           setShowLoader(true);
           clearInterval(id);
           setProgressValue(90);
+          setProcessing(true);
           const secondpayload = {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
@@ -189,12 +194,14 @@ const EmandatePage = () => {
           dispatch(agentConversation(secondpayload)).then((res) => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
               setShowLoader(false);
+              setProcessing(false);
               setError(true);
               return;
             }
             setError(false);
             setProgressValue(100);
             setShowLoader(false);
+            setProcessing(false);
             sessionStorage.setItem(
               "next_state",
               res?.payload?.data?.next_state
@@ -217,7 +224,10 @@ const EmandatePage = () => {
   return (
     <>
       <CustomLoader open={showLoader} />
-      <RedirectionDialogComponent open={redirectionVal} />
+      <RedirectionDialogComponent
+        open={redirectionVal}
+        setOpen={setRedirectionVal}
+      />
       <SubmitDialogBox
         confirmation={confirmation}
         setConfirmation={setConfirmation}

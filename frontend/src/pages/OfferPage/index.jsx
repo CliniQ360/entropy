@@ -149,6 +149,7 @@ const AvailableOffersPage = () => {
     setAudioResponse,
     setMessageResponse,
     setUserResponse,
+    setProcessing,
   } = useContext(MediaContext);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
@@ -162,21 +163,24 @@ const AvailableOffersPage = () => {
     const thread_id = sessionStorage.getItem("thread_id");
     const uploadFlag = sessionStorage.getItem("document_upload_flag");
     const next_state = sessionStorage.getItem("next_state");
+    setProcessing(true);
     const payload = {
       threadId: thread_id,
       uploadFlag: uploadFlag,
       state: "refresh_offer",
     };
-
-    const setTimeoutSeconds = showTimer ? 52000 : 0;
+    const setTimeoutSeconds = showTimer ? 48000 : 0;
     setTimeout(() => {
+      setShowLoader(true);
       dispatch(agentConversation(payload)).then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
           setShowLoader(false);
           setError(true);
+          setProcessing(false);
           return;
         }
         setError(false);
+        setProcessing(false);
         setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setOfferDetails(res?.payload?.data?.offer_list);

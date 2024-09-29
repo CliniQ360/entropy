@@ -58,6 +58,7 @@ const KYCPage = () => {
     setError,
     setProgressValue,
     setUserResponse,
+    setProcessing,
   } = useContext(MediaContext);
 
   let kyc_url;
@@ -104,6 +105,7 @@ const KYCPage = () => {
           setRedirectionVal(false);
           setShowLoader(true);
           clearInterval(id);
+          setProcessing(true);
           const secondpayload = {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
@@ -115,10 +117,12 @@ const KYCPage = () => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
               setShowLoader(false);
               setError(true);
+              setProcessing(false);
               return;
             }
             setError(false);
             setShowLoader(false);
+            setProcessing(false);
             setProgressValue(60);
             sessionStorage.setItem(
               "next_state",
@@ -143,7 +147,10 @@ const KYCPage = () => {
   return (
     <>
       <CustomLoader open={showLoader} />
-      <RedirectionDialogComponent open={redirectionVal} />
+      <RedirectionDialogComponent
+        open={redirectionVal}
+        setOpen={setRedirectionVal}
+      />
       <KYCWrapper>
         <Stack gap={4}>
           <Typography

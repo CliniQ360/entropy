@@ -37,6 +37,8 @@ const CreditPage = () => {
     setProgressValue,
     setUserResponse,
     setIsListening,
+    setProcessing,
+    processing,
   } = useContext(MediaContext);
   const { setCustomerDetails, setAaRedirectUrl, setKycRedirectUrl } =
     useContext(AudioDataContext);
@@ -50,12 +52,12 @@ const CreditPage = () => {
 
   const handleUploadAudio = async (mediaBlobUrl) => {
     // setShowLoader(true);
+    setProcessing(true);
     const response = await fetch(mediaBlobUrl);
     const audioBlob = await response.blob();
     setAudioBlob(audioBlob);
     const formData = new FormData();
     formData.append("file", audioBlob, "audio_recording.mp3");
-
     const payload = {
       file: formData,
       threadId: thread_id,
@@ -73,9 +75,11 @@ const CreditPage = () => {
       .then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
           setError(true);
+          setProcessing(false);
           return;
         }
         setError(false);
+        setProcessing(false);
         setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setCustomerDetails(res?.payload?.data?.customer_details);
@@ -169,6 +173,13 @@ const CreditPage = () => {
       silenceDetector.stop();
     };
   }, [isRecording, isPaused]);
+
+  useEffect(() => {
+    if (processing) {
+      handlePauseAudio();
+      setIsPaused(true);
+    }
+  }, [processing]);
 
   return (
     <CreditPageContainer>
