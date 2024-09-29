@@ -76,8 +76,14 @@ styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
 const AgentHeader = () => {
-  const { audioResponse, messageResponse, error, listening, processing } =
-    useContext(MediaContext);
+  const {
+    audioResponse,
+    messageResponse,
+    error,
+    listening,
+    processing,
+    uploadDocument,
+  } = useContext(MediaContext);
   const [audioSrc, setAudioSrc] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const audioRef = useRef(null);
@@ -227,6 +233,17 @@ const AgentHeader = () => {
                 }}
               >
                 Listening
+                <DotsAnimationContainer className="dotsAnimation" />
+              </Typography>
+            ) : uploadDocument ? (
+              <Typography
+                sx={{
+                  color: "#535353",
+                  fontSize: "1rem",
+                  fontFamily: "source sans pro",
+                }}
+              >
+                Uploading
                 <DotsAnimationContainer className="dotsAnimation" />
               </Typography>
             ) : (
