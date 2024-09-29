@@ -66,7 +66,7 @@ const CustomTimer = ({ open, onClose, setShowTimer }) => {
             color={"#0054BA"}
             fontFamily={"plus jakarta sans bold"}
           >
-            Please Be Patient
+            Please be patient
           </Typography>
           <CountdownCircleTimer
             isPlaying
