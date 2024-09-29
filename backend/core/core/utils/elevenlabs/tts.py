@@ -11,15 +11,14 @@ load_dotenv()
 class ElevenLabsHelper:
     def __init__(self):
         self.api_key = os.environ.get("ELEVENLABS_API_KEY")
+        self.client = ElevenLabs(api_key=self.api_key)
+        self.voice_id = os.environ.get("ELEVENLABS_VOICE_ID")
 
-    def text_to_speech_generator(text: str, output_path: str):
+    def text_to_speech_generator(self, text: str):
         print("Inside TTS 11labs")
-        print(f"{os.environ.get('ELEVENLABS_API_KEY')=}")
-        client = ElevenLabs(
-            api_key=os.environ.get("ELEVENLABS_API_KEY"),
-        )
-        result = client.text_to_speech.convert(
-            voice_id="zT03pEAEi0VHKciJODfn",
+
+        result = self.client.text_to_speech.convert(
+            voice_id=self.voice_id,
             optimize_streaming_latency="0",
             output_format="mp3_22050_32",
             text=text,
@@ -29,12 +28,9 @@ class ElevenLabsHelper:
                 style=0.2,
             ),
         )
-
         audio_buffer = io.BytesIO()
-
         for chunk in result:
             audio_buffer.write(chunk)
-
         # Move the buffer's position to the start
         audio_buffer.seek(0)
         # print(f"{audio_buffer.getvalue()}")

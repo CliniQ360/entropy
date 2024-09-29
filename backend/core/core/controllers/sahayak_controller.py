@@ -23,6 +23,7 @@ class SahayakController:
         self.LLM_CONFIG = os.getenv("LLM_CONFIG")
         self.bucket_name = os.getenv("GCS_BUCKET_NAME")
         self.audio_file_folder_path = f"/app/audio_data"
+        self.welcom_message_audio_path = f"/app/data/welcome_message.txt"
 
     def text_generator(self, transcribed_text: str):
         if transcribed_text:
@@ -62,15 +63,15 @@ class SahayakController:
         )
         agent_message = conversation_response.get("agent_message")
         output_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-output.mp3"
-        output_audio_file_path = f"{self.audio_file_folder_path}/{output_file_name}"
+        # output_audio_file_path = f"{self.audio_file_folder_path}/{output_file_name}"
         # logging.info(f"executing text to speech function")
-        # agent_audio_data = ElevenLabsHelper.text_to_speech_generator(
+        # agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
         #     text=agent_message, output_path=output_audio_file_path
         # )
         # Encode audio bytes as base64
-        # audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
-        audio_base64 = ""
-        conversation_response.update({"agent_audio_data": audio_base64})
+        audio_base64_str = open(self.welcom_message_audio_path, "r").read()
+        # audio_base64 = ""
+        conversation_response.update({"agent_audio_data": audio_base64_str})
         return conversation_response
 
     def resume_audio_conversation(self, request):
@@ -154,14 +155,13 @@ class SahayakController:
             logging.info(f"{conversation_response=}")
             agent_message = conversation_response.get("agent_message")
             output_audio_file_path = f"{self.audio_file_folder_path}/{output_file_name}"
-            # # logging.info(f"executing text to speech function")
-            # agent_audio_data = ElevenLabsHelper.text_to_speech_generator(
-            #     text=agent_message, output_path=output_audio_file_path
-            # )
-
-            # # Encode audio bytes as base64
-            # audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
-            audio_base64 = ""
+            logging.info(f"executing text to speech function")
+            agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
+                text=agent_message
+            )
+            # Encode audio bytes as base64
+            audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+            # audio_base64 = ""
             conversation_response.update({"agent_audio_data": audio_base64})
             return conversation_response
         except Exception as error:
