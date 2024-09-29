@@ -112,8 +112,50 @@ const FooterButton = styled(Button)(({ theme }) => ({
   boxShadow: "none",
 }));
 
+const ActionLanguageSectionContainer = styled("div")(({ theme }) => ({
+  display: "flex",
+  padding: theme.spacing(2),
+  gap: theme.spacing(2),
+  borderRadius: "30px",
+  backgroundColor: "#EAF2FF",
+  width: "150px",
+  height: "28px",
+  position: "relative",
+}));
+
+const LanguageSlider = styled("div")(({ activeButton }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  position: "absolute",
+  top: 4,
+  left: activeButton === 0 ? 0 : "50%",
+  width: "50%",
+  height: "85%",
+  backgroundColor: "#0188E8",
+  borderRadius: "30px",
+  transition: "left 0.3s ease-in-out",
+}));
+
+const LanguageToggleButton = styled(Button)(({ theme, isActive }) => ({
+  zIndex: 1,
+  backgroundColor: "transparent",
+  color: isActive ? "#fff" : "#000",
+  textTransform: "none",
+  width: "50%",
+  height: "100%",
+  fontWeight: "bold",
+  fontSize: "0.9rem",
+  transition: "color 0.3s ease-in-out",
+  margin: 1,
+  "&:hover": {
+    backgroundColor: "transparent",
+  },
+}));
+
 const ChooseAssistant = () => {
   const [activeButton, setActiveButton] = useState(0);
+  const [activeLanguage, setActiveLanguage] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
   const {
     setAudioResponse,
@@ -129,6 +171,9 @@ const ChooseAssistant = () => {
 
   const handleButtonClick = (index) => {
     setActiveButton(index);
+  };
+  const handleLanguageClick = (index) => {
+    setActiveLanguage(index);
   };
 
   const handleInitConversion = () => {
@@ -172,34 +217,47 @@ const ChooseAssistant = () => {
             onClick={() => handleButtonClick(0)}
             isActive={activeButton === 0}
           >
-            Name 1
+            Raju
           </ToggleButton>
           <ToggleButton
             onClick={() => handleButtonClick(1)}
             isActive={activeButton === 1}
           >
-            Name 2
+            Rani
           </ToggleButton>
         </ActionChangeSectionContainer>
       </AssistantChangeSectionWrapper>
       <AssistantProfilePhotoWrapper>
         <AssistantProfilePhoto activeIndex={activeButton} />
-        <Stack justifyContent={"center"} alignItems={"center"}>
-          <AudioBarIcon width={50} height={60} />
-        </Stack>
+        <ActionLanguageSectionContainer>
+          <LanguageSlider activeButton={activeLanguage} />
+          <LanguageToggleButton
+            onClick={() => handleLanguageClick(0)}
+            isActive={activeLanguage === 0}
+          >
+            English
+          </LanguageToggleButton>
+          <LanguageToggleButton
+            onClick={() => handleLanguageClick(1)}
+            isActive={activeLanguage === 1}
+          >
+            Hindi
+          </LanguageToggleButton>
+        </ActionLanguageSectionContainer>
         <Stack padding={6}>
           <Typography
             textAlign={"center"}
             sx={{ fontSize: "1.2rem", color: "#535353" }}
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry
+            Welcome to CliniQ-360! My name is{" "}
+            {activeButton === 0 ? "Raju" : "Rani"} and i am excited to assist
+            you in your credit journey!
           </Typography>
         </Stack>
       </AssistantProfilePhotoWrapper>
       <FooterButtonWrapper>
         <FooterButton variant="contained" onClick={handleInitConversion}>
-          Button
+          Start Your Journey
         </FooterButton>
       </FooterButtonWrapper>
     </PageWrapper>

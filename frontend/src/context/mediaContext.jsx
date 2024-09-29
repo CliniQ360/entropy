@@ -12,6 +12,7 @@ const MediaContextProvider = ({ children }) => {
   const [listening, setIsListening] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [uploadDocument, setUploadDocument] = useState(false);
 
   return (
     <MediaContext.Provider
@@ -34,6 +35,8 @@ const MediaContextProvider = ({ children }) => {
         setShowLoader,
         processing,
         setProcessing,
+        uploadDocument,
+        setUploadDocument,
       }}
     >
       {children}

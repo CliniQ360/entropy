@@ -82,6 +82,7 @@ const DocumentUploadPage = () => {
     nextState,
     setProgressValue,
     progressValue,
+    setUploadDocument,
   } = useContext(MediaContext);
   const { setCustomerDetails } = useContext(AudioDataContext);
   const [showLoader, setShowLoader] = useState(false);
@@ -122,6 +123,7 @@ const DocumentUploadPage = () => {
 
   const handleUploadImages = () => {
     setShowLoader(true);
+    setUploadDocument(true);
     const formData = new FormData();
 
     images.map((item) => {
@@ -154,11 +156,13 @@ const DocumentUploadPage = () => {
           if (res?.error && Object.keys(res?.error)?.length > 0) {
             setError(true);
             setShowLoader(false);
+            setUploadDocument(false);
             return;
           }
           setError(false);
           sessionStorage.setItem("document_upload_flag", true);
           setProgressValue(20);
+          setUploadDocument(false);
           sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
           setAudioResponse(res?.payload?.data?.agent_audio_data);
           setMessageResponse(res?.payload?.data?.agent_message);
@@ -190,13 +194,7 @@ const DocumentUploadPage = () => {
               textAlign: "left",
             }}
           >
-            Lorem Ipsum is simply dummy text
-          </Typography>
-          <Typography
-            sx={{ fontSize: "1rem", color: "#535353", textAlign: "left" }}
-          >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry
+            Please upload your Aadhar and Pan Card Below
           </Typography>
         </DocumentHeaderSection>
         <UploadDocumentContainer>
