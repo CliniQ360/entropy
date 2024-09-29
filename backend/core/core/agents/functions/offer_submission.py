@@ -120,7 +120,9 @@ def send_ack(state: SahayakState):
     )
     # current_action = select_consent_resp.get("current_action")
     return {
-        "agent_message": ["Please wait while your transaction is in progress."],
+        "agent_message": [
+            "Please wait while negotiate with the banks to get the best offer for you."
+        ],
         "status": "FETCHING_OFFERS",
     }
 
