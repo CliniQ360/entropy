@@ -1,23 +1,25 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
   Divider,
   Fab,
+  IconButton,
   Stack,
   styled,
   Typography,
 } from "@mui/material";
-import MicOffIcon from "@mui/icons-material/MicOff";
-import CloseIcon from "@mui/icons-material/Close";
-import MicIcon from "@mui/icons-material/Mic";
-import { VisualizerLive } from "../LiveAudioWavelengthComponent";
 import Lottie from "lottie-react";
 import audioAnimation from "../../utils/lottieJson/audioAnimation.json";
 import { MediaContext } from "../../context/mediaContext";
+import ChatIcon from "../../utils/CustomIcons/ChatIcon";
+import SettingIcon from "../../utils/CustomIcons/SettingIcon";
+import MicIcon from "../../utils/CustomIcons/MicIcon";
+import MuteIcon from "../../utils/CustomIcons/MuteIcon";
+import CustomDrawer from "../CustomBottomDrawer";
 
 const FooterContainer = styled("footer")(({ theme }) => ({
-  backgroundColor: "#EAF2FF",
+  backgroundColor: "white",
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
@@ -25,7 +27,7 @@ const FooterContainer = styled("footer")(({ theme }) => ({
   bottom: 0,
   width: "100%",
   zIndex: 100,
-  boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.2)",
+  boxShadow: "-20px 5px 20px 1px rgba(0, 0, 0, 0.2)",
 }));
 
 const FooterText = styled(Box)(({ theme }) => ({
@@ -34,7 +36,26 @@ const FooterText = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2, 6),
 }));
 
-const CustomFabButton = styled(Fab)(({ theme, bgcolor }) => ({
+const CustomFabButtonWrapper = styled(Stack)(({ theme, bgcolor }) => ({
+  // height: "65px",
+  // width: "65px",
+  borderRadius: "50%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#0188e854",
+  border: "2px solid #0188E8 ",
+  padding: 2,
+}));
+
+const CustomFabButton = styled(Stack)(({ theme, bgcolor }) => ({
+  height: "60px",
+  width: "60px",
+  borderRadius: "50%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  margin: 2,
   backgroundColor: bgcolor || "#fff",
   ":hover": {
     backgroundColor: bgcolor || "#fff",
@@ -44,10 +65,10 @@ const CustomFabButton = styled(Fab)(({ theme, bgcolor }) => ({
 const FooterActionContainer = styled(Stack)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
-  justifyContent: "center",
+  justifyContent: "space-around",
   alignItems: "center",
   gap: theme.spacing(8),
-  padding: theme.spacing(6, 8),
+  padding: theme.spacing(6, 4),
 }));
 
 const PageFooter = ({
@@ -83,7 +104,7 @@ const PageFooter = ({
 
   return (
     <FooterContainer>
-      <Stack
+      {/* <Stack
         alignItems={"center"}
         justifyContent={"center"}
         padding={2}
@@ -106,66 +127,73 @@ const PageFooter = ({
             {!userResponse ? "Welcome to Cliniq360 Sahayak" : userResponse}
           </Typography>
         </FooterText>
-      </Stack>
+      </Stack> */}
       <FooterActionContainer>
+        <IconButton sx={{ padding: 1 }}>
+          <ChatIcon width={27} color={"black"} />
+        </IconButton>
+
         {isRecording ? (
           <>
             {isPaused ? (
-              <CustomFabButton
-                onClick={handleResumeAudio}
-                bgcolor={"#E25341"}
-                size="large"
-                aria-label="mute"
-              >
-                <MicOffIcon sx={{ color: "white" }} />
-              </CustomFabButton>
+              <CustomFabButtonWrapper>
+                <CustomFabButton
+                  onClick={handleResumeAudio}
+                  bgcolor={"#0054BA"}
+                  size="large"
+                  aria-label="mute"
+                >
+                  <MuteIcon color={"white"} width={20} height={25} />
+                </CustomFabButton>
+              </CustomFabButtonWrapper>
             ) : (
-              <CustomFabButton
-                onClick={handlePauseAudio}
-                bgcolor={"rgba(30,30,30,0.5)"}
-                size="large"
-                aria-label="mute"
-              >
-                <MicOffIcon sx={{ color: "white" }} />
-              </CustomFabButton>
+              <CustomFabButtonWrapper>
+                <CustomFabButton
+                  onClick={handlePauseAudio}
+                  bgcolor={"#0054BA"}
+                  size="large"
+                  aria-label="mute"
+                >
+                  <MicIcon color={"white"} width={24} height={24} />
+                </CustomFabButton>
+              </CustomFabButtonWrapper>
             )}
-            {/* <CustomFabButton
-              onClick={handlePauseResume}
-              bgcolor={!isPaused ? "rgba(30,30,30,0.5)" : "#E25341"}
-              size="large"
-              aria-label="mute"
-            >
-              <MicOffIcon sx={{ color: "white" }} />
-            </CustomFabButton> */}
+            {/* <CustomFabButtonWrapper>
+              <CustomFabButton
+                onClick={handleStartRecording}
+                size="large"
+                aria-label="Close"
+                bgcolor={"#535353"}
+              >
+                <MicIcon color={"white"} width={24} height={24} />
+              </CustomFabButton>
+            </CustomFabButtonWrapper> */}
 
-            <Box sx={{ width: "30%" }}>
+            {/* <Box sx={{ width: "30%" }}>
               <Lottie
                 lottieRef={lottieRef}
                 animationData={audioAnimation}
                 autoPlay={true}
               />{" "}
-            </Box>
-            <CustomFabButton
-              onClick={handleStopRecording}
-              bgcolor={"#E25341"}
-              size="large"
-              aria-label="Close"
-            >
-              <CloseIcon sx={{ color: "white" }} />
-            </CustomFabButton>
+            </Box> */}
           </>
         ) : (
           <>
-            <CustomFabButton
-              onClick={handleStartRecording}
-              size="large"
-              aria-label="Close"
-              bgcolor={"#0054BA"}
-            >
-              <MicIcon sx={{ color: "white" }} />
-            </CustomFabButton>
+            <CustomFabButtonWrapper>
+              <CustomFabButton
+                onClick={handleStartRecording}
+                size="large"
+                aria-label="Close"
+                bgcolor={"#535353"}
+              >
+                <MuteIcon color={"white"} width={20} height={25} />
+              </CustomFabButton>
+            </CustomFabButtonWrapper>
           </>
         )}
+        <IconButton sx={{ padding: 1 }}>
+          <SettingIcon />
+        </IconButton>
       </FooterActionContainer>
     </FooterContainer>
   );

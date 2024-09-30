@@ -11,6 +11,7 @@ import { MediaContext } from "../../context/mediaContext";
 import { AudioDataContext } from "../../context/audioDataContext";
 import { useReactMediaRecorder } from "react-media-recorder-2";
 import CustomLoader from "../../components/CustomLoader";
+import CustomDrawer from "../../components/CustomBottomDrawer";
 
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -47,6 +48,7 @@ const CreditPage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(true);
 
   /* CONFIGURING REACT MEdiA RECORDER COMPONENT */
 
@@ -179,6 +181,7 @@ const CreditPage = () => {
       <OutletContainer>
         <Outlet />
       </OutletContainer>
+      <CustomDrawer open={drawerOpen} setDrawerOpen={setDrawerOpen} />
       <PageFooter
         // mediaRecorder={mediaRecorder}
         handleStartRecording={handleStartRecording}
