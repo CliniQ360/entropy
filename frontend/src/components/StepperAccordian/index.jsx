@@ -59,7 +59,13 @@ const StepperAccordion = ({ steps, checkError, refreshState }) => {
                 <CheckCircleIcon color="disabled" />
               )}
             </Box>
-            <Typography>{step.accordionSummary}</Typography>
+            <Typography
+              fontSize={"18px"}
+              fontWeight={"bold"}
+              fontFamily={"Plus Jakarta Sans Bold"}
+            >
+              {step.accordionSummary}
+            </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <div data-step={index}>

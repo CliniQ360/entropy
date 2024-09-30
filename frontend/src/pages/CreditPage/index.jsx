@@ -64,12 +64,8 @@ const CreditPage = () => {
       uploadFlag: uploadFlag,
       state: sessionStorage.getItem("next_state"),
     };
-
-    if (sessionStorage.getItem("offer_item_id") !== "None") {
+    if (sessionStorage.getItem("offer_item_id")) {
       payload.offer_item_id = sessionStorage.getItem("offer_item_id");
-    }
-    if (sessionStorage.getItem("selected_amt") !== "None") {
-      payload.selected_loan_amount = sessionStorage.getItem("selected_amt");
     }
     dispatch(agentConversation(payload))
       .then((res) => {
@@ -89,13 +85,7 @@ const CreditPage = () => {
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
         setShowLoader(false);
-        if (res?.payload?.data?.next_state === "resume_after_kyc_redirect") {
-          navigate("/credit/kyc-page");
-          console.log("kyc_redirect_url", res?.payload?.data?.kyc_redirect_url);
-          setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
-        } else if (
-          res?.payload?.data?.next_state === "human_loan_amount_selection"
-        ) {
+        if (res?.payload?.data?.next_state === "human_loan_amount_selection") {
           navigate("/credit/customize-offers");
           setProgressValue(50);
         } else if (res?.payload?.data?.next_state === "human_selection") {

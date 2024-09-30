@@ -205,7 +205,7 @@ const DocumentUploadPage = () => {
               id="panel1-header"
             >
               <Typography sx={{ fontFamily: "plus jakarta sans bold", ml: 3 }}>
-                ADDHAR
+                AADHAR
               </Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ padding: 4 }}>
