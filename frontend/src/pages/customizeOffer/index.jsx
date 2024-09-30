@@ -121,13 +121,13 @@ const CustomizeOfferPage = () => {
       setProcessing(false);
       setError(false);
       setShowLoader(false);
-      sessionStorage.setItem("next_state", res?.payload?.next_state);
-      setAudioResponse(res?.payload?.agent_audio_data);
-      setMessageResponse(res?.payload?.agent_message);
-      setUserResponse(res?.payload?.user_message);
+      sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+      setAudioResponse(res?.payload?.data?.agent_audio_data);
+      setMessageResponse(res?.payload?.data?.agent_message);
+      setUserResponse(res?.payload?.data?.user_message);
+      setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
       if (res?.payload?.data?.next_state === "resume_after_kyc_redirect") {
         navigate("/credit/kyc-page");
-        setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
       }
     });
   };
