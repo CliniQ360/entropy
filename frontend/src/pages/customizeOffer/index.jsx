@@ -22,6 +22,7 @@ import { json, useNavigate } from "react-router-dom";
 import { AudioDataContext } from "../../context/audioDataContext";
 import { MediaContext } from "../../context/mediaContext";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
+import ViewOfferDetails from "../../components/viewOffer/viewOfferDetails";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -38,6 +39,7 @@ const DocumentHeaderSection = styled("div")(({ theme }) => ({
   flexDirection: "column",
   padding: theme.spacing(4),
   gap: theme.spacing(4),
+  width: "95%",
 }));
 
 const FormContainer = styled(Box)(({ theme }) => ({
@@ -55,7 +57,7 @@ const SliderBox = styled(Box)(({ theme }) => ({
 
 const CustomizeOfferPage = () => {
   const dispatch = useDispatch();
-  const [offerDetails, setOfferDetails] = useState([]);
+  const [offerDetails, setOfferDetails] = useState({});
   const [showLoader, setShowLoader] = useState(false);
   const [newOfferValues, setNewOfferValues] = useState({});
   const maxLoanAmount = offerDetails?.quote_details?.PRINCIPAL;
@@ -140,12 +142,7 @@ const CustomizeOfferPage = () => {
           >
             Available Offers
           </Typography>
-          <Typography
-            sx={{ fontSize: "1rem", color: "#535353", textAlign: "left" }}
-          >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry
-          </Typography>
+          <ViewOfferDetails offer={offerDetails} />
         </DocumentHeaderSection>
         <FormContainer>
           <Stack
