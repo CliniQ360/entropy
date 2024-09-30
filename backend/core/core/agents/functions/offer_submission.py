@@ -18,6 +18,15 @@ from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
 logging = logger(__name__)
 
 
+def submit_form_ack(state: SahayakState):
+    return {
+        "agent_message": [
+            "Please wait while we submit your details. This may take a few seconds."
+        ],
+        "modified": False,
+    }
+
+
 def submit_form(state: SahayakState):
     credit_base_url = os.environ["CREDIT_BASE_URL"]
     search_url = f"{credit_base_url}/v1/credit/search"
@@ -84,6 +93,7 @@ def submit_form(state: SahayakState):
             current_action = get_txn_resp.get("current_action")
             logging.info(f"{current_action=}")
             time.sleep(5)
+            counter += 1
         get_aa_resp, get_aa_resp_code = APIInterface().get(
             route=get_aa_url, params={"user_id": finvu_user_id, "txn_id": txn_id}
         )

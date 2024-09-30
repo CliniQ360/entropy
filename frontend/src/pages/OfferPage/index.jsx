@@ -269,6 +269,10 @@ const AvailableOffersPage = () => {
         "offer_item_id",
         offerDetails?.[currentSlide]?.offer_details?.offer_item_id
       );
+      sessionStorage.setItem(
+        "selected_offer",
+        JSON.stringify(offerDetails?.[currentSlide])
+      );
     }
   }, [currentSlide, offerDetails]);
 
@@ -508,7 +512,7 @@ const AvailableOffersPage = () => {
                               {offer.provider_details.name}
                             </Typography>
                           </div>
-                          <div>
+                          {/* <div>
                             <FormControlLabel
                               value={offer.offer_details.offer_item_id}
                               control={
@@ -523,7 +527,7 @@ const AvailableOffersPage = () => {
                               label=""
                               style={{ margin: 0 }}
                             />
-                          </div>
+                          </div> */}
                         </SelectBoxHeader>
                         <Divider
                           style={{ width: "100%", margin: "16px 0px" }}

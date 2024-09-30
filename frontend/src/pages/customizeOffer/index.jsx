@@ -22,6 +22,7 @@ import { json, useNavigate } from "react-router-dom";
 import { AudioDataContext } from "../../context/audioDataContext";
 import { MediaContext } from "../../context/mediaContext";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
+import ViewOfferDetails from "../../components/viewOffer/viewOfferDetails";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -38,6 +39,7 @@ const DocumentHeaderSection = styled("div")(({ theme }) => ({
   flexDirection: "column",
   padding: theme.spacing(4),
   gap: theme.spacing(4),
+  width: "95%",
 }));
 
 const FormContainer = styled(Box)(({ theme }) => ({
@@ -55,7 +57,7 @@ const SliderBox = styled(Box)(({ theme }) => ({
 
 const CustomizeOfferPage = () => {
   const dispatch = useDispatch();
-  const [offerDetails, setOfferDetails] = useState([]);
+  const [offerDetails, setOfferDetails] = useState({});
   const [showLoader, setShowLoader] = useState(false);
   const [newOfferValues, setNewOfferValues] = useState({});
   const maxLoanAmount = offerDetails?.quote_details?.PRINCIPAL;
@@ -102,7 +104,7 @@ const CustomizeOfferPage = () => {
     setShowLoader(true);
     setProcessing(true);
     const payload = {
-      thread_id: sessionStorage.getItem("thread_id"),
+      threadId: sessionStorage.getItem("thread_id"),
       uploadFlag: sessionStorage.getItem("document_upload_flag"),
       offer_item_id: sessionStorage.getItem("offer_item_id"),
       selected_loan_amount: loanAmount,
@@ -119,13 +121,13 @@ const CustomizeOfferPage = () => {
       setProcessing(false);
       setError(false);
       setShowLoader(false);
-      sessionStorage.setItem("next_state", res?.payload?.next_state);
-      setAudioResponse(res?.payload?.agent_audio_data);
-      setMessageResponse(res?.payload?.agent_message);
-      setUserResponse(res?.payload?.user_message);
+      sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+      setAudioResponse(res?.payload?.data?.agent_audio_data);
+      setMessageResponse(res?.payload?.data?.agent_message);
+      setUserResponse(res?.payload?.data?.user_message);
+      setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
       if (res?.payload?.data?.next_state === "resume_after_kyc_redirect") {
         navigate("/credit/kyc-page");
-        setKycRedirectUrl(res?.payload?.data?.kyc_redirect_url);
       }
     });
   };
@@ -140,12 +142,7 @@ const CustomizeOfferPage = () => {
           >
             Available Offers
           </Typography>
-          <Typography
-            sx={{ fontSize: "1rem", color: "#535353", textAlign: "left" }}
-          >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry
-          </Typography>
+          <ViewOfferDetails offer={offerDetails} />
         </DocumentHeaderSection>
         <FormContainer>
           <Stack

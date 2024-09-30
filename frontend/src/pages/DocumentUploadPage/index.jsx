@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { MediaContext } from "../../context/mediaContext";
 import { AudioDataContext } from "../../context/audioDataContext";
 import CustomLoader from "../../components/CustomLoader";
+import CorrectIcon from "../../utils/CustomIcons/CorrectIcon";
 
 const UploadDocumentWrapper = styled("div")(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -87,6 +88,7 @@ const DocumentUploadPage = () => {
   const { setCustomerDetails } = useContext(AudioDataContext);
   const [showLoader, setShowLoader] = useState(false);
   const [uploadRestriction, setUploadRestriction] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   /*FOR ADDHAR CARD*/
   const handleFileChange = (event) => {
@@ -96,15 +98,16 @@ const DocumentUploadPage = () => {
       imagesArray.push(files[i]);
     }
     if (files.length > 0) {
-      setImages([...imagesArray]);
+      setImages((prevImages) => [...prevImages, ...imagesArray]);
     }
+    event.target.value = null;
   };
+
   const handleDeleteImage = (index) => {
     const updatedImages = images.filter((_, imgIndex) => imgIndex !== index);
     setImages(updatedImages);
   };
-
-  /* PAN CARD IMAGE */
+  /*FOR PAN CARD*/
   const handlePanInputChange = (event) => {
     const files = event.target.files;
     const imagesArray = [];
@@ -112,18 +115,22 @@ const DocumentUploadPage = () => {
       imagesArray.push(files[i]);
     }
     if (files.length > 0) {
-      setPanImages([...imagesArray]);
+      setPanImages((prevPanImages) => [...prevPanImages, ...imagesArray]);
     }
+    event.target.value = null;
   };
 
   const handleDeletePanImage = (index) => {
-    const updatedImages = panImages.filter((_, imgIndex) => imgIndex !== index);
-    setPanImages(updatedImages);
+    const updatedPanImages = panImages.filter(
+      (_, imgIndex) => imgIndex !== index
+    );
+    setPanImages(updatedPanImages);
   };
 
   const handleUploadImages = () => {
     setShowLoader(true);
     setUploadDocument(true);
+    setUploadSuccess(false);
     const formData = new FormData();
 
     images.map((item) => {
@@ -145,6 +152,7 @@ const DocumentUploadPage = () => {
         setShowLoader(false);
         return;
       }
+      setUploadSuccess(true);
       if (res?.payload) {
         sessionStorage.setItem("document_upload_flag", true);
         const secondpayload = {
@@ -204,9 +212,18 @@ const DocumentUploadPage = () => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography sx={{ fontFamily: "plus jakarta sans bold", ml: 3 }}>
-                AADHAR
-              </Typography>
+              <Stack
+                flexDirection={"row"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <Typography
+                  sx={{ fontFamily: "plus jakarta sans bold", ml: 3, mr: 3 }}
+                >
+                  AADHAR
+                </Typography>
+                {uploadSuccess && images.length > 0 && <CorrectIcon />}
+              </Stack>
             </AccordionSummary>
             <AccordionDetails sx={{ padding: 4 }}>
               <UploadFilesSection onClick={handleUploadClick}>
@@ -251,9 +268,18 @@ const DocumentUploadPage = () => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography sx={{ fontFamily: "plus jakarta sans bold", ml: 3 }}>
-                PAN
-              </Typography>
+              <Stack
+                flexDirection={"row"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <Typography
+                  sx={{ fontFamily: "plus jakarta sans bold", ml: 3, mr: 3 }}
+                >
+                  PAN
+                </Typography>
+                {uploadSuccess && panImages.length > 0 && <CorrectIcon />}
+              </Stack>
             </AccordionSummary>
             <AccordionDetails sx={{ padding: 4 }}>
               <UploadFilesSection onClick={handlePanUploadClick}>

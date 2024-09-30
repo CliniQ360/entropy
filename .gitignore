@@ -29,6 +29,8 @@ MANIFEST
 db/*
 backend/core/env
 *podman*
+*.mp3
+backend/core/data/CUSTOMER_DATA/*
 poc/docs/*
 # PyInstaller
 #  Usually these files are written by a python script from a template
