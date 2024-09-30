@@ -40,7 +40,12 @@ class TextConversationController:
                         "human_loan_tnc_feedback",
                         "resume_loan_agreement_signing",
                     ],
-                    interrupt_after=["submit_form", "send_ack", "human_refreh_offer"],
+                    interrupt_after=[
+                        "submit_form_ack",
+                        "submit_form",
+                        "send_ack",
+                        "human_refreh_offer",
+                    ],
                     checkpointer=checkpointer,
                 )
 
@@ -111,7 +116,12 @@ class TextConversationController:
                         "human_loan_tnc_feedback",
                         "resume_loan_agreement_signing",
                     ],
-                    interrupt_after=["submit_form", "send_ack", "human_refreh_offer"],
+                    interrupt_after=[
+                        "submit_form_ack",
+                        "submit_form",
+                        "send_ack",
+                        "human_refreh_offer",
+                    ],
                     checkpointer=checkpointer,
                 )
                 print("Workflow compiled")
@@ -247,7 +257,12 @@ class TextConversationController:
                         "human_loan_tnc_feedback",
                         "resume_loan_agreement_signing",
                     ],
-                    interrupt_after=["submit_form", "send_ack", "human_refreh_offer"],
+                    interrupt_after=[
+                        "submit_form_ack",
+                        "submit_form",
+                        "send_ack",
+                        "human_refreh_offer",
+                    ],
                     checkpointer=checkpointer,
                 )
                 print("Workflow compiled")
@@ -285,7 +300,12 @@ class TextConversationController:
                         "human_loan_tnc_feedback",
                         "resume_loan_agreement_signing",
                     ],
-                    interrupt_after=["submit_form", "send_ack", "human_refreh_offer"],
+                    interrupt_after=[
+                        "submit_form_ack",
+                        "submit_form",
+                        "send_ack",
+                        "human_refreh_offer",
+                    ],
                     checkpointer=checkpointer,
                 )
                 print("Workflow compiled")
