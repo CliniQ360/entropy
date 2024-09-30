@@ -262,6 +262,10 @@ const AvailableOffersPage = () => {
   useEffect(() => {
     if (offerDetails.length > 0) {
       sessionStorage.setItem(
+        "selected_offer",
+        JSON.stringify(offerDetails?.[currentSlide])
+      );
+      sessionStorage.setItem(
         "offer_item_id",
         offerDetails?.[currentSlide]?.offer_details?.offer_item_id
       );

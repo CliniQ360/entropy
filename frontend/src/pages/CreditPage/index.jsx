@@ -12,6 +12,7 @@ import { AudioDataContext } from "../../context/audioDataContext";
 import { useReactMediaRecorder } from "react-media-recorder-2";
 import CustomLoader from "../../components/CustomLoader";
 import CustomDrawer from "../../components/CustomBottomDrawer";
+import DraggableFab from "../../components/AgentFABComponent";
 
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -48,7 +49,7 @@ const CreditPage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   /* CONFIGURING REACT MEdiA RECORDER COMPONENT */
 
@@ -177,13 +178,16 @@ const CreditPage = () => {
     <CreditPageContainer>
       <CustomLoader open={showLoader} />
       <CustomNavbar />
-      <AgentHeader />
+      {/* <AgentHeader /> */}
+      <DraggableFab />
       <OutletContainer>
         <Outlet />
       </OutletContainer>
       <CustomDrawer open={drawerOpen} setDrawerOpen={setDrawerOpen} />
       <PageFooter
         // mediaRecorder={mediaRecorder}
+        drawerOpen={drawerOpen}
+        setDrawerOpen={setDrawerOpen}
         handleStartRecording={handleStartRecording}
         handleStopRecording={handleStopRecording}
         handlePauseAudio={handlePauseAudio}

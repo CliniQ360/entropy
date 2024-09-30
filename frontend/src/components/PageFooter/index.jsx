@@ -4,10 +4,13 @@ import {
   Button,
   Divider,
   Fab,
+  getTouchRippleUtilityClass,
   IconButton,
   Stack,
   styled,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import Lottie from "lottie-react";
 import audioAnimation from "../../utils/lottieJson/audioAnimation.json";
@@ -18,15 +21,21 @@ import MicIcon from "../../utils/CustomIcons/MicIcon";
 import MuteIcon from "../../utils/CustomIcons/MuteIcon";
 import CustomDrawer from "../CustomBottomDrawer";
 
-const FooterContainer = styled("footer")(({ theme }) => ({
+const useScreenWidth = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(`(min-width:${theme.breakpoints.values.sm}px)`);
+  return matches ? window.innerWidth : window.innerWidth;
+};
+
+const FooterContainer = styled("footer")(({ theme, screenWidth }) => ({
   backgroundColor: "white",
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
   position: "fixed",
   bottom: 0,
-  width: "100%",
-  zIndex: 100,
+  width: screenWidth,
+  zIndex: 10000,
   boxShadow: "-20px 5px 20px 1px rgba(0, 0, 0, 0.2)",
 }));
 
@@ -72,6 +81,8 @@ const FooterActionContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const PageFooter = ({
+  drawerOpen,
+  setDrawerOpen,
   mediaRecorder,
   handleStartRecording,
   handleStopRecording,
@@ -83,6 +94,7 @@ const PageFooter = ({
   audioBlob,
 }) => {
   const lottieRef = useRef(null);
+  const screenWidth = useScreenWidth();
 
   useEffect(() => {
     if (isRecording && !isPaused) {
@@ -103,34 +115,13 @@ const PageFooter = ({
   }, []);
 
   return (
-    <FooterContainer>
-      {/* <Stack
-        alignItems={"center"}
-        justifyContent={"center"}
-        padding={2}
-        sx={{ whiteSpace: "nowrap" }}
-        width={"100%"}
-        height={"25px"}
-        ref={scrollRef} // Attach ref to the Stack
-      >
-        <FooterText>
-          <Typography
-            fontSize={12}
-            color={"#535353"}
-            sx={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "100%",
-            }}
-          >
-            {!userResponse ? "Welcome to Cliniq360 Sahayak" : userResponse}
-          </Typography>
-        </FooterText>
-      </Stack> */}
+    <FooterContainer screenWidth={screenWidth}>
       <FooterActionContainer>
-        <IconButton sx={{ padding: 1 }}>
-          <ChatIcon width={27} color={"black"} />
+        <IconButton
+          onClick={() => setDrawerOpen(!drawerOpen)}
+          sx={{ padding: 1 }}
+        >
+          <ChatIcon width={27} color={drawerOpen ? "#0054BA" : "black"} />
         </IconButton>
 
         {isRecording ? (

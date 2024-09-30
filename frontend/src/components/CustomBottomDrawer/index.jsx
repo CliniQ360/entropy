@@ -40,9 +40,8 @@ const CustomDrawer = ({ open, setDrawerOpen, window }) => {
       <Global
         styles={{
           ".MuiDrawer-root > .MuiPaper-root": {
-            height: `calc(50% - ${drawerBleeding}px)`,
+            height: `calc(40% - ${drawerBleeding}px)`,
             overflow: "visible",
-            top: "auto", // Ensure it opens from the footer
           },
         }}
       />
