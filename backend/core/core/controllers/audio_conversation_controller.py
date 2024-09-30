@@ -320,9 +320,11 @@ class AudioConversationController:
                 agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
                     text=agent_message
                 )
-                # Encode audio bytes as base64
-                audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
-                # audio_base64 = ""
+                if agent_audio_data:
+                    # Encode audio bytes as base64
+                    audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+                else:
+                    audio_base64 = ""
                 return {
                     "thread_id": thread_id,
                     "user_message": user_message,

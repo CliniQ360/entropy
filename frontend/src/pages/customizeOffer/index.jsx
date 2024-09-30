@@ -104,7 +104,7 @@ const CustomizeOfferPage = () => {
     setShowLoader(true);
     setProcessing(true);
     const payload = {
-      thread_id: sessionStorage.getItem("thread_id"),
+      threadId: sessionStorage.getItem("thread_id"),
       uploadFlag: sessionStorage.getItem("document_upload_flag"),
       offer_item_id: sessionStorage.getItem("offer_item_id"),
       selected_loan_amount: loanAmount,

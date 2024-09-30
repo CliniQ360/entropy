@@ -25,6 +25,7 @@ class SahayakController:
         self.audio_file_folder_path = f"/app/audio_data"
         self.welcome_message_audio_path = f"/app/data/welcome_message.txt"
         self.form_submit_message_audio_path = f"/app/data/form_submission_message.txt"
+        self.local_testing = os.getenv("LOCAL_TESTING")
 
     def text_generator(self, transcribed_text: str):
         if transcribed_text:
@@ -161,7 +162,6 @@ class SahayakController:
             next_state = conversation_response.get("next_state")
             if modified:
                 agent_message = conversation_response.get("agent_message_modified")
-
             if next_state == "submit_form":
                 logging.info(f"Reading default audio message")
                 audio_base64 = open(self.form_submit_message_audio_path, "r").read()
@@ -171,8 +171,10 @@ class SahayakController:
                     text=agent_message
                 )
                 # Encode audio bytes as base64
-                audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
-                # audio_base64 = ""
+                if agent_audio_data:
+                    audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+                else:
+                    audio_base64 = ""
             conversation_response.update({"agent_audio_data": audio_base64})
             return conversation_response
         except Exception as error:
