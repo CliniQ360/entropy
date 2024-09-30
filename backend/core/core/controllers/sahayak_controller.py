@@ -23,7 +23,7 @@ class SahayakController:
         self.LLM_CONFIG = os.getenv("LLM_CONFIG")
         self.bucket_name = os.getenv("GCS_BUCKET_NAME")
         self.audio_file_folder_path = f"/app/audio_data"
-        self.welcom_message_audio_path = f"/app/data/welcome_message.txt"
+        self.welcome_message_audio_path = f"/app/data/welcome_message.txt"
         self.form_submit_message_audio_path = f"/app/data/form_submission_message.txt"
 
     def text_generator(self, transcribed_text: str):
@@ -72,7 +72,7 @@ class SahayakController:
         #     text=agent_message, output_path=output_audio_file_path
         # )
         # Encode audio bytes as base64
-        audio_base64_str = open(self.welcom_message_audio_path, "r").read()
+        audio_base64_str = open(self.welcome_message_audio_path, "r").read()
         # audio_base64 = ""
         conversation_response.update({"agent_audio_data": audio_base64_str})
         return conversation_response
@@ -164,7 +164,7 @@ class SahayakController:
 
             if next_state == "submit_form":
                 logging.info(f"Reading default audio message")
-                audio_base64 = open(self.welcom_message_audio_path, "r").read()
+                audio_base64 = open(self.form_submit_message_audio_path, "r").read()
             else:
                 logging.info(f"executing text to speech function")
                 agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
