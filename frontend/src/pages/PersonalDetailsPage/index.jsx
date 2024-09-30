@@ -57,6 +57,10 @@ const PersonalDetailsPage = () => {
     gender: "",
     addressL1: "",
     addressL2: "",
+    companyName: "",
+    officialEmail: "",
+    employmentType: "",
+    income: "",
     endUse: "",
   });
 
@@ -81,6 +85,10 @@ const PersonalDetailsPage = () => {
         gender: customerDetails.gender ?? "",
         addressL1: customerDetails.addressL1 ?? "",
         addressL2: customerDetails.addressL2 ?? "",
+        companyName: customerDetails?.companyName ?? "",
+        officialEmail: customerDetails?.officialEmail ?? "",
+        employmentType: customerDetails?.employmentType ?? "",
+        income: customerDetails?.income ?? "",
         endUse: customerDetails.endUse ?? "",
       });
     }
