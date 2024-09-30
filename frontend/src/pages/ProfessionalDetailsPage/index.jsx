@@ -113,6 +113,7 @@ const ProfessionalDetailsPage = () => {
         setShowLoader(false);
         setProcessing(false);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+        sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
         setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setUserResponse(res?.payload?.data?.user_message);
