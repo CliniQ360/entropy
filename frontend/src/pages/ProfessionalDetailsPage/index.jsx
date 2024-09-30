@@ -94,7 +94,10 @@ const ProfessionalDetailsPage = () => {
 
   useEffect(() => {
     console.log("The Next Step From Response is ", nextState);
-    if (nextState === "submit_form") {
+    if (
+      nextState === "submit_form" ||
+      sessionStorage.getItem("next_state") === "submit_form"
+    ) {
       setShowLoader(true);
       setProcessing(true);
       const payload = {
