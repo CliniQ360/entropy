@@ -167,6 +167,7 @@ def send_kyc_ack(state: SahayakState):
         print(f"{current_action=}")
         print("Sleeping for 5 seconds")
         time.sleep(5)
+        counter += 1
     return {"status": current_action, "modified": False}
 
 
@@ -318,6 +319,7 @@ def submit_account_details_form(state: SahayakState):
         print(f"{current_action=}")
         print("Sleeping for 5 seconds")
         time.sleep(5)
+        counter += 1
     (
         submit_loan_amount_resp,
         submit_loan_amount_resp_code,
@@ -341,6 +343,7 @@ def submit_account_details_form(state: SahayakState):
         print(f"{current_action=}")
         print("Sleeping for 5 seconds")
         time.sleep(5)
+        counter += 1
     get_emandate_resp, get_emandate_resp_code = APIInterface().get(
         route=get_emandate_url,
         params={"offer_item_id": offer_item_id, "txn_id": txn_id},
@@ -439,6 +442,7 @@ def send_emdt_ack(state: SahayakState):
         print(f"{current_action=}")
         print("Sleeping for 5 seconds")
         time.sleep(5)
+        counter += 1
     get_loan_agrmt_resp, get_loan_agrmt_resp_code = APIInterface().get(
         route=get_loan_agrmt_url,
         params={"offer_item_id": offer_item_id, "txn_id": txn_id},
@@ -467,6 +471,7 @@ def summarise_loan_tnc(state: SahayakState):
         print(f"{current_action=}")
         print("Sleeping for 5 seconds")
         time.sleep(5)
+        counter += 1
     loan_document_resp, loan_document_resp_code = APIInterface().get(
         route=loan_document_url,
         params={"txn_id": txn_id, "offer_item_id": offer_item_id},
