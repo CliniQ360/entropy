@@ -202,7 +202,7 @@ const DraggableButton = () => {
         />
       )}
       <Draggable
-        defaultPosition={{ x: screenWidth - 60, y: 180 }}
+        defaultPosition={{ x: screenWidth - 60, y: 100 }}
         bounds={{
           left: 0,
           top: 60,

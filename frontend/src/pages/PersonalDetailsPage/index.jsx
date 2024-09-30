@@ -1,13 +1,8 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
   FormControl,
-  FormHelperText,
   FormLabel,
-  InputLabel,
   MenuItem,
   Select,
   Stack,
@@ -17,17 +12,17 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { AudioDataContext } from "../../context/audioDataContext";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import CustomStepperAccordion from "../../components/StepperAccordian";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckIcon from "@mui/icons-material/Check";
 
 const PersonalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  padding: theme.spacing(4),
+  width: "100%",
+  padding: theme.spacing(0, 4),
   gap: theme.spacing(6),
 }));
 
@@ -119,6 +114,13 @@ const PersonalDetailsPage = () => {
           formData.state &&
           formData.pincode
         );
+      case 3: // Professional Details
+        return !(
+          formData.companyName &&
+          formData.officialEmail &&
+          formData.employmentType &&
+          formData.income
+        );
       default:
         return true; // Default to error if the index is not recognized
     }
@@ -130,7 +132,15 @@ const PersonalDetailsPage = () => {
       accordionDetail: (
         <>
           <FormControl fullWidth>
-            <FormLabel htmlFor="firstName">First Name</FormLabel>
+            <FormLabel htmlFor="firstName">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.firstName ? "success" : "disabled"}
+                />
+                First Name
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="firstName"
@@ -141,7 +151,15 @@ const PersonalDetailsPage = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="lastName">Last Name</FormLabel>
+            <FormLabel htmlFor="lastName">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.lastName ? "success" : "disabled"}
+                />
+                Last Name
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="lastName"
@@ -152,7 +170,15 @@ const PersonalDetailsPage = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="dob">Date of Birth</FormLabel>
+            <FormLabel htmlFor="dob">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.dob ? "success" : "disabled"}
+                />
+                Date of Birth
+              </Stack>
+            </FormLabel>
             <TextField
               type="date"
               id="dob"
@@ -164,7 +190,15 @@ const PersonalDetailsPage = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="gender">Gender</FormLabel>
+            <FormLabel htmlFor="gender">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.gender ? "success" : "disabled"}
+                />
+                Gender
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="gender"
@@ -181,7 +215,15 @@ const PersonalDetailsPage = () => {
       accordionDetail: (
         <>
           <FormControl fullWidth>
-            <FormLabel htmlFor="email">Email</FormLabel>
+            <FormLabel htmlFor="email">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.email ? "success" : "disabled"}
+                />
+                Email
+              </Stack>
+            </FormLabel>
             <TextField
               type="email"
               id="email"
@@ -191,7 +233,15 @@ const PersonalDetailsPage = () => {
             />
           </FormControl>
           <FormControl fullWidth>
-            <FormLabel htmlFor="contactNumber">Contact Number</FormLabel>
+            <FormLabel htmlFor="contactNumber">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.contactNumber ? "success" : "disabled"}
+                />
+                Contact Number
+              </Stack>
+            </FormLabel>
             <TextField
               type="tel"
               id="contactNumber"
@@ -202,7 +252,15 @@ const PersonalDetailsPage = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="pan">PAN</FormLabel>
+            <FormLabel htmlFor="pan">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.pan ? "success" : "disabled"}
+                />
+                PAN
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="pan"
@@ -219,7 +277,15 @@ const PersonalDetailsPage = () => {
       accordionDetail: (
         <>
           <FormControl fullWidth>
-            <FormLabel htmlFor="addressL1">Address Line 1</FormLabel>
+            <FormLabel htmlFor="addressL1">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.addressL1 ? "success" : "disabled"}
+                />
+                Address Line 1
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="addressL1"
@@ -230,7 +296,15 @@ const PersonalDetailsPage = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="addressL2">Address Line 2</FormLabel>
+            <FormLabel htmlFor="addressL2">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.addressL2 ? "success" : "disabled"}
+                />
+                Address Line 2
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="addressL2"
@@ -241,7 +315,15 @@ const PersonalDetailsPage = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="city">City</FormLabel>
+            <FormLabel htmlFor="city">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.city ? "success" : "disabled"}
+                />
+                City
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="city"
@@ -252,7 +334,15 @@ const PersonalDetailsPage = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="state">State</FormLabel>
+            <FormLabel htmlFor="state">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.state ? "success" : "disabled"}
+                />
+                State
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="state"
@@ -263,7 +353,15 @@ const PersonalDetailsPage = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="pincode">Pincode</FormLabel>
+            <FormLabel htmlFor="pincode">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.pincode ? "success" : "disabled"}
+                />
+                Pincode
+              </Stack>
+            </FormLabel>
             <TextField
               type="text"
               id="pincode"
@@ -272,6 +370,96 @@ const PersonalDetailsPage = () => {
               onChange={handleInputChange}
             />
           </FormControl>
+        </>
+      ),
+    },
+    {
+      accordionSummary: "Professional Details",
+      accordionDetail: (
+        <>
+          <FormControl fullWidth>
+            <FormLabel htmlFor="companyName">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.companyName ? "success" : "disabled"}
+                />
+                Company Name
+              </Stack>
+            </FormLabel>
+            <TextField
+              type="text"
+              id="companyName"
+              name="companyName"
+              value={formData.companyName}
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <FormLabel htmlFor="officialEmail">
+              {" "}
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.officialEmail ? "success" : "disabled"}
+                />
+                Official Email
+              </Stack>
+            </FormLabel>
+            <TextField
+              type="text"
+              id="officialEmail"
+              name="officialEmail"
+              value={formData.officialEmail}
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <FormLabel htmlFor="employmentType">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.employmentType ? "success" : "disabled"}
+                />
+                Employment Type
+              </Stack>
+            </FormLabel>
+            <TextField
+              type="text"
+              id="employmentType"
+              name="employmentType"
+              value={formData.employmentType}
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <FormLabel htmlFor="contactNumber">
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.income ? "success" : "disabled"}
+                />
+                Income
+              </Stack>
+            </FormLabel>
+            <TextField
+              type="number"
+              id="income"
+              name="income"
+              value={formData.income}
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          {/* <FormControl fullWidth>
+          <FormLabel htmlFor="udyamNumber">Udyam Number</FormLabel>
+          <TextField
+            type="text"
+            id="udyamNumber"
+            name="udyamNumber"
+            value={formData.udyamNumber}
+            onChange={handleInputChange}
+          />
+        </FormControl> */}
         </>
       ),
     },
@@ -284,24 +472,45 @@ const PersonalDetailsPage = () => {
           <Typography
             sx={{ fontSize: "1.4rem", fontWeight: 700, textAlign: "left" }}
           >
-            Personal Details
-          </Typography>
-          <Typography
-            sx={{ fontSize: "1rem", color: "#535353", textAlign: "left" }}
-          >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry
+            Customer Details
           </Typography>
         </DocumentHeaderSection>
         <FormContainer>
-          <CustomStepperAccordion
-            steps={steps}
-            checkError={checkError}
-            refreshState={refreshState}
-          />
+          {steps.map((step, index) => (
+            <Stack flexDirection={"column"} gap={4}>
+              <Stack flexDirection={"row"} alignItems={"center"}>
+                <Box mr={2}>
+                  {!checkError(index) ? (
+                    <CheckCircleIcon color="success" />
+                  ) : (
+                    <CheckCircleIcon color="disabled" />
+                  )}
+                </Box>
+                <Typography
+                  fontSize={"18px"}
+                  fontWeight={"bold"}
+                  fontFamily={"Plus Jakarta Sans Bold"}
+                >
+                  {step.accordionSummary}
+                </Typography>
+              </Stack>
+              <Stack flexDirection={"column"} gap={2}>
+                {step.accordionDetail}
+              </Stack>
+            </Stack>
+          ))}
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="endUse">End Use</FormLabel>
+            <FormLabel htmlFor="endUse">
+              {" "}
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <CheckIcon
+                  fontSize="8px"
+                  color={formData.endUse ? "success" : "disabled"}
+                />
+                End Use
+              </Stack>
+            </FormLabel>
             <Select
               id="endUse"
               name="endUse"
@@ -311,21 +520,21 @@ const PersonalDetailsPage = () => {
               <MenuItem value={"Consumer Durable Purchase"}>
                 Consumer Durable Purchase
               </MenuItem>
-              <MenuItem value={"education"}>Education</MenuItem>
-              <MenuItem value={"travel"}>Travel</MenuItem>
-              <MenuItem value={"health"}>Health</MenuItem>
-              <MenuItem value={"other"}>Other</MenuItem>
+              <MenuItem value={"education" || "Education"}>Education</MenuItem>
+              <MenuItem value={"travel" || "Travel"}>Travel</MenuItem>
+              <MenuItem value={"health" || "Health"}>Health</MenuItem>
+              <MenuItem value={"other" || "Other"}>Other</MenuItem>
             </Select>
           </FormControl>
         </FormContainer>
-        <Stack justifyContent="flex-end" mb={4}>
+        {/* <Stack justifyContent="flex-end" mb={4}>
           <Button
             onClick={() => navigate("/credit/professionalDetails")}
             variant="contained"
           >
             Proceed for Professional Details
           </Button>
-        </Stack>
+        </Stack> */}
       </PersonalDetailsContainer>
     </>
   );
