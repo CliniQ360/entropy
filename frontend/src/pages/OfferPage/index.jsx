@@ -265,7 +265,10 @@ const AvailableOffersPage = () => {
         "offer_item_id",
         offerDetails?.[currentSlide]?.offer_details?.offer_item_id
       );
-      sessionStorage.setItem("selected_offer", offerDetails?.[currentSlide]);
+      sessionStorage.setItem(
+        "selected_offer",
+        JSON.stringify(offerDetails?.[currentSlide])
+      );
     }
   }, [currentSlide, offerDetails]);
 
