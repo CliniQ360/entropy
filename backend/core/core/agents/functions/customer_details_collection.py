@@ -291,6 +291,15 @@ def extract_user_details(state: SahayakState):
     # Generate question
     extracted_data = structured_llm.invoke([extractor_prompt])
     print(f"Inside Extract User Details {extracted_data.userDetails=}")
+    dob = extracted_data.userDetails[0].dob
+    if dob and dob != "NA" and dob != "None":
+        dob = dob.replace("/", "-")
+        # converted_date = llm_flash.invoke(
+        #     [
+        #         f"Input Date: {filtered_details.get('dob')}. Convert the date into DD-MM-YYYY format."
+        #     ]
+        # )
+        extracted_data.userDetails[0].dob = dob
     # Write the list of analysis to state
     return {"customer_details": extracted_data.userDetails, "modified": False}
 
