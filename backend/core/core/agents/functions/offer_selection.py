@@ -484,7 +484,7 @@ def summarise_loan_tnc(state: SahayakState):
         os.makedirs(file_path, exist_ok=True)
         file_name = f"{txn_id}.pdf"
         open(f"{file_path}/{file_name}", "wb").write(file_content)
-        loader = PyPDFLoader(file_name)
+        loader = PyPDFLoader(f"{file_path}/{file_name}")
         pages = loader.load_and_split()
         text = " ".join([page.page_content.replace("\t", " ") for page in pages])
         if os.environ.get("LLM_CONFIG") == "GOOGLE":
