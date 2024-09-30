@@ -93,6 +93,7 @@ def submit_form(state: SahayakState):
             current_action = get_txn_resp.get("current_action")
             logging.info(f"{current_action=}")
             time.sleep(5)
+            counter += 1
         get_aa_resp, get_aa_resp_code = APIInterface().get(
             route=get_aa_url, params={"user_id": finvu_user_id, "txn_id": txn_id}
         )
