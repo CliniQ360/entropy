@@ -96,30 +96,60 @@ const PersonalDetailsPage = () => {
   };
 
   const checkError = (index) => {
+    const isNA = (value) => value === "N/A";
+
     switch (index) {
       case 0: // Personal Details
-        return !(
-          formData.firstName &&
-          formData.lastName &&
-          formData.dob &&
-          formData.gender
+        return (
+          !(
+            formData.firstName &&
+            formData.lastName &&
+            formData.dob &&
+            formData.gender
+          ) ||
+          [
+            formData.firstName,
+            formData.lastName,
+            formData.dob,
+            formData.gender,
+          ].some(isNA)
         );
       case 1: // Contact Information
-        return !(formData.email && formData.contactNumber && formData.pan);
+        return (
+          !(formData.email && formData.contactNumber && formData.pan) ||
+          [formData.email, formData.contactNumber, formData.pan].some(isNA)
+        );
       case 2: // Address Information
-        return !(
-          formData.addressL1 &&
-          formData.addressL2 &&
-          formData.city &&
-          formData.state &&
-          formData.pincode
+        return (
+          !(
+            formData.addressL1 &&
+            formData.addressL2 &&
+            formData.city &&
+            formData.state &&
+            formData.pincode
+          ) ||
+          [
+            formData.addressL1,
+            formData.addressL2,
+            formData.city,
+            formData.state,
+            formData.pincode,
+          ].some(isNA)
         );
       case 3: // Professional Details
-        return !(
-          formData.companyName &&
-          formData.officialEmail &&
-          formData.employmentType &&
-          formData.income
+        return (
+          !(
+            formData.companyName &&
+            formData.officialEmail &&
+            formData.employmentType &&
+            formData.income
+          ) ||
+          [
+            formData.companyName,
+            formData.officialEmail,
+            formData.employmentType,
+            formData.income,
+          ].some(isNA)
         );
       default:
         return true; // Default to error if the index is not recognized
