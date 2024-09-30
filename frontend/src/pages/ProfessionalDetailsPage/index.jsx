@@ -95,6 +95,8 @@ const ProfessionalDetailsPage = () => {
   useEffect(() => {
     console.log("The Next Step From Response is ", nextState);
     if (nextState === "submit_form") {
+      setShowLoader(true);
+      setProcessing(true);
       const payload = {
         threadId: sessionStorage.getItem("thread_id"),
         uploadFlag: sessionStorage.getItem("document_upload_flag"),
@@ -104,6 +106,7 @@ const ProfessionalDetailsPage = () => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
           setError(true);
           setProcessing(false);
+          setShowLoader(false);
           return;
         }
         setError(false);
