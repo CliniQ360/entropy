@@ -80,7 +80,6 @@ const CreditPage = () => {
         setMessageResponse(res?.payload?.data?.agent_message);
         setCustomerDetails(res?.payload?.data?.customer_details);
         setUserResponse(res?.payload?.data?.user_message);
-        setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
         setNextState(res?.payload?.data?.next_state);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);

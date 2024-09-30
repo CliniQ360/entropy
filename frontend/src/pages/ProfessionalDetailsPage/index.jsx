@@ -74,7 +74,7 @@ const ProfessionalDetailsPage = () => {
   });
   const [confirmationDialog, setConfirmationDialog] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
-  const { customerDetails, aaRedirectUrl } = useContext(AudioDataContext);
+  const { customerDetails } = useContext(AudioDataContext);
   const {
     nextState,
     setError,
@@ -86,6 +86,7 @@ const ProfessionalDetailsPage = () => {
   } = useContext(MediaContext);
   const [showLoader, setShowLoader] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
+  const [aaRedirectUrl, setAaRedirectUrl] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -93,8 +94,30 @@ const ProfessionalDetailsPage = () => {
 
   useEffect(() => {
     console.log("The Next Step From Response is ", nextState);
-    if (nextState === "resume_after_aa_redirect") {
-      setConfirmationDialog(true);
+    if (nextState === "submit_form") {
+      const payload = {
+        threadId: sessionStorage.getItem("thread_id"),
+        uploadFlag: sessionStorage.getItem("document_upload_flag"),
+        state: sessionStorage.getItem("next_state"),
+      };
+      dispatch(agentConversation(payload)).then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setError(true);
+          setProcessing(false);
+          return;
+        }
+        setError(false);
+        setShowLoader(false);
+        setProcessing(false);
+        sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+        setAudioResponse(res?.payload?.data?.agent_audio_data);
+        setMessageResponse(res?.payload?.data?.agent_message);
+        setUserResponse(res?.payload?.data?.user_message);
+        setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
+        if (res?.payload?.data?.next_state === "resume_after_aa_redirect") {
+          setConfirmationDialog(true);
+        }
+      });
     }
   }, [nextState]);
 
