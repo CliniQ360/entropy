@@ -26,8 +26,8 @@ class ElevenLabsHelper:
             output_format="mp3_22050_32",
             text=text,
             voice_settings=VoiceSettings(
-                stability=0.1,
-                similarity_boost=0.3,
+                stability=0.9,
+                similarity_boost=0.5,
                 style=0.2,
             ),
         )

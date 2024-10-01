@@ -448,7 +448,13 @@ def send_emdt_ack(state: SahayakState):
         params={"offer_item_id": offer_item_id, "txn_id": txn_id},
     )
     loan_signing_redirect_url = get_loan_agrmt_resp.get("form_url")
-    return {"loan_signing_redirect_url": loan_signing_redirect_url, "modified": False}
+    return {
+        "loan_signing_redirect_url": loan_signing_redirect_url,
+        "agent_message": [
+            "Your e-mandate setup was successfull. Please click on proceed to sign your loan agreement."
+        ],
+        "modified": False,
+    }
 
 
 def summarise_loan_tnc(state: SahayakState):
@@ -512,7 +518,6 @@ def summarise_loan_tnc(state: SahayakState):
     return {
         "loan_agreement_summary": loan_agreement_summary,
         "loan_agreement_text": text,
-        "agent_message": [loan_agreement_summary],
         "loan_agreement_url": loan_agreement_url,
         "modified": False,
     }
@@ -529,7 +534,14 @@ def finalize_offer(state: SahayakState):
     logging.info(f"{get_offer_details_resp=}")
     offer_list = get_offer_details_resp.get("offer_list")
     logging.info(f"{offer_list=}")
-    return {"final_offer": offer_list, "modified": False}
+    loan_provider_name = offer_list[0].get("provider_details").get("name")
+    return {
+        "final_offer": offer_list,
+        "modified": False,
+        "agent_message": [
+            f"Congratulations! Your loan from {loan_provider_name} has been successfully processed."
+        ],
+    }
 
 
 def human_loan_tnc_feedback(state: SahayakState):

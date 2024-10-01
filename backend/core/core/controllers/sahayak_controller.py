@@ -180,11 +180,11 @@ class SahayakController:
                     f"Reading default audio message for resume_after_kyc_redirect"
                 )
                 audio_base64 = open(self.kyc_redirect_message_audio_path, "r").read()
-            elif next_state == "human_loan_tnc_feedback":
-                logging.info(
-                    f"Reading default audio message for human_loan_tnc_feedback"
-                )
-                audio_base64 = open(self.congratulations_message_audio_path, "r").read()
+            # elif next_state == "human_loan_tnc_feedback":
+            #     logging.info(
+            #         f"Reading default audio message for human_loan_tnc_feedback"
+            #     )
+            #     audio_base64 = open(self.congratulations_message_audio_path, "r").read()
             else:
                 logging.info(f"executing text to speech function")
                 agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
