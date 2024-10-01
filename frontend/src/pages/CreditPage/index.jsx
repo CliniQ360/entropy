@@ -138,7 +138,6 @@ const CreditPage = () => {
     console.log("Silence Detected");
     handleStopRecording();
     setIsListening(false);
-    handleStartRecording();
   };
 
   /* INITIALIZING THE SILENCE DETECTER */
