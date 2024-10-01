@@ -210,6 +210,7 @@ const EmandatePage = () => {
             setMessageResponse(res?.payload?.data?.agent_message);
             setUserResponse(res?.payload?.data?.user_message);
             setOfferList(res?.payload?.data?.final_offer);
+            sessionStorage.setItem("cracker_animation", true);
             navigate("/credit/offer-page", {
               state: res?.payload?.data?.loan_agreement_url,
             });

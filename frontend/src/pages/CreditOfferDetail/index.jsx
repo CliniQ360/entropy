@@ -17,7 +17,7 @@ import {
   TablePagination,
   Paper,
 } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DownloadIcon from "../../utils/CustomIcons/DownloadIcon";
 import { useLocation } from "react-router-dom";
@@ -26,6 +26,8 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { AudioDataContext } from "../../context/audioDataContext";
+import Lottie from "lottie-react";
+import PartyAnimation from "../../utils/lottieJson/Party_Animation.json";
 
 const CreditOfferWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
@@ -90,6 +92,8 @@ const CreditOfferPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const { offerList } = useContext(AudioDataContext);
+  const lottieRef = useRef(null);
+  const [playCount, setPlayCount] = useState(0);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -196,8 +200,32 @@ const CreditOfferPage = () => {
     }
   };
 
+  useEffect(() => {
+    const hasPlayed = JSON.parse(sessionStorage.getItem("cracker_animation"));
+    if (hasPlayed) {
+      if (lottieRef.current) {
+        lottieRef.current.play();
+      }
+    }
+  }, []);
+
+  const handleAnimationComplete = () => {
+    if (playCount < 2) {
+      sessionStorage.setItem("cracker_animation", false);
+      setPlayCount(playCount + 1);
+    }
+  };
+
   return (
     <CreditOfferWrapper>
+      <Lottie
+        style={{ position: "fixed", top: 10, height: "100%", zIndex: 1 }}
+        animationData={PartyAnimation}
+        loop={false}
+        autoPlay={false}
+        lottieRef={lottieRef}
+        onComplete={handleAnimationComplete}
+      />
       <CreditHeaderSection>
         <Typography
           sx={{
@@ -216,10 +244,8 @@ const CreditOfferPage = () => {
             fontFamily: "inter",
           }}
         >
-          Congratulations! Your loan application has been successfully processed
-          and approved. All required steps have been completed, and the funds
-          will be disbursed to your account shortly. Thank you for choosing our
-          services!
+          Congratulations your Loan is processed. Let me know if you have any
+          queries regarding your Loan Document
         </Typography>
       </CreditHeaderSection>
       <PDFPreviewSection>

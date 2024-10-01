@@ -132,6 +132,7 @@ const CreditPage = () => {
   const handleStartRecording = () => {
     startRecording();
     setIsRecording(true);
+    setIsPaused(false);
   };
 
   const onSilence = () => {

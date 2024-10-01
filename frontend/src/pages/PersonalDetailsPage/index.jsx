@@ -143,6 +143,41 @@ const PersonalDetailsPage = () => {
     setRefreshState(!refreshState);
   };
 
+  useEffect(() => {
+    if (
+      nextState === "submit_form" ||
+      sessionStorage.getItem("next_state") === "submit_form"
+    ) {
+      setShowLoader(true);
+      setProcessing(true);
+      const payload = {
+        threadId: sessionStorage.getItem("thread_id"),
+        uploadFlag: sessionStorage.getItem("document_upload_flag"),
+        state: sessionStorage.getItem("next_state"),
+      };
+      dispatch(agentConversation(payload)).then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setError(true);
+          setProcessing(false);
+          setShowLoader(false);
+          return;
+        }
+        setError(false);
+        setShowLoader(false);
+        setProcessing(false);
+        sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+        sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
+        setAudioResponse(res?.payload?.data?.agent_audio_data);
+        setMessageResponse(res?.payload?.data?.agent_message);
+        setUserResponse(res?.payload?.data?.user_message);
+        setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
+        if (res?.payload?.data?.next_state === "resume_after_aa_redirect") {
+          setConfirmationDialog(true);
+        }
+      });
+    }
+  }, [nextState]);
+
   const checkError = (index) => {
     const isNA = (value) => value === "N/A";
 
