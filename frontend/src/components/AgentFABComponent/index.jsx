@@ -204,7 +204,10 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
         <Container>
           <ProfileIcon />
           <MessageBox
-            onClick={() => setDrawerOpen(true)}
+            onClick={() => {
+              console.log("MessageBox clicked");
+              setDrawerOpen(true);
+            }}
             xPosition={xPosition}
             screenWidth={screenWidth}
             visible={messageVisible}
@@ -217,6 +220,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                     fontSize: "12px",
                     textAlign: "center",
                     fontFamily: "source sans pro",
+                    textTransform: "initial",
                   }}
                 >
                   Processing
@@ -229,6 +233,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                     fontSize: "12px",
                     textAlign: "center",
                     fontFamily: "source sans pro",
+                    textTransform: "initial",
                   }}
                 >
                   Listening
@@ -241,6 +246,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                     fontSize: "12px",
                     textAlign: "center",
                     fontFamily: "source sans pro",
+                    textTransform: "initial",
                   }}
                 >
                   Uploading
@@ -257,6 +263,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                     WebkitLineClamp: 3,
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
+                    textTransform: "initial",
                   }}
                 >
                   {messageResponse}
@@ -269,6 +276,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                   fontSize: "12px",
                   textAlign: "left",
                   fontFamily: "source sans pro",
+                  textTransform: "initial",
                 }}
               >
                 Oops! Please bring the mic closer to your mouth for better
