@@ -218,14 +218,16 @@ const CreditOfferPage = () => {
 
   return (
     <CreditOfferWrapper>
-      <Lottie
-        style={{ position: "fixed", top: 10, height: "100%", zIndex: 1 }}
-        animationData={PartyAnimation}
-        loop={false}
-        autoPlay={false}
-        lottieRef={lottieRef}
-        onComplete={handleAnimationComplete}
-      />
+      {JSON.parse(sessionStorage.getItem("cracker_animation")) && (
+        <Lottie
+          style={{ position: "fixed", top: 10, height: "100%", zIndex: 1 }}
+          animationData={PartyAnimation}
+          loop={false}
+          autoPlay={false}
+          lottieRef={lottieRef}
+          onComplete={handleAnimationComplete}
+        />
+      )}
       <CreditHeaderSection>
         <Typography
           sx={{
