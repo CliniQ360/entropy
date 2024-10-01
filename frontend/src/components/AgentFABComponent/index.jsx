@@ -184,8 +184,12 @@ const DraggableAgentFAB = () => {
   }, [messageResponse]);
 
   useEffect(() => {
-    console.log("listening", listening);
-  });
+    if (listening || processing || uploadDocument) {
+      setMessageVisible(true);
+    } else {
+      setMessageVisible(false);
+    }
+  }, [listening, processing, uploadDocument]);
 
   const handleDrag = (e, data) => {
     setXPosition(data.x);

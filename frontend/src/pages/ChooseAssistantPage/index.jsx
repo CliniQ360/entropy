@@ -29,7 +29,7 @@ const HeadingSection = styled("div")(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  marginTop: theme.spacing(10),
+  marginTop: theme.spacing(0),
 }));
 const AssistantChangeSectionWrapper = styled("div")(({ theme }) => ({
   display: "flex",
@@ -81,7 +81,7 @@ const AssistantProfilePhotoWrapper = styled("div")(({ theme, isActive }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  marginTop: theme.spacing(8),
+  margin: theme.spacing(8, 0, 15, 0),
   gap: theme.spacing(7),
   flexDirection: "column",
 }));
@@ -95,7 +95,7 @@ const AssistantProfilePhoto = styled("div")(({ theme, activeIndex }) => ({
   backgroundPosition: "center",
 }));
 const FooterButtonWrapper = styled(Stack)(({ theme }) => ({
-  position: "absolute",
+  position: "fixed",
   bottom: 25,
   left: 0,
   justifyContent: "center",
