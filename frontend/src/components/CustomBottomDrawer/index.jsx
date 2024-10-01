@@ -33,7 +33,8 @@ const ChatContainer = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   gap: 8,
   overflowY: "auto",
-  padding: "24px 16px 50px 16px",
+  padding: "16px 16px",
+  margin: "24px 0px 100px 0px",
   flex: 1,
 }));
 
@@ -46,7 +47,7 @@ const InputContainer = styled("div")(({ theme, type }) => ({
 const MessageContainer = styled(Typography)(({ theme, type }) => ({
   fontSize: "14px",
   fontFamily: "Inter",
-  backgroundColor: type === "user" ? "#EAF2FF" : "#F5F9FF",
+  backgroundColor: type === "user" ? "#EAF2FF" : "#00a91c54",
   padding: "10px",
   borderRadius: "10px",
   color: "black",

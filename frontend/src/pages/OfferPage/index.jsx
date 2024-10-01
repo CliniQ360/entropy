@@ -478,12 +478,6 @@ const AvailableOffersPage = () => {
           >
             Available Offers
           </Typography>
-          <Typography
-            sx={{ fontSize: "1rem", color: "#535353", textAlign: "left" }}
-          >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry
-          </Typography>
         </DocumentHeaderSection>
         <FormContainer>
           <FormControl component="fieldset">

@@ -169,16 +169,6 @@ const BankDetailsPage = () => {
           >
             Bank Details
           </Typography>
-          <Typography
-            sx={{
-              fontSize: "1.2rem",
-              color: "#535353",
-              fontFamily: "source sans pro",
-            }}
-          >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry{" "}
-          </Typography>
         </BankDetailHeader>
         <BankFormWrapper container>
           <BankFormWrapperItem sm={12} xs={12}>
@@ -278,7 +268,7 @@ const BankDetailsPage = () => {
                 >
                   <Box
                     sx={{
-                      height: "40px",
+                      height: "50px",
                       width: "40%",
                       border:
                         !formData.acctype && validateError
@@ -301,7 +291,7 @@ const BankDetailsPage = () => {
                   </Box>
                   <Box
                     sx={{
-                      height: "40px",
+                      height: "50px",
                       width: "40%",
                       border:
                         !formData.acctype && validateError
