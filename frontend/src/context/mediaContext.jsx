@@ -25,20 +25,20 @@ const MediaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (
-      messageResponse &&
-      messageResponse !== "None" &&
-      messageResponse !== "" &&
-      messageResponse !== null
-    ) {
-      addChat(messageResponse, "agent");
-    }
-    if (
       userResponse &&
       userResponse !== "None" &&
       userResponse !== "" &&
       userResponse !== null
     ) {
       addChat(userResponse, "user");
+    }
+    if (
+      messageResponse &&
+      messageResponse !== "None" &&
+      messageResponse !== "" &&
+      messageResponse !== null
+    ) {
+      addChat(messageResponse, "agent");
     }
   }, [messageResponse, userResponse]);
 
