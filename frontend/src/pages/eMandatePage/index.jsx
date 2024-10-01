@@ -281,7 +281,7 @@ const EmandatePage = () => {
           >
             Please don't exit or press back.
             <br />
-            Please wait while we are redirecting you to the Verification Page.
+            Please wait while we are redirecting you to the E-Mandate Page.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

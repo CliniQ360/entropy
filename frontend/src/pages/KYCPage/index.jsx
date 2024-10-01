@@ -199,7 +199,7 @@ const KYCPage = () => {
           >
             Please don't exit or press back.
             <br />
-            Please wait while we are redirecting you to the Verification Page.
+            Please wait while we are redirecting you to the KYC Page.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -717,7 +717,8 @@ const PersonalDetailsPage = () => {
           >
             Please don't exit or press back.
             <br />
-            Please wait while we are redirecting you to the Verification Page.
+            Please wait while we are redirecting you to the AA Verification
+            Page.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
