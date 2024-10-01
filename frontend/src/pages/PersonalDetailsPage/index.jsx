@@ -112,6 +112,8 @@ const PersonalDetailsPage = () => {
       const formattedDob = dobParts
         ? `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}` // Convert to YYYY-MM-DD
         : "";
+      console.log(customerDetails?.endUse?.toLowerCase());
+
       setFormData({
         firstName: customerDetails.firstName ?? "",
         lastName: customerDetails.lastName ?? "",
@@ -129,7 +131,7 @@ const PersonalDetailsPage = () => {
         officialEmail: customerDetails?.officialEmail ?? "",
         employmentType: customerDetails?.employmentType ?? "",
         income: customerDetails?.income ?? "",
-        endUse: customerDetails.endUse ?? "",
+        endUse: customerDetails?.endUse?.toLowerCase() ?? "",
       });
     }
   }, [customerDetails]);
