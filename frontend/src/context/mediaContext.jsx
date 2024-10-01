@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 const MediaContext = createContext();
 
@@ -13,6 +13,34 @@ const MediaContextProvider = ({ children }) => {
   const [showLoader, setShowLoader] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadDocument, setUploadDocument] = useState(false);
+  const [chats, setChats] = useState([]);
+
+  const addChat = (message, sender) => {
+    if (message === null) return;
+    setChats((prevChats) => [
+      ...prevChats,
+      { sender: sender, message: message },
+    ]);
+  };
+
+  useEffect(() => {
+    if (
+      messageResponse &&
+      messageResponse !== "None" &&
+      messageResponse !== "" &&
+      messageResponse !== null
+    ) {
+      addChat(messageResponse, "agent");
+    }
+    if (
+      userResponse &&
+      userResponse !== "None" &&
+      userResponse !== "" &&
+      userResponse !== null
+    ) {
+      addChat(userResponse, "user");
+    }
+  }, [messageResponse, userResponse]);
 
   return (
     <MediaContext.Provider
@@ -37,6 +65,7 @@ const MediaContextProvider = ({ children }) => {
         setProcessing,
         uploadDocument,
         setUploadDocument,
+        chats,
       }}
     >
       {children}

@@ -90,7 +90,7 @@ const useScreenWidth = () => {
   return matches ? window.innerWidth : window.innerWidth;
 };
 
-const DraggableButton = () => {
+const DraggableAgentFAB = () => {
   const {
     audioResponse,
     messageResponse,
@@ -286,4 +286,4 @@ const DraggableButton = () => {
   );
 };
 
-export default DraggableButton;
+export default DraggableAgentFAB;

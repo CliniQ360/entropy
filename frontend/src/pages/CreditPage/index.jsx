@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import PageFooter from "../../components/PageFooter";
 import { Outlet, useNavigate } from "react-router-dom";
-import AgentHeader from "../../components/AgentHeaderComponent";
+// import AgentHeader from "../../components/AgentHeaderComponent";
 import CustomNavbar from "../../components/CustomNavbar";
 import { styled } from "@mui/material";
 import { createSilenceDetector } from "../../components/SilenceDetectorComponent";
@@ -12,7 +12,7 @@ import { AudioDataContext } from "../../context/audioDataContext";
 import { useReactMediaRecorder } from "react-media-recorder-2";
 import CustomLoader from "../../components/CustomLoader";
 import CustomDrawer from "../../components/CustomBottomDrawer";
-import DraggableFab from "../../components/AgentFABComponent";
+import DraggableAgentFAB from "../../components/AgentFABComponent";
 
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -178,7 +178,7 @@ const CreditPage = () => {
       <CustomLoader open={showLoader} />
       <CustomNavbar />
       {/* <AgentHeader /> */}
-      <DraggableFab />
+      <DraggableAgentFAB />
       <OutletContainer>
         <Outlet />
       </OutletContainer>
