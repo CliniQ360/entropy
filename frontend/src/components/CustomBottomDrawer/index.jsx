@@ -1,7 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import { Global } from "@emotion/react";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
@@ -9,26 +9,32 @@ import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { MediaContext } from "../../context/mediaContext";
+import { useMediaQuery } from "@mui/material";
 
 const drawerBleeding = 0;
 
 const Root = styled("div")(({ theme }) => ({
   height: "100%",
   backgroundColor: grey[100],
+  display: "flex",
+  flexDirection: "column",
 }));
 
 const StyledBox = styled("div")(({ theme }) => ({
   backgroundColor: "#fff",
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
 }));
 
 const ChatContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   gap: 8,
-  overflowY: "scroll",
-  maxHeight: `350px`,
-  padding: "24px 16px",
-  margin: "16px 0px",
+  overflowY: "auto",
+  padding: "24px 16px 50px 16px",
+  flex: 1,
 }));
 
 const InputContainer = styled("div")(({ theme, type }) => ({
@@ -105,6 +111,7 @@ const CustomDrawer = ({ open, setDrawerOpen, window }) => {
               borderTopRightRadius: 8,
               right: 0,
               left: 0,
+              height: "60vh", // Dynamic height using viewport units
             }}
           >
             <Puller />
