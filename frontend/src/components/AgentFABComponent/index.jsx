@@ -102,10 +102,8 @@ const DraggableAgentFAB = () => {
   const screenHeight = useScreenHeight();
   const screenWidth = useScreenWidth();
   const [audioSrc, setAudioSrc] = useState(null);
-  const [audioBlob, setAudioBlob] = useState(null);
   const audioRef = useRef(null);
   const previousAudioUrlRef = useRef(null);
-  const [checkLenght, setCheckLenght] = useState(false);
   const [messageVisible, setMessageVisible] = useState(false);
   const [xPosition, setXPosition] = useState(screenWidth - 60);
 
@@ -142,7 +140,6 @@ const DraggableAgentFAB = () => {
     if (audioResponse) {
       const blob = base64ToBlob(audioResponse, "audio/wav");
       if (blob) {
-        setAudioBlob(blob);
         const newAudioUrl = URL.createObjectURL(blob);
         setAudioSrc(newAudioUrl);
 
@@ -174,14 +171,6 @@ const DraggableAgentFAB = () => {
       }
     }
   }, [audioSrc]);
-
-  useEffect(() => {
-    if (messageResponse && messageResponse.length > 40) {
-      setCheckLenght(true);
-    } else {
-      setCheckLenght(false);
-    }
-  }, [messageResponse]);
 
   useEffect(() => {
     if (listening || processing || uploadDocument) {
@@ -218,6 +207,7 @@ const DraggableAgentFAB = () => {
         <Container>
           <ProfileIcon />
           <MessageBox
+            onClick={() => {}}
             xPosition={xPosition}
             screenWidth={screenWidth}
             visible={messageVisible}
