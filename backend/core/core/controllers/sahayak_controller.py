@@ -182,3 +182,14 @@ class SahayakController:
                 f"Error in SahayakController.resume_audio_conversation function: {error}"
             )
             raise error
+
+    def generate_audio_bytes(self, text: str):
+        logging.info(f"executing generate_audio_bytes function")
+        logging.info(f"{text=}")
+        agent_audio_data = ElevenLabsHelper().text_to_speech_generator(text=text)
+        # Encode audio bytes as base64
+        if agent_audio_data:
+            audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+        else:
+            audio_base64 = ""
+        return audio_base64

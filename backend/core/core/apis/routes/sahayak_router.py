@@ -81,6 +81,19 @@ async def upload_documents(thread_id: str, files: List[UploadFile]):
         )
 
 
+@sahayak_router.post("/v1/audio/generate_bytes")
+def generate_audio_bytes(text: str):
+    try:
+        return SahayakController().generate_audio_bytes(text=text)
+    except Exception as error:
+        logging.error(f"Error in /v1/audio/generate_bytes endpoint: {error}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(error),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
 # @sahayak_router.post("/v1/chatbot")
 # async def init_conversation(
 #     thread_id: str = None,
