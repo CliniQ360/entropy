@@ -178,7 +178,7 @@ const CreditPage = () => {
       <CustomLoader open={showLoader} />
       <CustomNavbar />
       {/* <AgentHeader /> */}
-      <DraggableAgentFAB />
+      <DraggableAgentFAB setDrawerOpen={setDrawerOpen} />
       <OutletContainer>
         <Outlet />
       </OutletContainer>

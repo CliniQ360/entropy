@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Draggable from "react-draggable";
 import {
+  Button,
   keyframes,
   styled,
   Typography,
@@ -47,7 +48,7 @@ const ProfileIcon = styled("div")({
   backgroundPosition: "center",
 });
 
-const MessageBox = styled("div")(
+const MessageBox = styled(Button)(
   ({ theme }) =>
     ({ xPosition, screenWidth, visible }) => ({
       width: "300px",
@@ -67,7 +68,7 @@ const MessageBox = styled("div")(
       left: xPosition < screenWidth / 2 ? "0" : "auto",
       right: xPosition >= screenWidth ? "0" : "auto",
       transform:
-        xPosition < screenWidth / 2 ? "translateX(0)" : "translateX(-100%)",
+        xPosition < screenWidth / 2 ? "translateX(10%)" : "translateX(-90%)",
       [theme.breakpoints.down("sm")]: {
         width: screenWidth - 100,
       },
@@ -90,7 +91,7 @@ const useScreenWidth = () => {
   return matches ? window.innerWidth : window.innerWidth;
 };
 
-const DraggableAgentFAB = () => {
+const DraggableAgentFAB = ({ setDrawerOpen }) => {
   const {
     audioResponse,
     messageResponse,
@@ -108,14 +109,18 @@ const DraggableAgentFAB = () => {
   const [xPosition, setXPosition] = useState(screenWidth - 60);
 
   useEffect(() => {
-    if (messageResponse) {
+    if (messageResponse || listening || processing || uploadDocument) {
       setMessageVisible(true);
-      const timer = setTimeout(() => {
-        setMessageVisible(false);
-      }, 10000);
-      return () => clearTimeout(timer);
+      if (messageResponse) {
+        const timer = setTimeout(() => {
+          setMessageVisible(false);
+        }, 10000);
+        return () => clearTimeout(timer);
+      }
+    } else {
+      setMessageVisible(false);
     }
-  }, [messageResponse]);
+  }, [messageResponse, listening, processing, uploadDocument]);
 
   const base64ToBlob = (base64Data, contentType) => {
     const byteCharacters = atob(base64Data);
@@ -172,14 +177,6 @@ const DraggableAgentFAB = () => {
     }
   }, [audioSrc]);
 
-  useEffect(() => {
-    if (listening || processing || uploadDocument) {
-      setMessageVisible(true);
-    } else {
-      setMessageVisible(false);
-    }
-  }, [listening, processing, uploadDocument]);
-
   const handleDrag = (e, data) => {
     setXPosition(data.x);
   };
@@ -207,7 +204,7 @@ const DraggableAgentFAB = () => {
         <Container>
           <ProfileIcon />
           <MessageBox
-            onClick={() => {}}
+            onClick={() => setDrawerOpen(true)}
             xPosition={xPosition}
             screenWidth={screenWidth}
             visible={messageVisible}
@@ -216,8 +213,9 @@ const DraggableAgentFAB = () => {
               processing ? (
                 <Typography
                   sx={{
-                    color: "#535353",
-                    fontSize: "1rem",
+                    color: "#171717",
+                    fontSize: "12px",
+                    textAlign: "center",
                     fontFamily: "source sans pro",
                   }}
                 >
@@ -227,8 +225,9 @@ const DraggableAgentFAB = () => {
               ) : listening ? (
                 <Typography
                   sx={{
-                    color: "#535353",
-                    fontSize: "1rem",
+                    color: "#171717",
+                    fontSize: "12px",
+                    textAlign: "center",
                     fontFamily: "source sans pro",
                   }}
                 >
@@ -238,8 +237,9 @@ const DraggableAgentFAB = () => {
               ) : uploadDocument ? (
                 <Typography
                   sx={{
-                    color: "#535353",
-                    fontSize: "1rem",
+                    color: "#171717",
+                    fontSize: "12px",
+                    textAlign: "center",
                     fontFamily: "source sans pro",
                   }}
                 >
@@ -249,8 +249,9 @@ const DraggableAgentFAB = () => {
               ) : (
                 <Typography
                   sx={{
-                    color: "#535353",
-                    fontSize: "1rem",
+                    color: "#171717",
+                    fontSize: "12px",
+                    textAlign: "left",
                     fontFamily: "source sans pro",
                     display: "-webkit-box",
                     WebkitLineClamp: 3,
@@ -264,8 +265,9 @@ const DraggableAgentFAB = () => {
             ) : (
               <Typography
                 sx={{
-                  color: "#535353",
-                  fontSize: "1rem",
+                  color: "#171717",
+                  fontSize: "12px",
+                  textAlign: "left",
                   fontFamily: "source sans pro",
                 }}
               >
