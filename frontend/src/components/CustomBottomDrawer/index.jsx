@@ -39,14 +39,14 @@ const ChatContainer = styled(Box)(({ theme }) => ({
 
 const InputContainer = styled("div")(({ theme, type }) => ({
   display: "flex",
-  justifyContent: type !== "user" ? "flex-end" : "flex-start",
+  justifyContent: type === "user" ? "flex-end" : "flex-start",
   marginBottom: 10,
 }));
 
 const MessageContainer = styled(Typography)(({ theme, type }) => ({
   fontSize: "14px",
   fontFamily: "Inter",
-  backgroundColor: type !== "user" ? "#EAF2FF" : "#F5F9FF",
+  backgroundColor: type === "user" ? "#EAF2FF" : "#F5F9FF",
   padding: "10px",
   borderRadius: "10px",
   color: "black",
