@@ -25,6 +25,11 @@ class SahayakController:
         self.audio_file_folder_path = f"/app/audio_data"
         self.welcome_message_audio_path = f"/app/data/welcome_message.txt"
         self.form_submit_message_audio_path = f"/app/data/form_submission_message.txt"
+        self.aa_redirect_message_audio_path = f"/app/data/aa_redirect_message.txt"
+        self.kyc_redirect_message_audio_path = f"/app/data/kyc_redirect_message.txt"
+        self.congratulations_message_audio_path = (
+            f"/app/data/congratulations_message.txt"
+        )
         self.local_testing = os.getenv("LOCAL_TESTING")
 
     def text_generator(self, transcribed_text: str):
@@ -163,8 +168,23 @@ class SahayakController:
             if modified:
                 agent_message = conversation_response.get("agent_message_modified")
             if next_state == "submit_form":
-                logging.info(f"Reading default audio message")
+                logging.info(f"Reading default audio message for submit_form")
                 audio_base64 = open(self.form_submit_message_audio_path, "r").read()
+            elif next_state == "resume_after_aa_redirect":
+                logging.info(
+                    f"Reading default audio message for resume_after_aa_redirect"
+                )
+                audio_base64 = open(self.aa_redirect_message_audio_path, "r").read()
+            elif next_state == "resume_after_kyc_redirect":
+                logging.info(
+                    f"Reading default audio message for resume_after_kyc_redirect"
+                )
+                audio_base64 = open(self.kyc_redirect_message_audio_path, "r").read()
+            elif next_state == "human_loan_tnc_feedback":
+                logging.info(
+                    f"Reading default audio message for human_loan_tnc_feedback"
+                )
+                audio_base64 = open(self.congratulations_message_audio_path, "r").read()
             else:
                 logging.info(f"executing text to speech function")
                 agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
@@ -182,3 +202,14 @@ class SahayakController:
                 f"Error in SahayakController.resume_audio_conversation function: {error}"
             )
             raise error
+
+    def generate_audio_bytes(self, text: str):
+        logging.info(f"executing generate_audio_bytes function")
+        logging.info(f"{text=}")
+        agent_audio_data = ElevenLabsHelper().text_to_speech_generator(text=text)
+        # Encode audio bytes as base64
+        if agent_audio_data:
+            audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+        else:
+            audio_base64 = ""
+        return audio_base64
