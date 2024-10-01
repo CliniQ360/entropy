@@ -130,7 +130,7 @@ const PageFooter = ({
               <CustomFabButtonWrapper>
                 <CustomFabButton
                   onClick={handleResumeAudio}
-                  bgcolor={"#0054BA"}
+                  bgcolor={"red"}
                   size="large"
                   aria-label="mute"
                 >

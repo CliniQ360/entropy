@@ -207,7 +207,7 @@ const CreditOfferPage = () => {
             fontFamily: "plus jakarta sans bold",
           }}
         >
-          Success Message
+          Loan Process Successfully Completed!
         </Typography>
         <Typography
           sx={{
@@ -216,8 +216,10 @@ const CreditOfferPage = () => {
             fontFamily: "inter",
           }}
         >
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry
+          Congratulations! Your loan application has been successfully processed
+          and approved. All required steps have been completed, and the funds
+          will be disbursed to your account shortly. Thank you for choosing our
+          services!
         </Typography>
       </CreditHeaderSection>
       <PDFPreviewSection>
