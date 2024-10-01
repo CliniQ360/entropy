@@ -90,7 +90,8 @@ def is_amount_valid(state: SahayakState):
             selected_offer = offer
             break
     min_loan_amt = selected_offer.get("offer_details").get("MIN_LOAN_AMOUNT")
-    max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
+    max_loan_amt = selected_offer.get("quote_details").get("PRINCIPAL")
+    # max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
     if (
         int(float(min_loan_amt))
         <= int(float(selected_loan_amount))
@@ -112,7 +113,8 @@ def human_invalid_loan_amount_selection(state: SahayakState):
             selected_offer = offer
             break
     min_loan_amt = selected_offer.get("offer_details").get("MIN_LOAN_AMOUNT")
-    max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
+    max_loan_amt = selected_offer.get("quote_details").get("PRINCIPAL")
+    # max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
     return {
         "agent_message": [
             f"Minimum loan amount is {min_loan_amt} and maximum loan amount is {max_loan_amt}. Please select the loan amount within the range provided"

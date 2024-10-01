@@ -310,7 +310,8 @@ def select_offer(state: SahayakState):
     min_loan_amt = selected_offer.get("offer_details").get("MIN_LOAN_AMOUNT")
     min_loan_amt = re.sub("[^A-Za-z0-9]+", "", min_loan_amt)
     min_loan_amt_words = num2words(min_loan_amt)
-    max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
+    max_loan_amt = selected_offer.get("quote_details").get("PRINCIPAL")
+    # max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
     max_loan_amt = re.sub("[^A-Za-z0-9]+", "", max_loan_amt)
     max_loan_amt_words = num2words(max_loan_amt)
     return {
