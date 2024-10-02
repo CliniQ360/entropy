@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  entropy_ui:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    image: cliniq360/entropy-ui:0.2
+    container_name: entropy-ui
+    ports:
+      - "4000:80"
+    volumes:
+      - ./frontend/src:/app/src
+    networks:
+      - entropy
+    restart: "on-failure"
+
+networks:
+  entropy:
+    name: entropy-network
