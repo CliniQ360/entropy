@@ -7,6 +7,12 @@
 - **AI Engine:** Vertex AI - Gemini
 - **Agentic Framework:** LangGraph
 
+## Architecture Diagram
+The following diagram illustrates the architecture of the MIQ&A Bot:
+
+![Architecture Diagram](architecture.png)
+
+
 ## Deployment Steps
 
 To run the application, follow these steps:
