@@ -1,13 +1,19 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import PageFooter from "../../components/PageFooter";
-import { Outlet } from "react-router-dom";
-import AgentHeader from "../../components/AgentHeaderComponent";
+import { Outlet, useNavigate } from "react-router-dom";
+// import AgentHeader from "../../components/AgentHeaderComponent";
 import CustomNavbar from "../../components/CustomNavbar";
 import { styled } from "@mui/material";
 import { createSilenceDetector } from "../../components/SilenceDetectorComponent";
 import { useDispatch } from "react-redux";
 import { agentConversation } from "./audioAgent.slice";
-import { MediaContext, useMediaContext } from "../../context/mediaContext";
+import { MediaContext } from "../../context/mediaContext";
+import { AudioDataContext } from "../../context/audioDataContext";
+import { useReactMediaRecorder } from "react-media-recorder-2";
+import CustomLoader from "../../components/CustomLoader";
+import CustomDrawer from "../../components/CustomBottomDrawer";
+import DraggableAgentFAB from "../../components/AgentFABComponent";
+
 const CreditPageContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -21,133 +27,132 @@ const OutletContainer = styled("div")(({ theme }) => ({
 }));
 
 const CreditPage = () => {
-  const [mediaRecorder, setMediaRecorder] = useState(null);
+  const { showLoader, setShowLoader } = useContext(MediaContext);
+  const thread_id = sessionStorage.getItem("thread_id");
+  const uploadFlag = sessionStorage.getItem("document_upload_flag");
+
+  const {
+    setError,
+    setAudioResponse,
+    setMessageResponse,
+    setNextState,
+    setProgressValue,
+    setUserResponse,
+    setIsListening,
+    setProcessing,
+    processing,
+  } = useContext(MediaContext);
+  const { setCustomerDetails, setAaRedirectUrl, setKycRedirectUrl } =
+    useContext(AudioDataContext);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [resetChunks, setResetChunks] = useState(false);
-  const { setError, setAudioResponse, setMessageResponse } =
-    useContext(MediaContext);
-  const audioChunks = useRef([]);
-  const dispatch = useDispatch();
+  const [audioBlob, setAudioBlob] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Function to start recording
-  const handleStartRecording = () => {
-    if (mediaRecorder && mediaRecorder.state === "inactive") {
-      setTimeout(() => {
-        mediaRecorder.start(1000);
-        audioChunks.current = [];
-        setResetChunks(!resetChunks);
-        setIsRecording(true);
-        setIsPaused(false);
-      }, 200);
-    }
-  };
+  /* CONFIGURING REACT MEdiA RECORDER COMPONENT */
 
-  // Function to stop recording (this will be used only for the full stop, not on silence)
-  const handleStopRecording = () => {
-    if (mediaRecorder && mediaRecorder.state !== "inactive") {
-      mediaRecorder.stop();
-      setIsRecording(false);
-    }
-  };
-
-  // Function to pause/resume recording
-  const handlePauseResume = () => {
-    if (mediaRecorder) {
-      if (mediaRecorder.state === "recording") {
-        mediaRecorder.pause();
-        setIsPaused(true);
-      } else if (mediaRecorder.state === "paused") {
-        mediaRecorder.resume();
-        setIsPaused(false);
-      }
-    }
-  };
-
-  // Function to handle downloading the audio when silence is detected
-  const onSilence = () => {
-    console.log("Silence detected for 3 seconds!");
-
-    // Ensure there is data in the audio chunks before proceeding
-    if (audioChunks.current.length > 0) {
-      // Create a Blob from the audio chunks
-      const audioBlob = new Blob(audioChunks.current, { type: "audio/webm" });
-      // Check if the blob size is greater than 0
-      if (audioBlob.size > 0) {
-        // Create a FormData object
-        const formData = new FormData();
-
-        // Append the Blob to the FormData
-        formData.append("audio_file", audioBlob, "agent_audio.webm");
-
-        const payload = {
-          audio_file: formData,
-        };
-        // Prepare the payload with the FormData object
-        dispatch(agentConversation(payload))
-          .then((res) => {
-            if (res?.error && Object.keys(res?.error)?.length > 0) {
-              setError(true);
-              return;
-            }
-            setError(false);
-            setAudioResponse(res?.payload?.data?.audio_file);
-            setMessageResponse(res?.payload?.data?.text);
-          })
-          .catch((error) => {
-            console.error("Error uploading the audio file:", error);
-          });
-
-        // Stop and restart the media recorder to reset its internal state
-        mediaRecorder.stop();
-
-        setTimeout(() => {
-          // Restart recording after stopping, with a short delay
-          audioChunks.current = [];
-          mediaRecorder.start(1000); // Restart the recorder after stopping
-          setResetChunks(!resetChunks);
-        }, 200); // Add a short delay to ensure everything resets properly
-      } else {
-        console.warn("Recorded audio size is zero, skipping upload.");
-      }
-    } else {
-      console.warn("No audio data available.");
-    }
-  };
-
-  useEffect(() => {
-    // Set up the media recorder when the component mounts
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const recorder = new MediaRecorder(stream);
-
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.current.push(event.data);
-        }
-      };
-
-      // Set the media recorder and start recording once it's ready testing
-      setMediaRecorder(recorder);
-
-      // Start recording immediately after the recorder is set up with a timeslice of 1000ms
-      recorder.start(1000);
-      setIsRecording(true);
-    });
-
-    return () => {
-      // Clean up: Stop the media recorder and release resources
-      if (mediaRecorder && mediaRecorder.state !== "inactive") {
-        mediaRecorder.stop();
-      }
+  const handleUploadAudio = async (mediaBlobUrl) => {
+    // setShowLoader(true);
+    setProcessing(true);
+    const response = await fetch(mediaBlobUrl);
+    const audioBlob = await response.blob();
+    setAudioBlob(audioBlob);
+    const formData = new FormData();
+    formData.append("file", audioBlob, "audio_recording.mp3");
+    const payload = {
+      file: formData,
+      threadId: thread_id,
+      uploadFlag: uploadFlag,
+      state: sessionStorage.getItem("next_state"),
     };
-  }, [resetChunks]);
+    if (sessionStorage.getItem("offer_item_id")) {
+      payload.offer_item_id = sessionStorage.getItem("offer_item_id");
+    }
+    dispatch(agentConversation(payload))
+      .then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setError(true);
+          setProcessing(false);
+          return;
+        }
+        setError(false);
+        setProcessing(false);
+        setAudioResponse(res?.payload?.data?.agent_audio_data);
+        setMessageResponse(res?.payload?.data?.agent_message);
+        setCustomerDetails(res?.payload?.data?.customer_details);
+        setUserResponse(res?.payload?.data?.user_message);
+        setNextState(res?.payload?.data?.next_state);
+        sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+        sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
+        setShowLoader(false);
+        if (res?.payload?.data?.next_state === "human_loan_amount_selection") {
+          navigate("/credit/customize-offers");
+          setProgressValue(50);
+        } else if (res?.payload?.data?.next_state === "human_selection") {
+          setProgressValue(40);
+        }
+        clearBlobUrl();
+      })
+      .catch((error) => {
+        console.error("Error uploading the audio file:", error);
+      });
+  };
 
-  // Silence detection hook
+  const {
+    status,
+    startRecording,
+    pauseRecording,
+    stopRecording,
+    resumeRecording,
+    mediaBlobUrl,
+    clearBlobUrl,
+  } = useReactMediaRecorder({
+    audio: true,
+    onStop: handleUploadAudio,
+  });
+
+  const handlePauseAudio = () => {
+    pauseRecording();
+    setIsPaused(true);
+    setIsListening(false);
+  };
+
+  const handleResumeAudio = () => {
+    resumeRecording();
+    setIsPaused(false);
+  };
+
+  const handleStopRecording = () => {
+    stopRecording();
+    setIsRecording(false);
+    setIsListening(false);
+  };
+  const handleStartRecording = () => {
+    startRecording();
+    setIsRecording(true);
+    setIsPaused(false);
+  };
+
+  const onSilence = () => {
+    console.log("Silence Detected");
+    handleStopRecording();
+    setIsListening(false);
+  };
+
+  /* INITIALIZING THE SILENCE DETECTER */
   useEffect(() => {
     const silenceDetector = createSilenceDetector({
       noiseThreshold: 10,
       silenceDurationThreshold: 3000,
       onSilence,
+      onSound: (isSoundDetected) => {
+        if (isSoundDetected) {
+          console.log("Sound Recording on");
+          setIsListening(true);
+        }
+      },
     });
 
     if (isRecording && !isPaused) {
@@ -161,20 +166,34 @@ const CreditPage = () => {
     };
   }, [isRecording, isPaused]);
 
+  useEffect(() => {
+    if (processing) {
+      handlePauseAudio();
+      setIsPaused(true);
+    }
+  }, [processing]);
+
   return (
     <CreditPageContainer>
+      <CustomLoader open={showLoader} />
       <CustomNavbar />
-      <AgentHeader />
+      {/* <AgentHeader /> */}
+      <DraggableAgentFAB setDrawerOpen={setDrawerOpen} />
       <OutletContainer>
         <Outlet />
       </OutletContainer>
+      <CustomDrawer open={drawerOpen} setDrawerOpen={setDrawerOpen} />
       <PageFooter
-        mediaRecorder={mediaRecorder}
+        // mediaRecorder={mediaRecorder}
+        drawerOpen={drawerOpen}
+        setDrawerOpen={setDrawerOpen}
         handleStartRecording={handleStartRecording}
         handleStopRecording={handleStopRecording}
-        handlePauseResume={handlePauseResume}
+        handlePauseAudio={handlePauseAudio}
+        handleResumeAudio={handleResumeAudio}
         isRecording={isRecording}
         isPaused={isPaused}
+        audioBlob={audioBlob}
       />
     </CreditPageContainer>
   );

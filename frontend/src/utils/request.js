@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "https://engine-entropy.cliniq360.com:8000";
 
 const defaultHeader = () => {
   return {

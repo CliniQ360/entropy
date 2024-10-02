@@ -11,6 +11,9 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ImageIcon from "@mui/icons-material/Image";
 import MicIcon from "../../utils/CustomIcons/MicIcon";
 import ChatIcon from "../../utils/CustomIcons/ChatIcon";
+import { useDispatch } from "react-redux";
+import { startConversion } from "../CreditPage/audioAgent.slice";
+import { useNavigate } from "react-router-dom";
 
 // import Micicon from "../../assets/icons/MicIcon.svg";
 
@@ -37,6 +40,7 @@ const HomePageContentWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   padding: "40px 20px",
+  marginBottom: "20px",
 }));
 const TextFeildWrapper = styled(Stack)(({ theme }) => ({
   display: "flex",
@@ -65,7 +69,7 @@ const FooterButton = styled(Button)(({ theme }) => ({
 }));
 
 const FooterButtonWrapper = styled(Stack)(({ theme }) => ({
-  position: "absolute",
+  position: "fixed",
   bottom: 25,
   left: 0,
   justifyContent: "center",
@@ -74,16 +78,18 @@ const FooterButtonWrapper = styled(Stack)(({ theme }) => ({
 }));
 
 const AssistantHomepage = () => {
+  const navigate = useNavigate();
+
   return (
     <PageWrapper>
       <ImageSectionWrapper>
-        <RedirectionContainer>
+        {/* <RedirectionContainer>
           <IconButton>
             <KeyboardArrowLeftIcon
               sx={{ fontSize: "2.2rem", color: "black" }}
             />
           </IconButton>
-        </RedirectionContainer>
+        </RedirectionContainer> */}
         <ImageContainerSection>
           <ImageIcon sx={{ color: "#B4DBFF", fontSize: "2.5rem" }} />
         </ImageContainerSection>
@@ -156,10 +162,12 @@ const AssistantHomepage = () => {
             </Typography>
           </ActionContainerItem>
         </ActionWrapper>
-        <FooterButtonWrapper>
-          <FooterButton variant="contained">Get Started</FooterButton>
-        </FooterButtonWrapper>
-      </HomePageContentWrapper>
+      </HomePageContentWrapper>{" "}
+      <FooterButtonWrapper>
+        <FooterButton variant="contained" onClick={() => navigate("/route-2")}>
+          Get Started
+        </FooterButton>
+      </FooterButtonWrapper>
     </PageWrapper>
   );
 };

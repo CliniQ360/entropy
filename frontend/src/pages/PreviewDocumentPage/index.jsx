@@ -1,5 +1,5 @@
 import { Box, Stack, styled, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DownloadIcon from "../../utils/CustomIcons/DownloadIcon";
 const PreviewDocumentWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
@@ -44,6 +44,28 @@ const FAQItemSection = styled("div")(({ theme }) => ({
 }));
 
 const PreviewDocumentPage = () => {
+  const pdfUrl =
+    "https://pramaan.ondc.org/beta/preprod/mock/seller/document/agreement.pdf";
+  const [showLoader, setShowLoader] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      setShowLoader(true);
+      const response = await fetch(pdfUrl);
+      const blob = await response.blob();
+      setShowLoader(false);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Loan Agreement.pdf";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+    }
+  };
   return (
     <PreviewDocumentWrapper>
       <PreviewHeaderContainer>
@@ -59,16 +81,18 @@ const PreviewDocumentPage = () => {
         </Typography>
       </PreviewHeaderContainer>
       <PDFPreviewSection>
-        <PdfPreview></PdfPreview>
+        <PdfPreview>
+          <iframe src={pdfUrl} title="PDF Preview" width="100%" height="100%" />
+        </PdfPreview>
         <PreviewBottomSection>
           <Box ml={5}>
             <Typography
               sx={{ fontFamily: "source sans pro", fontSize: "1.1rem" }}
             >
-              FileName.pdf
+              Loan Agreement.pdf
             </Typography>
           </Box>
-          <Stack mr={6}>
+          <Stack mr={6} onClick={handleDownload}>
             <DownloadIcon width={"18"} />
           </Stack>
         </PreviewBottomSection>

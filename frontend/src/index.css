@@ -4,19 +4,19 @@ body {
 
 @font-face {
   font-family: "Source Sans Pro";
-  src: url("./assets//fonts/source-sans-pro/SourceSansPro-Regular.otf")
+  src: url("./assets/fonts/source-sans-pro/SourceSansPro-Regular.otf")
     format("opentype");
 }
 
 @font-face {
   font-family: "Source Sans Pro SemiBold";
-  src: url("./assets//fonts/source-sans-pro/SourceSansPro-Semibold.otf")
+  src: url("./assets/fonts/source-sans-pro/SourceSansPro-Semibold.otf")
     format("opentype");
 }
 
 @font-face {
   font-family: "Inter";
-  src: url("./assets//fonts/Inter/static/Inter-Regular.ttf") format("truetype");
+  src: url("./assets/fonts/Inter/static/Inter-Regular.ttf") format("truetype");
 }
 
 @font-face {

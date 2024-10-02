@@ -29,6 +29,7 @@ class GroqHelper:
             audio_file = open(file_path, "rb")
             transcription = self.client.audio.transcriptions.create(
                 model="whisper-large-v3",
+                # model="distil-whisper-large-v3-en",
                 file=audio_file,
                 extra_query={
                     "compression_ratio_threshold": 2.0,
@@ -39,3 +40,10 @@ class GroqHelper:
             return {"transcription": transcription.text}
         except Exception as error:
             raise error
+
+
+# print(
+#     GroqHelper().transcribe(
+#         file_path="/Users/arpitkjain/Documents/cliniq360/entropy/poc/docs/customer_info_test_recording.mp3"
+#     )
+# )

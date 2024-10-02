@@ -4,11 +4,25 @@ services:
     image: entropy/core:latest
     container_name: entropy-core
     env_file: backend/core/env_var
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/data/google_credential.json
     volumes:
       - ./backend/core:/app
       - ./backend/logs:/core/logs
+      - ${GOOGLE_APPLICATION_CREDENTIALS}:/app/data/google_credential.json
     ports:
       - 8000:8000
+    networks:
+      - entropy
+    restart: "on-failure"
+
+  entropy_ui:
+    image: cliniq360/entropy-ui:0.2
+    container_name: entropy-ui
+    ports:
+      - "4000:80"
+    volumes:
+      - ./frontend/src:/app/src
     networks:
       - entropy
     restart: "on-failure"
@@ -23,21 +37,6 @@ services:
       - ./db/postgres/postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    networks:
-      - entropy
-    restart: "on-failure"
-
-  entropy_ui:
-    build: frontend/.
-    image: entropy/ui:latest
-    container_name: entropy-ui
-    environment:
-      - BASE_URL=ws://entropy_core:8000
-      - CORE_URL=http://entropy_core:8000
-    volumes:
-      - ./demo_ui:/app
-    ports:
-      - 8501:8501
     networks:
       - entropy
     restart: "on-failure"

@@ -5,7 +5,7 @@ const ChatIcon = ({ color, stroke, width, height }) => {
     <svg
       width={width || "40"}
       height={height || "35"}
-      viewBox="0 0 25 25"
+      viewBox="0 0 28 27"
       fill={color}
       xmlns="http://www.w3.org/2000/svg"
     >

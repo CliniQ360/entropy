@@ -1,5 +1,5 @@
-import { Divider, Stack, styled, Typography } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import { Divider, keyframes, Stack, styled, Typography } from "@mui/material";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 import AudioBarIcon from "../../utils/CustomIcons/BarIcon";
@@ -37,10 +37,58 @@ const ProfileIcon = styled("div")(({ theme }) => ({
   backgroundPosition: "center",
 }));
 
+const styles = `
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%); // Start from off-screen right
+  }
+  100% {
+    transform: translateX(-100%); // Move to off-screen left
+  }
+}
+`;
+
+const ellipsisAnimation = keyframes`
+  0%, 100% {
+    content: '.';
+  }
+  33% {
+    content: '..';
+  }
+  66% {
+    content: '...';
+  }
+`;
+
+const DotsAnimationContainer = styled("span")(({ theme }) => ({
+  "&::after": {
+    content: '"."',
+    display: "inline-block",
+    width: "1em",
+    animation: `${ellipsisAnimation} 1.5s infinite steps(1, end)`,
+  },
+}));
+
+// Inject the keyframes into the document dynamically
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
+
 const AgentHeader = () => {
-  const { audioResponse, messageResponse, error } = useContext(MediaContext);
+  const {
+    audioResponse,
+    messageResponse,
+    error,
+    listening,
+    processing,
+    uploadDocument,
+  } = useContext(MediaContext);
   const [audioSrc, setAudioSrc] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
+  const audioRef = useRef(null);
+  const previousAudioUrlRef = useRef(null);
+  const [checkLenght, setCheckLenght] = useState(false);
 
   const base64ToBlob = (base64Data, contentType) => {
     const byteCharacters = atob(base64Data);
@@ -63,21 +111,52 @@ const AgentHeader = () => {
 
   useEffect(() => {
     if (audioResponse) {
-      try {
-        const audioBlob = base64ToBlob(audioResponse, "audio/wav");
-        setAudioBlob(audioBlob);
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setAudioSrc(audioUrl);
+      const blob = base64ToBlob(audioResponse, "audio/wav");
+      if (blob) {
+        setAudioBlob(blob);
+        const newAudioUrl = URL.createObjectURL(blob);
+        setAudioSrc(newAudioUrl);
 
-        // Cleanup URL when component unmounts or audioResponse changes
-        return () => {
-          URL.revokeObjectURL(audioUrl);
-        };
-      } catch (error) {
-        console.error("Error converting Base64 audio to Blob", error);
+        // Revoke the previous Blob URL to free up memory
+        if (previousAudioUrlRef.current) {
+          URL.revokeObjectURL(previousAudioUrlRef.current);
+        }
+        previousAudioUrlRef.current = newAudioUrl;
       }
     }
+
+    // Cleanup when component unmounts
+    return () => {
+      if (previousAudioUrlRef.current) {
+        URL.revokeObjectURL(previousAudioUrlRef.current);
+      }
+    };
   }, [audioResponse]);
+
+  useEffect(() => {
+    if (audioRef.current && audioSrc) {
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {})
+          .catch((error) => {
+            console.error("Error attempting to play audio:", error);
+          });
+      }
+    }
+  }, [audioSrc]);
+
+  useEffect(() => {
+    if (messageResponse && messageResponse.length > 40) {
+      setCheckLenght(true);
+    } else {
+      setCheckLenght(false);
+    }
+  }, [messageResponse]);
+
+  useEffect(() => {
+    console.log("listening", listening);
+  });
 
   return (
     <HeaderComponentWrapper>
@@ -112,28 +191,80 @@ const AgentHeader = () => {
                   height={20}
                   gap={3}
                 />
-                <audio src={audioSrc} autoPlay style={{ display: "none" }} />
+                <audio
+                  ref={audioRef}
+                  src={audioSrc}
+                  autoPlay
+                  style={{ display: "none" }}
+                />
               </>
             )}
           </Stack>
         </HeaderIconSection>
         <Divider />
         <Stack
-          alignItems={"center"}
-          justifyContent={"center"}
+          alignItems="center"
+          justifyContent="center"
           padding={2}
-          sx={{ overflowX: "auto" }}
+          sx={{
+            overflow: "hidden", // Hide text overflow
+            whiteSpace: "nowrap", // Ensure text stays on one line
+            height: "25px",
+          }}
         >
           {!error ? (
-            <Typography
-              sx={{
-                color: "#535353",
-                fontSize: "1rem",
-                fontFamily: "source sans pro",
-              }}
-            >
-              {messageResponse}
-            </Typography>
+            processing ? (
+              <Typography
+                sx={{
+                  color: "#535353",
+                  fontSize: "1rem",
+                  fontFamily: "source sans pro",
+                }}
+              >
+                Processing
+                <DotsAnimationContainer className="dotsAnimation" />
+              </Typography>
+            ) : listening ? (
+              <Typography
+                sx={{
+                  color: "#535353",
+                  fontSize: "1rem",
+                  fontFamily: "source sans pro",
+                }}
+              >
+                Listening
+                <DotsAnimationContainer className="dotsAnimation" />
+              </Typography>
+            ) : uploadDocument ? (
+              <Typography
+                sx={{
+                  color: "#535353",
+                  fontSize: "1rem",
+                  fontFamily: "source sans pro",
+                }}
+              >
+                Uploading
+                <DotsAnimationContainer className="dotsAnimation" />
+              </Typography>
+            ) : (
+              <Typography
+                sx={{
+                  color: "#535353",
+                  fontSize: "1rem",
+                  fontFamily: "source sans pro",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  position: "relative",
+                  display: "inline-block",
+                  animation: checkLenght
+                    ? "scrollText 20s linear infinite"
+                    : "none",
+                }}
+              >
+                {messageResponse}
+              </Typography>
+            )
           ) : (
             <Typography
               sx={{
@@ -141,6 +272,12 @@ const AgentHeader = () => {
                 fontSize: "1rem",
                 fontFamily: "source sans pro",
                 textAlign: "center",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                position: "relative",
+                display: "inline-block",
+                animation: "scrollText 20s linear infinite",
               }}
             >
               Oops! Please bring the mic closer to your mouth for better

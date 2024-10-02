@@ -1,20 +1,42 @@
-import React from "react";
-import { Box, Divider, Fab, Stack, styled, Typography } from "@mui/material";
-import MicOffIcon from "@mui/icons-material/MicOff";
-import CloseIcon from "@mui/icons-material/Close";
-import MicIcon from "@mui/icons-material/Mic";
-import { VisualizerLive } from "../LiveAudioWavelengthComponent";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  Fab,
+  getTouchRippleUtilityClass,
+  IconButton,
+  Stack,
+  styled,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import Lottie from "lottie-react";
+import audioAnimation from "../../utils/lottieJson/audioAnimation.json";
+import { MediaContext } from "../../context/mediaContext";
+import ChatIcon from "../../utils/CustomIcons/ChatIcon";
+import SettingIcon from "../../utils/CustomIcons/SettingIcon";
+import MicIcon from "../../utils/CustomIcons/MicIcon";
+import MuteIcon from "../../utils/CustomIcons/MuteIcon";
+import CustomDrawer from "../CustomBottomDrawer";
 
-const FooterContainer = styled("footer")(({ theme }) => ({
-  backgroundColor: "#EAF2FF",
+const useScreenWidth = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(`(min-width:${theme.breakpoints.values.sm}px)`);
+  return matches ? window.innerWidth : window.innerWidth;
+};
+
+const FooterContainer = styled("footer")(({ theme, screenWidth }) => ({
+  backgroundColor: "white",
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
   position: "fixed",
   bottom: 0,
-  width: "100%",
-  zIndex: 100,
-  boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.2)",
+  width: screenWidth,
+  zIndex: 10000,
+  boxShadow: "-20px 5px 20px 1px rgba(0, 0, 0, 0.2)",
 }));
 
 const FooterText = styled(Box)(({ theme }) => ({
@@ -23,7 +45,26 @@ const FooterText = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2, 6),
 }));
 
-const CustomFabButton = styled(Fab)(({ theme, bgcolor }) => ({
+const CustomFabButtonWrapper = styled(Stack)(({ theme, bgcolor }) => ({
+  // height: "65px",
+  // width: "65px",
+  borderRadius: "50%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#0188e854",
+  border: "2px solid #0188E8 ",
+  padding: 2,
+}));
+
+const CustomFabButton = styled(Stack)(({ theme, bgcolor }) => ({
+  height: "60px",
+  width: "60px",
+  borderRadius: "50%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  margin: 2,
   backgroundColor: bgcolor || "#fff",
   ":hover": {
     backgroundColor: bgcolor || "#fff",
@@ -33,62 +74,117 @@ const CustomFabButton = styled(Fab)(({ theme, bgcolor }) => ({
 const FooterActionContainer = styled(Stack)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
-  justifyContent: "center",
+  justifyContent: "space-around",
   alignItems: "center",
   gap: theme.spacing(8),
-  padding: theme.spacing(6, 8),
+  padding: theme.spacing(6, 4),
 }));
 
 const PageFooter = ({
+  drawerOpen,
+  setDrawerOpen,
   mediaRecorder,
   handleStartRecording,
   handleStopRecording,
   handlePauseResume,
   isRecording,
   isPaused,
+  handlePauseAudio,
+  handleResumeAudio,
+  audioBlob,
 }) => {
+  const lottieRef = useRef(null);
+  const screenWidth = useScreenWidth();
+
+  useEffect(() => {
+    if (isRecording && !isPaused) {
+      lottieRef?.current?.play();
+    } else if (isPaused) {
+      lottieRef?.current?.stop();
+    }
+  }, [isRecording, isPaused]);
+
+  const { userResponse } = useContext(MediaContext);
+
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = 0; // Force scroll to start (left side)
+    }
+  }, []);
+
   return (
-    <FooterContainer>
-      <FooterText>
-        <Typography fontSize={12} color={"#535353"}>
-          Lorem Ipsum has been the industry's standard dummy..
-        </Typography>
-      </FooterText>
+    <FooterContainer screenWidth={screenWidth}>
       <FooterActionContainer>
+        <IconButton
+          onClick={() => setDrawerOpen(!drawerOpen)}
+          sx={{ padding: 1 }}
+        >
+          <ChatIcon width={27} color={drawerOpen ? "#0054BA" : "black"} />
+        </IconButton>
+
         {isRecording ? (
           <>
-            <CustomFabButton
-              onClick={handlePauseResume}
-              bgcolor={!isPaused ? "rgba(30,30,30,0.5)" : "#E25341"}
-              size="large"
-              aria-label="mute"
-            >
-              <MicOffIcon sx={{ color: "white" }} />
-            </CustomFabButton>
-            <Box>
-              <VisualizerLive mediaRecorder={mediaRecorder} />
-            </Box>
-            <CustomFabButton
-              onClick={handleStopRecording}
-              bgcolor={"#E25341"}
-              size="large"
-              aria-label="Close"
-            >
-              <CloseIcon sx={{ color: "white" }} />
-            </CustomFabButton>
+            {isPaused ? (
+              <CustomFabButtonWrapper>
+                <CustomFabButton
+                  onClick={handleResumeAudio}
+                  bgcolor={"red"}
+                  size="large"
+                  aria-label="mute"
+                >
+                  <MuteIcon color={"white"} width={20} height={25} />
+                </CustomFabButton>
+              </CustomFabButtonWrapper>
+            ) : (
+              <CustomFabButtonWrapper>
+                <CustomFabButton
+                  onClick={handlePauseAudio}
+                  bgcolor={"#0054BA"}
+                  size="large"
+                  aria-label="mute"
+                >
+                  <MicIcon color={"white"} width={24} height={24} />
+                </CustomFabButton>
+              </CustomFabButtonWrapper>
+            )}
+            {/* <CustomFabButtonWrapper>
+              <CustomFabButton
+                onClick={handleStartRecording}
+                size="large"
+                aria-label="Close"
+                bgcolor={"#535353"}
+              >
+                <MicIcon color={"white"} width={24} height={24} />
+              </CustomFabButton>
+            </CustomFabButtonWrapper> */}
+
+            {/* <Box sx={{ width: "30%" }}>
+              <Lottie
+                lottieRef={lottieRef}
+                animationData={audioAnimation}
+                autoPlay={true}
+              />{" "}
+            </Box> */}
           </>
         ) : (
           <>
-            <CustomFabButton
-              onClick={handleStartRecording}
-              size="large"
-              aria-label="Close"
-              bgcolor={"#0054BA"}
-            >
-              <MicIcon sx={{ color: "white" }} />
-            </CustomFabButton>
+            <CustomFabButtonWrapper>
+              <CustomFabButton
+                onClick={handleStartRecording}
+                size="large"
+                aria-label="Close"
+                bgcolor={"#535353"}
+              >
+                <MuteIcon color={"white"} width={20} height={25} />
+              </CustomFabButton>
+            </CustomFabButtonWrapper>
           </>
         )}
+        <IconButton sx={{ padding: 1 }}>
+          <SettingIcon />
+        </IconButton>
       </FooterActionContainer>
     </FooterContainer>
   );

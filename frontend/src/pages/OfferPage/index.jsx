@@ -19,12 +19,18 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useLocation } from "react-router-dom";
+import { AudioDataContext } from "../../context/audioDataContext";
+import { useDispatch } from "react-redux";
+import { agentConversation } from "../CreditPage/audioAgent.slice";
+import CustomLoader from "../../components/CustomLoader";
+import CustomTimer from "../../components/CustomTimer";
+import { MediaContext } from "../../context/mediaContext";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -136,88 +142,71 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 
 const AvailableOffersPage = () => {
   const [selectedOffer, setSelectedOffer] = useState(null);
-  const [offers, setOffers] = useState([
-    {
-      offer_details: {
-        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72e",
-        item_price: "81132.23",
-        INTEREST_RATE: "26.99%",
-        TERM: "24 Months",
-        INSTALLMENT_AMOUNT: "3262.51 INR",
-      },
-      provider_details: {
-        name: "DMI FINANCE PRIVATE LIMITED",
-        images: [
-          {
-            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
-          },
-        ],
-      },
-    },
-    {
-      offer_details: {
-        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72f",
-        item_price: "81132.23",
-        INTEREST_RATE: "26.99%",
-        TERM: "24 Months",
-        INSTALLMENT_AMOUNT: "3262.51 INR",
-      },
-      provider_details: {
-        name: "DMI FINANCE PRIVATE LIMITED",
-        images: [
-          {
-            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
-          },
-        ],
-      },
-    },
-    {
-      offer_details: {
-        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72g",
-        item_price: "81132.23",
-        INTEREST_RATE: "26.99%",
-        TERM: "24 Months",
-        INSTALLMENT_AMOUNT: "3262.51 INR",
-      },
-      provider_details: {
-        name: "DMI FINANCE PRIVATE LIMITED",
-        images: [
-          {
-            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
-          },
-        ],
-      },
-    },
-    {
-      offer_details: {
-        offer_item_id: "d9eb81e2-96b5-477f-98dc-8518ad60d72h",
-        item_price: "81132.23",
-        INTEREST_RATE: "26.99%",
-        TERM: "24 Months",
-        INSTALLMENT_AMOUNT: "3262.51 INR",
-      },
-      provider_details: {
-        name: "Aditya Birla",
-        images: [
-          {
-            url: "https://refo-static-public.s3.ap-south-1.amazonaws.com/dmi/dmi-sm.png",
-          },
-        ],
-      },
-    },
-  ]);
+  const [offerDetails, setOfferDetails] = useState([]);
+  const {
+    nextState,
+    setError,
+    setAudioResponse,
+    setMessageResponse,
+    setUserResponse,
+    setProcessing,
+  } = useContext(MediaContext);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const [openViewDetails, setOpenViewDetails] = useState(false);
   const scrollRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const filteredLoanOffers = offers.filter((offer) =>
-    offer.provider_details.name.toLowerCase().includes("")
+  /*APIS FOR REFERESH OFFER */
+  useEffect(() => {
+    setShowLoader(true);
+    const thread_id = sessionStorage.getItem("thread_id");
+    const uploadFlag = sessionStorage.getItem("document_upload_flag");
+    const next_state = sessionStorage.getItem("next_state");
+    setProcessing(true);
+    const payload = {
+      threadId: thread_id,
+      uploadFlag: uploadFlag,
+      state: "refresh_offer",
+    };
+    const setTimeoutSeconds = showTimer ? 48000 : 0;
+    setTimeout(() => {
+      setShowLoader(true);
+      dispatch(agentConversation(payload)).then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setShowLoader(false);
+          setError(true);
+          setProcessing(false);
+          return;
+        }
+        setError(false);
+        setProcessing(false);
+        setAudioResponse(res?.payload?.data?.agent_audio_data);
+        setMessageResponse(res?.payload?.data?.agent_message);
+        setOfferDetails(res?.payload?.data?.offer_list);
+        setUserResponse(res?.payload?.data?.user_message);
+
+        sessionStorage.setItem(
+          "customer_details",
+          JSON.stringify(res?.payload?.data?.customer_details)
+        );
+        setShowLoader(false);
+        setTimeout(() => {
+          sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+        }, 300);
+      });
+    }, setTimeoutSeconds);
+  }, []);
+
+  const filteredLoanOffers = offerDetails?.filter((offer) =>
+    offer?.provider_details?.name.toLowerCase().includes("")
   );
 
   const handleInputChange = (event, offer) => {
     event.preventDefault();
     setSelectedOfferId(offer.offer_details.offer_item_id); // Set the selected offer's ID
+    sessionStorage.setItem("offer_item_id", offer.offer_details.offer_item_id);
+    sessionStorage.setItem("selected_offer", JSON.stringify(offer));
     console.log(offer);
   };
 
@@ -249,6 +238,43 @@ const AvailableOffersPage = () => {
   const handleCloseViewDetails = () => {
     setOpenViewDetails(false);
   };
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, children } = scrollRef.current;
+      const newIndex = Array.from(children).findIndex(
+        (child) => child.offsetLeft >= scrollLeft
+      );
+      setCurrentSlide(newIndex);
+    }
+  };
+
+  useEffect(() => {
+    const ref = scrollRef.current;
+    if (ref) {
+      ref.addEventListener("scroll", handleScroll);
+      return () => {
+        ref.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (offerDetails.length > 0) {
+      sessionStorage.setItem(
+        "selected_offer",
+        JSON.stringify(offerDetails?.[currentSlide])
+      );
+      sessionStorage.setItem(
+        "offer_item_id",
+        offerDetails?.[currentSlide]?.offer_details?.offer_item_id
+      );
+      sessionStorage.setItem(
+        "selected_offer",
+        JSON.stringify(offerDetails?.[currentSlide])
+      );
+    }
+  }, [currentSlide, offerDetails]);
 
   const pageName = "offerPage";
 
@@ -426,20 +452,31 @@ const AvailableOffersPage = () => {
     },
   ];
 
+  const initialShowTimer =
+    sessionStorage.getItem("showTimer") === "true" ? true : false;
+  const [showTimer, setShowTimer] = useState(initialShowTimer);
+  const [showLoader, setShowLoader] = useState(false);
+  useEffect(() => {
+    sessionStorage.setItem("showTimer", showTimer);
+  }, [showTimer]);
+
   return (
     <>
+      {!showTimer ? (
+        <CustomLoader open={showLoader} />
+      ) : (
+        <CustomTimer
+          open={showTimer}
+          onClose={() => setShowLoader(false)}
+          setShowTimer={setShowTimer}
+        />
+      )}
       <AvailableOffersContainer>
         <DocumentHeaderSection>
           <Typography
             sx={{ fontSize: "1.4rem", fontWeight: 700, textAlign: "left" }}
           >
             Available Offers
-          </Typography>
-          <Typography
-            sx={{ fontSize: "1rem", color: "#535353", textAlign: "left" }}
-          >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry
           </Typography>
         </DocumentHeaderSection>
         <FormContainer>
@@ -469,7 +506,7 @@ const AvailableOffersPage = () => {
                               {offer.provider_details.name}
                             </Typography>
                           </div>
-                          <div>
+                          {/* <div>
                             <FormControlLabel
                               value={offer.offer_details.offer_item_id}
                               control={
@@ -484,7 +521,7 @@ const AvailableOffersPage = () => {
                               label=""
                               style={{ margin: 0 }}
                             />
-                          </div>
+                          </div> */}
                         </SelectBoxHeader>
                         <Divider
                           style={{ width: "100%", margin: "16px 0px" }}

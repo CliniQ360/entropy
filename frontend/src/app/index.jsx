@@ -14,6 +14,7 @@ import SelectAAPage from "../pages/SelectAAPage";
 import CreditOfferPage from "../pages/CreditOfferDetail";
 import AvailableOffersPage from "../pages/OfferPage";
 import PreviewDocumentPage from "../pages/PreviewDocumentPage";
+import CustomizeOfferPage from "../pages/customizeOffer";
 
 function App() {
   return (
@@ -25,19 +26,20 @@ function App() {
         <Route path="/route-2" element={<ChooseAssistant />} />
 
         <Route path="/credit" element={<CreditPage />}>
-          <Route path="personalDetails" element={<PersonalDetailsPage />} />
+          <Route path="personal-Detail" element={<PersonalDetailsPage />} />
           <Route
             path="professionalDetails"
             element={<ProfessionalDetailsPage />}
           />
           <Route path="selectAA" element={<SelectAAPage />} />
           <Route path="availableOffers" element={<AvailableOffersPage />} />
+          <Route path="customize-offers" element={<CustomizeOfferPage />} />
           <Route path="route-3" element={<DocumentUploadPage />} />
-          <Route path="route-4" element={<KYCPage />} />
-          <Route path="route-5" element={<BankDetailsPage />} />
-          <Route path="route-6" element={<EmandatePage />} />
-          <Route path="route-7" element={<CreditOfferPage />} />
-          <Route path="route-8" element={<PreviewDocumentPage />} />
+          <Route path="kyc-page" element={<KYCPage />} />
+          <Route path="account-details" element={<BankDetailsPage />} />
+          <Route path="emandate-page" element={<EmandatePage />} />
+          <Route path="offer-page" element={<CreditOfferPage />} />
+          <Route path="preview-offer" element={<PreviewDocumentPage />} />
         </Route>
       </Routes>
     </div>
