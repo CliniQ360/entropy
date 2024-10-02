@@ -6,7 +6,12 @@ from core.agents.schemas.output_schemas import (
     GeneratedQuestion,
 )
 import os, json, time, base64
-from core.utils.vertex_ai_helper.gemini_helper import llm_flash, llm_pro
+from core.utils.vertex_ai_helper.gemini_helper import (
+    llm_flash,
+    llm_pro,
+    llm_002_flash,
+    llm_002_pro,
+)
 from core.utils.openai_helper import llm_4o, llm_4omini
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
@@ -54,7 +59,7 @@ def process_user_document(state: SahayakState):
         If information is not available, return 'None' for the field in output.""",
     }
     image_message_list.extend(text_message)
-    structured_llm = llm_pro.with_structured_output(UserDocumentDetails)
+    structured_llm = llm_002_pro.with_structured_output(UserDocumentDetails)
     message = HumanMessage(content=image_message_list)
 
     response = structured_llm.invoke([message])

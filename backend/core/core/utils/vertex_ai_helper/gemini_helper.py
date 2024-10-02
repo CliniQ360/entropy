@@ -14,6 +14,14 @@ llm_flash = ChatVertexAI(
     model="gemini-1.5-flash-001", temperature=0.0, project=project, location=location
 )
 
+llm_002_pro = ChatVertexAI(
+    model="gemini-1.5-pro-002", temperature=0.0, project=project, location=location
+)
+
+llm_002_flash = ChatVertexAI(
+    model="gemini-1.5-flash-002", temperature=0.0, project=project, location=location
+)
+
 
 def transcribe(gcs_uri: str, input_prompt: str = None):
     if input_prompt:

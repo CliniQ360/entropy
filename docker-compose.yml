@@ -16,6 +16,18 @@ services:
       - entropy
     restart: "on-failure"
 
+  entropy_ui:
+    build: frontend/.
+    image: entropy/ui:latest
+    container_name: entropy-ui
+    ports:
+      - "4000:80"
+    volumes:
+      - ./frontend/src:/app/src
+    networks:
+      - entropy
+    restart: "on-failure"
+
   entropy_db:
     image: postgres:12-alpine
     container_name: entropy-db
