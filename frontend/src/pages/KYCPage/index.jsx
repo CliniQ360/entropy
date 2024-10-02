@@ -168,12 +168,12 @@ const KYCPage = () => {
               fontFamily: "source sans pro",
             }}
           >
-            I, hereby declare that I am voluntarily sharing my Aadhaar Number
-            and demographic information issued by UIDAI, with National Health
-            Authority (NHA) for the sole purpose of creation of ABHA number . I
-            understand that my ABHA number can be used and shared for purposes
-            as may be notified by ABDM from time to time including provision of
-            healthcare services.
+            I hereby declare that I am voluntarily sharing my Aadhaar Number and
+            demographic information issued by UIDAI with the concerned
+            authorities for the sole purpose of completing the KYC process. I
+            understand that my information can be used and shared for purposes
+            as may be notified from time to time, including compliance with
+            regulatory requirements.
           </Typography>
         </Stack>
       </KYCWrapper>

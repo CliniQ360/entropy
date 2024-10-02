@@ -250,7 +250,7 @@ const ChooseAssistant = () => {
             sx={{ fontSize: "1.2rem", color: "#535353" }}
           >
             Welcome to CliniQ-360! My name is{" "}
-            {activeButton === 0 ? "Raju" : "Rani"} and i am excited to assist
+            {activeButton === 0 ? "Raju" : "Rani"} and I am excited to assist
             you in your credit journey!
           </Typography>
         </Stack>

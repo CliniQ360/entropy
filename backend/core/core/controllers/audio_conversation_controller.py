@@ -2,6 +2,7 @@ from core.agents.workflows.text_conversation_workflow import build_workflow
 from psycopg_pool import ConnectionPool
 from langgraph.checkpoint.postgres import PostgresSaver
 from core.utils.elevenlabs.tts import ElevenLabsHelper
+from core.utils.sarvam_helper import SarvamAPI
 from core import logger
 import os, base64
 
@@ -12,6 +13,7 @@ class AudioConversationController:
     def __init__(self):
 
         self.DB_URI = os.getenv("DB_URI")
+        self.stt_service = os.getenv("STT_SERVICE")
 
     def start_conversation(self, thread_id: str):
         try:
@@ -315,16 +317,28 @@ class AudioConversationController:
                 )
                 if modified:
                     agent_message = agent_message_modified
-                logging.info(f"executing text to speech function")
+                if self.stt_service == "11LABS":
+                    logging.info(f"executing text to speech with 11LABS")
 
-                agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
-                    text=agent_message
-                )
-                if agent_audio_data:
-                    # Encode audio bytes as base64
-                    audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+                    agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
+                        text=agent_message
+                    )
+                    if agent_audio_data:
+                        # Encode audio bytes as base64
+                        audio_base64 = base64.b64encode(agent_audio_data).decode(
+                            "utf-8"
+                        )
+                    else:
+                        audio_base64 = ""
                 else:
-                    audio_base64 = ""
+                    logging.info(f"executing text to speech with Sarvam")
+
+                    agent_audio_data = SarvamAPI().sarvam_tts(text=agent_message)
+                    if agent_audio_data:
+                        # Encode audio bytes as base64
+                        audio_base64 = agent_audio_data
+                    else:
+                        audio_base64 = ""
                 return {
                     "thread_id": thread_id,
                     "user_message": user_message,

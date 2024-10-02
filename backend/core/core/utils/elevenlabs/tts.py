@@ -20,6 +20,7 @@ class ElevenLabsHelper:
         if self.local_testing == "True":
             print(f"Bypassing audio generation")
             return None
+        text = text.replace("*", "")
         result = self.client.text_to_speech.convert(
             voice_id=self.voice_id,
             optimize_streaming_latency="0",
