@@ -17,8 +17,7 @@ services:
     restart: "on-failure"
 
   entropy_ui:
-    build: frontend/.
-    image: entropy/ui:latest
+    image: cliniq360/entropy-ui:0.1
     container_name: entropy-ui
     ports:
       - "4000:80"
