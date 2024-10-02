@@ -27,6 +27,12 @@ class SahayakController:
         self.form_submit_message_audio_path = f"/app/data/form_submission_message.txt"
         self.aa_redirect_message_audio_path = f"/app/data/aa_redirect_message.txt"
         self.kyc_redirect_message_audio_path = f"/app/data/kyc_redirect_message.txt"
+        self.eMandate_redirect_message_audio_path = (
+            f"/app/data/eMandate_redirect_message.txt"
+        )
+        self.sign_loan_agreement_message_audio_path = (
+            f"/app/data/sign_loan_agreement_message.txt"
+        )
         self.congratulations_message_audio_path = (
             f"/app/data/congratulations_message.txt"
         )
@@ -180,6 +186,20 @@ class SahayakController:
                     f"Reading default audio message for resume_after_kyc_redirect"
                 )
                 audio_base64 = open(self.kyc_redirect_message_audio_path, "r").read()
+            elif next_state == "resume_after_emdt_redirect":
+                logging.info(
+                    f"Reading default audio message for resume_after_emdt_redirect"
+                )
+                audio_base64 = open(
+                    self.eMandate_redirect_message_audio_path, "r"
+                ).read()
+            elif next_state == "resume_loan_agreement_signing":
+                logging.info(
+                    f"Reading default audio message for resume_loan_agreement_signing"
+                )
+                audio_base64 = open(
+                    self.sign_loan_agreement_message_audio_path, "r"
+                ).read()
             # elif next_state == "human_loan_tnc_feedback":
             #     logging.info(
             #         f"Reading default audio message for human_loan_tnc_feedback"
