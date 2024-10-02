@@ -181,7 +181,7 @@ class GeminiPrompts:
 
         self.offer_summary_instructions = """Offer details: {offer_list}.
         Act as a financial adviser. From the credit offer list provided above, help customer understand each credit offer in simple paragraph focusing on important information. 
-        Keep the tone conversational and maximum 3 lines per offer."""
+        Output should be in maximum 200 english characters including spaces and special characters. Keep the tone conversational."""
 
         self.offer_qna_instructions = """Offer details : {offer_list}.
         Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.

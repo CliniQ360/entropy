@@ -8,6 +8,7 @@ from fastapi import Response
 from datetime import datetime
 from core.utils.groq.stt import GroqHelper
 from core.utils.elevenlabs.tts import ElevenLabsHelper
+from core.utils.sarvam_helper import SarvamAPI
 from core.controllers.audio_conversation_controller import AudioConversationController
 from core.utils.vertex_ai_helper.gemini_helper import transcribe
 from core.utils.vertex_ai_helper.gcs_helper import upload_blob_string
@@ -22,20 +23,21 @@ class SahayakController:
         self.DB_URI = os.getenv("DB_URI")
         self.LLM_CONFIG = os.getenv("LLM_CONFIG")
         self.bucket_name = os.getenv("GCS_BUCKET_NAME")
+        self.stt_service = os.getenv("STT_SERVICE")
         self.audio_file_folder_path = f"/app/audio_data"
-        self.welcome_message_audio_path = f"/app/data/welcome_message.txt"
-        self.form_submit_message_audio_path = f"/app/data/form_submission_message.txt"
-        self.aa_redirect_message_audio_path = f"/app/data/aa_redirect_message.txt"
-        self.kyc_redirect_message_audio_path = f"/app/data/kyc_redirect_message.txt"
-        self.eMandate_redirect_message_audio_path = (
-            f"/app/data/eMandate_redirect_message.txt"
+        self.welcome_message_audio_path = (
+            f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/welcome_message.txt"
         )
-        self.sign_loan_agreement_message_audio_path = (
-            f"/app/data/sign_loan_agreement_message.txt"
+        self.form_submit_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/form_submission_message.txt"
+        self.aa_redirect_message_audio_path = (
+            f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/aa_redirect_message.txt"
         )
-        self.congratulations_message_audio_path = (
-            f"/app/data/congratulations_message.txt"
+        self.kyc_redirect_message_audio_path = (
+            f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/kyc_redirect_message.txt"
         )
+        self.eMandate_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/eMandate_redirect_message.txt"
+        self.sign_loan_agreement_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/sign_loan_agreement_message.txt"
+        self.congratulations_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/congratulations_message.txt"
         self.local_testing = os.getenv("LOCAL_TESTING")
 
     def text_generator(self, transcribed_text: str):
@@ -84,6 +86,8 @@ class SahayakController:
         #     text=agent_message, output_path=output_audio_file_path
         # )
         # Encode audio bytes as base64
+        logging.info(f"{self.stt_service=}")
+        logging.info(f"{self.welcome_message_audio_path=}")
         audio_base64_str = open(self.welcome_message_audio_path, "r").read()
         # audio_base64 = ""
         conversation_response.update({"agent_audio_data": audio_base64_str})
@@ -207,14 +211,26 @@ class SahayakController:
             #     audio_base64 = open(self.congratulations_message_audio_path, "r").read()
             else:
                 logging.info(f"executing text to speech function")
-                agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
-                    text=agent_message
-                )
-                # Encode audio bytes as base64
-                if agent_audio_data:
-                    audio_base64 = base64.b64encode(agent_audio_data).decode("utf-8")
+                if self.stt_service == "11LABS":
+                    logging.info(f"executing text to speech with 11LABS")
+                    agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
+                        text=agent_message
+                    )
+                    # Encode audio bytes as base64
+                    if agent_audio_data:
+                        audio_base64 = base64.b64encode(agent_audio_data).decode(
+                            "utf-8"
+                        )
+                    else:
+                        audio_base64 = ""
                 else:
-                    audio_base64 = ""
+                    logging.info(f"executing text to speech with Sarvam")
+                    agent_audio_data = SarvamAPI().sarvam_tts(text=agent_message)
+                    # Encode audio bytes as base64
+                    if agent_audio_data:
+                        audio_base64 = agent_audio_data
+                    else:
+                        audio_base64 = ""
             conversation_response.update({"agent_audio_data": audio_base64})
             return conversation_response
         except Exception as error:
