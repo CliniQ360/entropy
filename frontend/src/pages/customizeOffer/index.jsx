@@ -109,6 +109,7 @@ const CustomizeOfferPage = () => {
       offer_item_id: sessionStorage.getItem("offer_item_id"),
       selected_loan_amount: loanAmount,
       state: sessionStorage.getItem("next_state"),
+      language: sessionStorage.getItem("activeLanguage"), 
     };
     dispatch(agentConversation(payload)).then((res) => {
       if (res?.error && Object.keys(res?.error)?.length > 0) {

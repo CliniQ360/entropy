@@ -66,6 +66,7 @@ const CreditPage = () => {
       threadId: thread_id,
       uploadFlag: uploadFlag,
       state: sessionStorage.getItem("next_state"),
+      language: sessionStorage.getItem("activeLanguage"), 
     };
     if (sessionStorage.getItem("offer_item_id")) {
       payload.offer_item_id = sessionStorage.getItem("offer_item_id");

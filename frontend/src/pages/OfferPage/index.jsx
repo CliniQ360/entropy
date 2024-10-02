@@ -168,6 +168,7 @@ const AvailableOffersPage = () => {
       threadId: thread_id,
       uploadFlag: uploadFlag,
       state: "refresh_offer",
+      language: sessionStorage.getItem("activeLanguage"), 
     };
     const setTimeoutSeconds = showTimer ? 48000 : 0;
     setTimeout(() => {

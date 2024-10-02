@@ -6,7 +6,7 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
@@ -173,12 +173,26 @@ const ChooseAssistant = () => {
     setActiveButton(index);
   };
   const handleLanguageClick = (index) => {
+    // language en/hi
     setActiveLanguage(index);
+    if (index === 0) {
+      sessionStorage.setItem("activeLanguage", "en");
+    } else {
+      sessionStorage.setItem("activeLanguage", "hi");
+    }
   };
+
+  useEffect(() => {
+    sessionStorage.setItem("activeLanguage", "en");
+  }, [activeLanguage]);
 
   const handleInitConversion = () => {
     setShowLoader(true);
-    dispatch(startConversion()).then((res) => {
+    const payload = {
+      language: sessionStorage.getItem("activeLanguage"),
+    };
+
+    dispatch(startConversion(payload)).then((res) => {
       if (res?.error && Object.keys(res?.error)?.length > 0) {
         setError(true);
         return;

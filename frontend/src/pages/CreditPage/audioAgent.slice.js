@@ -55,10 +55,17 @@ export const documentUpload = createAsyncThunk(
   }
 );
 
-export const startConversion = createAsyncThunk("startConversion", async () => {
-  const response = await apiRequest("POST", apis?.startConversionApi);
-  return response;
-});
+export const startConversion = createAsyncThunk(
+  "startConversion",
+  async (payload) => {
+    const response = await apiRequest(
+      "POST",
+      apis?.startConversionApi,
+      payload
+    );
+    return response;
+  }
+);
 
 export const bankLoanDataResumeConversion = createAsyncThunk(
   "startConversion",
