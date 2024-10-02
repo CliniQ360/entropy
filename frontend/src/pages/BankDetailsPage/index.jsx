@@ -131,6 +131,7 @@ const BankDetailsPage = () => {
           `My Account Holder Name is ${formData?.accHolderName}, my account type is ${formData?.acctype}, my ifsc code is ${formData?.ifscCode} and my ACCOUNT NUMBER IS ${formData?.accNo}.`,
         ],
         state: sessionStorage.getItem("next_state"),
+        language: sessionStorage.getItem("activeLanguage"),
       };
       dispatch(bankLoanDataResumeConversion(payload)).then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
