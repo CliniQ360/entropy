@@ -184,5 +184,5 @@ class GeminiPrompts:
         Output should be in maximum 200 english characters including spaces and special characters. Keep the tone conversational."""
 
         self.offer_qna_instructions = """Offer details : {offer_list}.
-        Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
+        Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Output should be in maximum 200 english characters including spaces and special characters. Keep the tone conversational.
         user_query: {user_query}"""
