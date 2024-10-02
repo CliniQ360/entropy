@@ -4,8 +4,8 @@
 
 - **Frontend:** React
 - **Backend:** Python
-- **AI Engine:** OpenAI GPT
-- **Agentic Framework:** AutoGen
+- **AI Engine:** Vertex AI - Gemini
+- **Agentic Framework:** LangGraph
 
 ## Deployment Steps
 
@@ -17,36 +17,11 @@ To run the application, follow these steps:
    git clone <git_repo_path>
    ```
 
-2. **Navigate to Frontend Folder**
+2. **Populate the env_var file**
 
-   ```
-   cd frontend
-   ```
 
-3. **Update BACKEND_API_PATH url**
-
-   a. Locate .env.dev file and update the "BACKEND_API_PATH" to your local IP address.
-
-4. **Install npm packages**
-
-   ```
-   npm install
-   ```
-
-5. **Run Frontend**
-
-   ```
-   npm run dev
-   ```
-
-6. **Update OPEN_API_KEY**
-   Create env file under "backend/core" and update
-
-   ```
-   OPENAI_API_KEY=<your_openai_key>
-   ```
-
-7. **Build Backend**
+3. **Build containers**
    ```
    sh build_all.sh
    ```
+4. **Frontend will be up on port 4000 and backend APIs on port 8000**
