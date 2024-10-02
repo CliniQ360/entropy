@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://34.93.232.8:8000";
+export const BASE_URL = "http://34.93.232.88:8000";
 
 const defaultHeader = () => {
   return {
