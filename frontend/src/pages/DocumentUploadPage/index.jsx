@@ -144,6 +144,7 @@ const DocumentUploadPage = () => {
     const payload = {
       threadId: sessionStorage.getItem("thread_id"),
       files: formData,
+      // language: sessionStorage.getItem("activeLanguage"),
     };
 
     dispatch(documentUpload(payload)).then((res) => {
@@ -159,6 +160,7 @@ const DocumentUploadPage = () => {
           threadId: sessionStorage.getItem("thread_id"),
           uploadFlag: true,
           state: sessionStorage.getItem("next_state"),
+          language: sessionStorage.getItem("activeLanguage"),
         };
         dispatch(agentConversation(secondpayload)).then((res) => {
           if (res?.error && Object.keys(res?.error)?.length > 0) {

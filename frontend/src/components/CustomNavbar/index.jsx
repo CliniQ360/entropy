@@ -57,6 +57,7 @@ const CustomNavbar = () => {
       threadId: thread_id,
       uploadFlag: false,
       state: sessionStorage.getItem("next_state"),
+      language: sessionStorage.getItem("activeLanguage"),      
     };
     dispatch(agentConversation(payload)).then((res) => {
       if (res?.error && Object.keys(res?.error)?.length > 0) {
