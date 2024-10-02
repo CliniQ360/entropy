@@ -54,6 +54,7 @@ import operator
 
 class SahayakState(TypedDict):
     thread_id: str
+    language: str
     document_upload_flag: bool
     document_list: list
     customer_extracted_details: dict

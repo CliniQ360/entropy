@@ -14,9 +14,9 @@ logging = logger(__name__)
 
 
 @sahayak_router.post("/v1/sahayak/start_conversation", response_model=SahayakOutput)
-def start_conversation():
+def start_conversation(language: str = "en"):
     try:
-        return SahayakController().start_audio_conversation()
+        return SahayakController().start_audio_conversation(language=language)
     except Exception as error:
         logging.error(f"Error in /v1/sahayak/start_conversation endpoint: {error}")
         raise HTTPException(

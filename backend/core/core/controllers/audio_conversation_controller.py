@@ -15,7 +15,7 @@ class AudioConversationController:
         self.DB_URI = os.getenv("DB_URI")
         self.stt_service = os.getenv("STT_SERVICE")
 
-    def start_conversation(self, thread_id: str):
+    def start_conversation(self, thread_id: str, language: str):
         try:
             logging.info(f"AudioConversationController: start_conversation")
             logging.info(f"Stating workflow with thread_id: {thread_id}")
@@ -54,7 +54,12 @@ class AudioConversationController:
 
                 thread = {"configurable": {"thread_id": thread_id}}
                 for event in workflow.stream(
-                    {"agent_message": ["Hello!"], "thread_id": thread_id}, thread
+                    {
+                        "agent_message": ["Hello!"],
+                        "language": language,
+                        "thread_id": thread_id,
+                    },
+                    thread,
                 ):
                     agent_message = event.get("agent_message", "")
                     logging.info(f"{agent_message=}")
@@ -74,11 +79,13 @@ class AudioConversationController:
                 else:
                     user_message = "None"
                 next_state = workflow.get_state(thread).next[0]
+                language = workflow.get_state(thread).values.get("language")
                 return_payload = {
                     "thread_id": thread_id,
                     "user_message": user_message,
                     "agent_message": agent_message,
                     "next_state": next_state,
+                    "language": language,
                     "customer_details": {},
                     "customer_account_details": {},
                 }
@@ -312,6 +319,7 @@ class AudioConversationController:
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
                 final_offer = workflow.get_state(thread).values.get("final_offer")
                 modified = workflow.get_state(thread).values.get("modified")
+                language = workflow.get_state(thread).values.get("language")
                 agent_message_modified = workflow.get_state(thread).values.get(
                     "agent_message_modified"
                 )
@@ -339,6 +347,7 @@ class AudioConversationController:
                         audio_base64 = agent_audio_data
                     else:
                         audio_base64 = ""
+
                 return {
                     "thread_id": thread_id,
                     "user_message": user_message,
@@ -370,6 +379,7 @@ class AudioConversationController:
                         agent_message_modified if agent_message_modified else "None"
                     ),
                     "agent_audio_data": audio_base64,
+                    "language": language,
                 }
         except Exception as error:
             logging.error(

@@ -13,6 +13,7 @@ export const agentConversation = createAsyncThunk(
           `/${apis?.resumeConversionApi}?` +
           `thread_id=${payload?.threadId}&state=${payload?.state}&translate=false&document_upload_flag=${payload?.uploadFlag}&offer_item_id=${payload?.offer_item_id}&selected_loan_amount=${payload?.selected_loan_amount}`,
         payload?.file,
+        payload?.language,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
