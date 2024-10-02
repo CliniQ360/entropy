@@ -175,15 +175,13 @@ const ChooseAssistant = () => {
   const handleLanguageClick = (index) => {
     // language en/hi
     setActiveLanguage(index);
-    if (index === 0) {
-      sessionStorage.setItem("activeLanguage", "en");
-    } else {
-      sessionStorage.setItem("activeLanguage", "hi");
-    }
   };
 
   useEffect(() => {
-    sessionStorage.setItem("activeLanguage", "en");
+    sessionStorage.setItem(
+      "activeLanguage",
+      activeLanguage === 0 ? "en" : "hi"
+    );
   }, [activeLanguage]);
 
   const handleInitConversion = () => {
