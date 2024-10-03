@@ -177,7 +177,10 @@ class AudioConversationController:
                 ):
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
                         as_node=state,
                     )
                 elif state == "resume_after_aa_redirect":
@@ -197,6 +200,7 @@ class AudioConversationController:
                         thread,
                         {
                             "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
                             "offer_item_id": kwargs.get("offer_item_id"),
                         },
                         as_node=state,
@@ -218,25 +222,37 @@ class AudioConversationController:
                 elif state == "human_account_details_feedback":
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
                         as_node=state,
                     )
                 elif state == "human_account_details_verification_feedback":
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
                         as_node=state,
                     )
                 elif state == "resume_after_emdt_redirect":
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
                         as_node=state,
                     )
                 elif state == "human_loan_tnc_feedback":
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
                         as_node=state,
                     )
                 elif state == "resume_loan_agreement_signing":
@@ -264,6 +280,12 @@ class AudioConversationController:
                     )[-1]
                 else:
                     user_message = "None"
+                if workflow.get_state(thread).values.get("user_message_hindi"):
+                    user_message_hindi = workflow.get_state(thread).values.get(
+                        "user_message_hindi"
+                    )[-1]
+                else:
+                    user_message_hindi = "None"
                 next_state = workflow.get_state(thread).next[0]
                 collected_details_list = workflow.get_state(thread).values.get(
                     "customer_details"
@@ -351,6 +373,7 @@ class AudioConversationController:
                 return {
                     "thread_id": thread_id,
                     "user_message": user_message,
+                    "user_message_hindi": user_message_hindi,
                     "agent_message": agent_message,
                     "next_state": next_state,
                     "customer_details": customer_details,

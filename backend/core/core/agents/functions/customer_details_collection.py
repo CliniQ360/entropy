@@ -18,12 +18,20 @@ from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
 
 
 def welcome_message(state: SahayakState):
-    return {
-        "agent_message": [
-            "Welcome to the CliniQ 360. I am your credit sahayak and will assist you with your credit journey. Let's get started. For ease of application, would you like to upload your Aadhaar and PAN card?"
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Welcome to the CliniQ 360. I am your credit sahayak and will assist you with your credit journey. Let's get started. For ease of application, would you like to upload your Aadhaar and PAN card?"
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "CliniQ 360 में आपका स्वागत है। मैं आपका क्रेडिट सहायक हूं और आपकी क्रेडिट यात्रा में आपकी सहायता करूंगा। आइए शुरू करें। आवेदन में आसानी के लिए, क्या आप अपना आधार और पैन कार्ड अपलोड करना चाहेंगे?"
+            ],
+            "modified": False,
+        }
 
 
 def human_document_upload_feedback(state: SahayakState):
@@ -181,6 +189,7 @@ def generate_questions(state: SahayakState):
     """Generate questions to collect user details"""
     master_dict, collected_info = {}, {}
     collected_details_list = state.get("customer_details", None)
+    language = state.get("language")
     required_fields = {
         "personal_information": {
             "firstName": "First Name",
@@ -250,7 +259,10 @@ def generate_questions(state: SahayakState):
                         collected_info[key_section] = {key: value}
                     master_dict[key] = value
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
-        collector_instructions = GeminiPrompts().collector_instructions
+        if language == "hi":
+            collector_instructions = GeminiPrompts().collector_instructions_hi
+        else:
+            collector_instructions = GeminiPrompts().collector_instructions
 
         collector_prompt = collector_instructions.format(
             customer_info=collected_info, required_fields=required_fields
@@ -350,12 +362,20 @@ def should_verify(state: SahayakState):
 
 
 def verify_user_details(state: SahayakState):
-    return {
-        "agent_message": [
-            "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Thank you for providing the details. The collected information is visible on screen. Do you want me to submit your details?"
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "विवरण उपलब्ध कराने के लिए धन्यवाद. एकत्रित जानकारी स्क्रीन पर दिखाई देती है। क्या आप चाहते हैं कि मैं आपका विवरण प्रस्तुत करूँ?"
+            ],
+            "modified": False,
+        }
 
 
 def human_verification_feedback(state: SahayakState):

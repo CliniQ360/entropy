@@ -14,7 +14,7 @@ logging = logger(__name__)
 
 
 @sahayak_router.post("/v1/sahayak/start_conversation", response_model=SahayakOutput)
-def start_conversation(language: str = "en"):
+def start_conversation(language: str):
     try:
         return SahayakController().start_audio_conversation(language=language)
     except Exception as error:
@@ -30,6 +30,7 @@ def start_conversation(language: str = "en"):
 async def resume_conversation(
     thread_id: str,
     state: str,
+    language: str = "en",
     translate: bool = False,
     document_upload_flag: bool = False,
     file: UploadFile | None = None,
@@ -49,6 +50,7 @@ async def resume_conversation(
             "thread_id": thread_id,
             "state": state,
             "translate": translate,
+            "language": language,
             "document_upload_flag": document_upload_flag,
             "audio_data": audio_data,
             "audio_file_name": audio_file_name,

@@ -135,13 +135,22 @@ def send_ack(state: SahayakState):
         route=select_consent_url, params={"txn_id": state.get("txn_id")}
     )
     # current_action = select_consent_resp.get("current_action")
-    return {
-        "agent_message": [
-            "Please wait while negotiate with the banks to get the best offer for you."
-        ],
-        "status": "FETCHING_OFFERS",
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Please wait while negotiate with the banks to get the best offer for you."
+            ],
+            "status": "FETCHING_OFFERS",
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "कृपया अपने लिए सर्वोत्तम प्रस्ताव प्राप्त करने के लिए बैंकों के साथ बातचीत करते समय प्रतीक्षा करें।"
+            ],
+            "status": "FETCHING_OFFERS",
+            "modified": False,
+        }
 
 
 def is_aa_approved(state: SahayakState):
@@ -215,12 +224,16 @@ def human_selection(state: SahayakState):
 
 def summarise_offers(state: SahayakState):
     offer_list = state.get("offer_list")
+    language = state.get("language")
     # Generate summary
     # summary_prompt = f"""Offer details: {offer_list}.
     # Act as a financial adviser. From the credit offer list provided above, help customer understand each credit offer in simple paragraph focusing on important information.
     # Keep the tone conversational and maximum 3 lines per offer."""
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
-        offer_summary_instructions = GeminiPrompts().offer_summary_instructions
+        if language == "hi":
+            offer_summary_instructions = GeminiPrompts().offer_summary_instructions_hi
+        else:
+            offer_summary_instructions = GeminiPrompts().offer_summary_instructions
         offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
         offer_summary = llm_flash.invoke(offer_summary_prompt)
         prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
@@ -268,19 +281,30 @@ def user_intent(state: SahayakState):
 
 def answer_user_query(state: SahayakState):
     offer_list = state.get("offer_list")
+    language = state.get("language")
     logging.info("Inside answer_user_query")
     # qna_prompt = f"""Offer details : {offer_list}.
     # Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
     # user_query: {state.get("user_message")[-1]}"""
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
-        offer_qna_instructions = GeminiPrompts().offer_qna_instructions
-        offer_qna_prompt = offer_qna_instructions.format(
-            offer_list=offer_list, user_query=state.get("user_message")[-1]
-        )
-        llm_response = llm_flash.invoke(offer_qna_prompt)
-        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {llm_response.content}"
-        llm_response_in_words = llm_flash.invoke(prompt)
-        print(llm_response_in_words.content)
+        if language == "hi":
+            offer_qna_instructions = GeminiPrompts().offer_qna_instructions_hi
+            offer_qna_prompt = offer_qna_instructions.format(
+                offer_list=offer_list, user_query=state.get("user_message")[-1]
+            )
+            llm_response = llm_flash.invoke(offer_qna_prompt)
+            prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. Generate output in Hindi. input_text: {llm_response.content}"
+            llm_response_in_words = llm_flash.invoke(prompt)
+            print(llm_response_in_words.content)
+        else:
+            offer_qna_instructions = GeminiPrompts().offer_qna_instructions
+            offer_qna_prompt = offer_qna_instructions.format(
+                offer_list=offer_list, user_query=state.get("user_message")[-1]
+            )
+            llm_response = llm_flash.invoke(offer_qna_prompt)
+            prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {llm_response.content}"
+            llm_response_in_words = llm_flash.invoke(prompt)
+            print(llm_response_in_words.content)
     else:
         offer_qna_instructions = OpenAIPrompts().offer_qna_instructions
         offer_qna_prompt = offer_qna_instructions.format(

@@ -62,6 +62,7 @@ class SahayakState(TypedDict):
     customer_details: Annotated[list, operator.add]
     customer_account_details: Annotated[list, operator.add]
     user_message: Annotated[list, operator.add]
+    user_message_hindi: Annotated[list, operator.add]
     aa_url: str
     kyc_url: str
     emndt_url: str

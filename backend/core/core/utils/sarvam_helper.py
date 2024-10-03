@@ -33,7 +33,7 @@ class SarvamAPI:
             "Content-Type": "application/json",
         }
 
-        response, response_code = APIInterface.post(
+        response, response_code = APIInterface.post_without_logs(
             route=route, json=payload, headers=headers
         )
         return response.get("audios")[0]

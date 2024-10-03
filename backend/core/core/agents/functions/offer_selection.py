@@ -115,12 +115,20 @@ def human_invalid_loan_amount_selection(state: SahayakState):
     min_loan_amt = selected_offer.get("offer_details").get("MIN_LOAN_AMOUNT")
     max_loan_amt = selected_offer.get("quote_details").get("PRINCIPAL")
     # max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
-    return {
-        "agent_message": [
-            f"Minimum loan amount is {min_loan_amt} and maximum loan amount is {max_loan_amt}. Please select the loan amount within the range provided"
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                f"Minimum loan amount is {min_loan_amt} and maximum loan amount is {max_loan_amt}. Please select the loan amount within the range provided"
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                f"न्यूनतम ऋण राशि {min_loan_amt} है और अधिकतम ऋण राशि {max_loan_amt} है। कृपया दी गई सीमा के भीतर ऋण राशि का चयन करें"
+            ],
+            "modified": False,
+        }
 
 
 def resume_after_kyc_redirect(state: SahayakState):
@@ -227,12 +235,20 @@ def generate_account_details_questions(state: SahayakState):
 
     # # Write the list of analysis to state
     # return {"agent_message": [generated_data.text]}
-    return {
-        "agent_message": [
-            "Please provide your bank account details and click on submit to proceed further."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Please provide your bank account details and click on submit to proceed further."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "कृपया अपना बैंक खाता विवरण प्रदान करें और आगे बढ़ने के लिए सबमिट पर क्लिक करें।"
+            ],
+            "modified": False,
+        }
 
 
 def human_account_details_feedback(state: SahayakState):
@@ -466,6 +482,7 @@ def summarise_loan_tnc(state: SahayakState):
     txn_id = state.get("txn_id")
     thread_id = state.get("thread_id")
     offer_item_id = state.get("offer_item_id")
+    language = state.get("language")
     current_action = None
     counter = 0
     while current_action != "ON_CONFIRM":
@@ -496,9 +513,14 @@ def summarise_loan_tnc(state: SahayakState):
         pages = loader.load_and_split()
         text = " ".join([page.page_content.replace("\t", " ") for page in pages])
         if os.environ.get("LLM_CONFIG") == "GOOGLE":
-            summarise_loan_agreement_instruction = (
-                GeminiPrompts().summarise_loan_agreement_instructions
-            )
+            if language == "hi":
+                summarise_loan_agreement_instruction = (
+                    GeminiPrompts().summarise_loan_agreement_instructions_hi
+                )
+            else:
+                summarise_loan_agreement_instruction = (
+                    GeminiPrompts().summarise_loan_agreement_instructions
+                )
             summarise_loan_agreement_prompt = (
                 summarise_loan_agreement_instruction.format(text=text)
             )
@@ -553,6 +575,7 @@ def human_loan_tnc_feedback(state: SahayakState):
 def answer_tnc_query(state: SahayakState):
     user_query = state.get("user_message")[-1]
     loan_agreement_text = state.get("loan_agreement_text")
+    language = state.get("language")
     # qna_prompt = f"""
     #     Given is the text from loan agreement document.
     #     Act as a financial advisor and try to answer the user query about the loan agreement strictly based on the text provided.
@@ -565,7 +588,10 @@ def answer_tnc_query(state: SahayakState):
     #     Answer:
     # """
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
-        qna_instructions = GeminiPrompts().qna_instructions
+        if language == "hi":
+            qna_instructions = GeminiPrompts().qna_instructions_hi
+        else:
+            qna_instructions = GeminiPrompts().qna_instructions
         qna_prompt = qna_instructions.format(
             loan_agreement_text=loan_agreement_text, user_query=user_query
         )

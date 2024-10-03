@@ -10,7 +10,7 @@ from core.utils.groq.stt import GroqHelper
 from core.utils.elevenlabs.tts import ElevenLabsHelper
 from core.utils.sarvam_helper import SarvamAPI
 from core.controllers.audio_conversation_controller import AudioConversationController
-from core.utils.vertex_ai_helper.gemini_helper import transcribe
+from core.utils.vertex_ai_helper.gemini_helper import transcribe, translate
 from core.utils.vertex_ai_helper.gcs_helper import upload_blob_string
 from core.utils.openai_helper import WhisperHelper
 
@@ -114,9 +114,16 @@ class SahayakController:
                         content_type="audio/mpeg",
                         file=audio_data,
                     )
-                    transcription_result = transcribe(
-                        gcs_uri=gcs_uri, input_prompt=custom_prompt, input_language="en"
-                    )
+                    if request.get("language") == "en":
+                        logging.info(f"Transcribing file")
+                        transcription_result = transcribe(
+                            gcs_uri=gcs_uri, input_prompt=custom_prompt
+                        )
+                    else:
+                        logging.info(f"Translating file")
+                        transcription_result = translate(
+                            gcs_uri=gcs_uri, input_prompt=custom_prompt
+                        )
                 else:
                     logging.info(
                         f"Saving audio file to local at {inp_audio_file_path=}"
@@ -140,8 +147,11 @@ class SahayakController:
                 end = time.time()
                 logging.info(f"Transcription Time: {end-master_start}")
                 transcribed_text = transcription_result.get("transcription")
+                translated_text = transcription_result.get("transcription_hindi", None)
                 logging.info(f"Transcription Text: {transcribed_text=}")
                 request.update({"user_message": [transcribed_text]})
+                if translated_text:
+                    request.update({"user_message_hindi": [translated_text]})
                 # request.update({"gcs_uri": gcs_uri})
             else:
                 logging.info(f"Audio data not received")
@@ -151,6 +161,7 @@ class SahayakController:
                 "thread_id": request.get("thread_id"),
                 "state": request.get("state"),
                 "user_message": request.get("user_message"),
+                "user_message_hindi": request.get("user_message_hindi"),
                 "document_upload_flag": request.get("document_upload_flag"),
                 "offer_item_id": request.get("offer_item_id"),
                 "selected_loan_amount": request.get("selected_loan_amount"),
@@ -221,6 +232,9 @@ class SahayakController:
                         audio_base64 = agent_audio_data
                     else:
                         audio_base64 = ""
+            if language == "hi":
+                user_message_hindi = conversation_response.get("user_message_hindi")
+                conversation_response.update({"user_message": user_message_hindi})
             conversation_response.update({"agent_audio_data": audio_base64})
             return conversation_response
         except Exception as error:
