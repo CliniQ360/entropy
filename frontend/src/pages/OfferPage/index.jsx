@@ -59,7 +59,7 @@ const SelectBoxContainer = styled("div")(({ theme }) => ({
   border: "1px solid #9E9E9E",
   padding: theme.spacing(4),
   borderRadius: "8px",
-  width: 320,
+  width: "100%",
   backgroundColor: "#FFFFFF",
   flex: "0 0 auto",
 }));
@@ -154,6 +154,13 @@ const AvailableOffersPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const [openViewDetails, setOpenViewDetails] = useState(false);
+  const initialShowTimer =
+    sessionStorage.getItem("showTimer") === "true" ? true : false;
+  const [showTimer, setShowTimer] = useState(initialShowTimer);
+  const [showLoader, setShowLoader] = useState(false);
+  useEffect(() => {
+    sessionStorage.setItem("showTimer", showTimer);
+  }, [showTimer]);
   const scrollRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -175,6 +182,7 @@ const AvailableOffersPage = () => {
       dispatch(agentConversation(payload)).then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
           setShowLoader(false);
+          setShowTimer(false);
           setError(true);
           setProcessing(false);
           return;
@@ -451,14 +459,6 @@ const AvailableOffersPage = () => {
       ),
     },
   ];
-
-  const initialShowTimer =
-    sessionStorage.getItem("showTimer") === "true" ? true : false;
-  const [showTimer, setShowTimer] = useState(initialShowTimer);
-  const [showLoader, setShowLoader] = useState(false);
-  useEffect(() => {
-    sessionStorage.setItem("showTimer", showTimer);
-  }, [showTimer]);
 
   return (
     <>
