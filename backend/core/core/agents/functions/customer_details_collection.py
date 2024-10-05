@@ -351,7 +351,7 @@ def should_submit(state: SahayakState):
     extracted_data = structured_llm.invoke([intent_classification_prompt])
     if extracted_data.user_intent.lower() == "submit":
         return "submit_form_ack"
-    return "collect_updated_details"
+    return "extract_user_details"
 
 
 def should_verify(state: SahayakState):

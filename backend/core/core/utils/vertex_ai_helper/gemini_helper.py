@@ -8,19 +8,35 @@ project = os.environ["PROJECT_ID"]
 location = os.environ["LOCATION"]
 
 llm_pro = ChatVertexAI(
-    model="gemini-1.5-pro-001", temperature=0.0, project=project, location=location
+    model="gemini-1.5-pro-001",
+    temperature=0.0,
+    project=project,
+    location=location,
+    top_p=0.4,
 )
 
 llm_flash = ChatVertexAI(
-    model="gemini-1.5-flash-001", temperature=0.0, project=project, location=location
+    model="gemini-1.5-flash-001",
+    temperature=0.0,
+    project=project,
+    location=location,
+    top_p=0.4,
 )
 
 llm_002_pro = ChatVertexAI(
-    model="gemini-1.5-pro-002", temperature=0.0, project=project, location=location
+    model="gemini-1.5-pro-002",
+    temperature=0.0,
+    project=project,
+    location=location,
+    top_p=0.4,
 )
 
 llm_002_flash = ChatVertexAI(
-    model="gemini-1.5-flash-002", temperature=0.0, project=project, location=location
+    model="gemini-1.5-flash-002",
+    temperature=0.0,
+    project=project,
+    location=location,
+    top_p=0.4,
 )
 
 

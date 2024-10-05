@@ -122,7 +122,8 @@ class SahayakController:
                     else:
                         logging.info(f"Translating file")
                         transcription_result = translate(
-                            gcs_uri=gcs_uri, input_prompt=custom_prompt
+                            gcs_uri=gcs_uri,
+                            # input_prompt=custom_prompt
                         )
                 else:
                     logging.info(

@@ -22,8 +22,8 @@ def build_workflow():
     builder.add_node("human_verification_feedback", human_verification_feedback)
     builder.add_node("submit_form_ack", submit_form_ack)
     builder.add_node("submit_form", submit_form)
-    builder.add_node("collect_updated_details", collect_updated_details)
-    builder.add_node("human_update_feedback", human_update_feedback)
+    # builder.add_node("collect_updated_details", collect_updated_details)
+    # builder.add_node("human_update_feedback", human_update_feedback)
     builder.add_node("resume_after_aa_redirect", resume_after_aa_redirect)
     builder.add_node("send_ack", send_ack)
     builder.add_node("approval_pending", approval_pending)
@@ -83,10 +83,10 @@ def build_workflow():
     builder.add_conditional_edges(
         "human_verification_feedback",
         should_submit,
-        ["submit_form_ack", "collect_updated_details"],
+        ["submit_form_ack", "extract_user_details"],
     )
-    builder.add_edge("collect_updated_details", "human_update_feedback")
-    builder.add_edge("human_update_feedback", "extract_user_details")
+    # builder.add_edge("collect_updated_details", "human_update_feedback")
+    # builder.add_edge("human_update_feedback", "extract_user_details")
     builder.add_edge("submit_form_ack", "submit_form")
     builder.add_edge("submit_form", "resume_after_aa_redirect")
     builder.add_conditional_edges(
