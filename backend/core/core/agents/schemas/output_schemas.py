@@ -72,6 +72,12 @@ class UserIntent(BaseModel):
     )
 
 
+class UserIntent2(BaseModel):
+    user_intent: str = Field(
+        description="Classification of user message  in question or acknowledgement or get_more_offers"
+    )
+
+
 class UserIntentClassification(BaseModel):
     user_intent: str = Field(
         description="Intent of the user in the audio file from the given options: 'submit', 'edit'"

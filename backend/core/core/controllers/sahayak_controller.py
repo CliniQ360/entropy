@@ -162,11 +162,12 @@ class SahayakController:
                 "thread_id": request.get("thread_id"),
                 "state": request.get("state"),
                 "user_message": request.get("user_message"),
-                "user_message_hindi": request.get("user_message_hindi"),
+                "user_message_hindi": request.get("user_message_hindi", []),
                 "document_upload_flag": request.get("document_upload_flag"),
                 "offer_item_id": request.get("offer_item_id"),
                 "selected_loan_amount": request.get("selected_loan_amount"),
             }
+            logging.info(f"{workflow_payload=}")
             conversation_response = AudioConversationController().resume_conversation(
                 **workflow_payload
             )

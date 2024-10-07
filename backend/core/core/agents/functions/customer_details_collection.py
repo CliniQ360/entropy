@@ -15,6 +15,9 @@ from core.utils.vertex_ai_helper.gemini_helper import (
 from core.utils.openai_helper import llm_4o, llm_4omini
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from core.agents.functions.prompt_config import OpenAIPrompts, GeminiPrompts
+from core import logger
+
+logging = logger(__name__)
 
 
 def welcome_message(state: SahayakState):
@@ -291,6 +294,7 @@ def extract_user_details(state: SahayakState):
     #     User response: {state.get("user_message")[-1]}.
     #     If values are not present, return None."""
     # Enforce structured output
+    logging.info("Inside extract_user_details")
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
         extractor_instructions = GeminiPrompts().extractor_instructions
         extractor_prompt = extractor_instructions.format(

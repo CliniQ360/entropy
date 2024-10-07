@@ -4,6 +4,7 @@ from core.agents.schemas.output_schemas import (
     UserDocumentDetails,
     GeneratedQuestion,
     UserIntent,
+    UserIntent2,
 )
 from num2words import num2words
 import re
@@ -116,6 +117,238 @@ def submit_form(state: SahayakState):
         }
 
 
+def get_bureau_based_offers(state: SahayakState):
+    credit_base_url = os.environ["CREDIT_BASE_URL"]
+    search_url = f"{credit_base_url}/v1/credit/search"
+    submit_url = f"{credit_base_url}/v1/credit/submitForm"
+    select_url = f"{credit_base_url}/v1/credit/select"
+    get_txn_url = f"{credit_base_url}/v1/txn_details"
+    get_aa_url = f"{credit_base_url}/v1/credit/getAAUrl"
+    get_bureau_offer_url = f"{credit_base_url}/v1/getApprovedOffers"
+    # making initial search call
+    search_resp, search_resp_code = APIInterface().post_with_params(
+        route=search_url, params={"user_id": "3"}
+    )
+    collected_details_list = state.get("customer_details", None)
+    customer_details = {}
+    if collected_details_list:
+        for item in collected_details_list:
+            if isinstance(item, dict):
+                collected_details = item
+            else:
+                collected_details = item.dict()
+            for key, value in collected_details.items():
+                if (
+                    value != None
+                    and value != " "
+                    and value != "None"
+                    and value != "NA"
+                    and value != 0
+                ):
+                    customer_details[key] = value
+        logging.info(customer_details)
+    txn_id = search_resp.get("txn_id")
+    logging.info("Sleeping for 5 seconds")
+    time.sleep(5)
+    user_contact_number = customer_details.get("contactNumber")
+    user_contact_number = re.sub("[^A-Za-z0-9]+", "", user_contact_number)
+    finvu_user_id = f"{user_contact_number}@finvu"
+    user_income = customer_details.get("income")
+    customer_details.update(
+        {
+            "bureauConsent": True,
+            "aa_id": finvu_user_id,
+            "income": str(user_income),
+            "contactNumber": user_contact_number,
+        }
+    )
+    submit_payload = {"loanForm": customer_details}
+    logging.info(f"{submit_payload=}")
+    json_payload = json.dumps(submit_payload)
+    submit_resp, submit_resp_code = APIInterface().post_with_params(
+        route=submit_url, params={"txn_id": txn_id}, data=json_payload
+    )
+    if submit_resp_code == 200:
+        select_resp, select_resp_code = APIInterface().post_with_params(
+            route=select_url, params={"txn_id": txn_id}
+        )
+        offer_list = []
+        wait_seconds = 0
+        while wait_seconds <= 60:
+            logging.info(f"Getting bureau based offers for {txn_id=}")
+            get_bureau_offer_resp, get_bureau_offer_resp_code = APIInterface().get(
+                route=get_bureau_offer_url, params={"txn_id": txn_id}
+            )
+            if get_bureau_offer_resp is not None:
+                logging.info(f"Received bureau based offer for {txn_id=}")
+                offer_list = get_bureau_offer_resp.get("offer_list")
+                break
+            logging.info(f"Did not receive bureau based offer for {txn_id=}")
+            sleep_seconds = 10
+            logging.info(f"Sleeping for {sleep_seconds} seconds")
+            time.sleep(sleep_seconds)
+            wait_seconds += sleep_seconds
+        current_action = None
+        counter = 0
+        while current_action != "ON_SELECT_CST":
+            if counter == 10:
+                logging.info("Did not receive submit form response.")
+                break
+            get_txn_resp, get_txn_resp_code = APIInterface().get(
+                route=get_txn_url, params={"txn_id": txn_id}
+            )
+            current_action = get_txn_resp.get("current_action")
+            logging.info(f"{current_action=}")
+            logging.info(f"Sleeping for 5 seconds")
+            time.sleep(5)
+            counter += 1
+        get_aa_resp, get_aa_resp_code = APIInterface().get(
+            route=get_aa_url, params={"user_id": finvu_user_id, "txn_id": txn_id}
+        )
+        aa_url = get_aa_resp.get("aa_url")
+        logging.info(f"{aa_url=}")
+        return {
+            "aa_url": aa_url,
+            "offer_list": offer_list,
+            "txn_id": txn_id,
+            "modified": False,
+        }
+    else:
+        return {
+            "aa_url": None,
+            "txn_id": txn_id,
+            "agent_message": [f"Error in submitting the form. Please try again later."],
+            "modified": False,
+        }
+
+
+def is_bureau_offer_received(state: SahayakState):
+    offer_list = state.get("offer_list")
+    if len(offer_list) == 0:
+        return "get_aa_url"
+    return "summarise_bureau_based_offers"
+
+
+def get_aa_url(state: SahayakState):
+    return {
+        "agent_message": ["Please click proceed to complete account aggregator flow."],
+        "modified": False,
+    }
+
+
+def summarise_bureau_based_offers(state: SahayakState):
+    offer_list = state.get("offer_list")
+    language = state.get("language")
+    # Generate summary
+    # summary_prompt = f"""Offer details: {offer_list}.
+    # Act as a financial adviser. From the credit offer list provided above, help customer understand each credit offer in simple paragraph focusing on important information.
+    # Keep the tone conversational and maximum 3 lines per offer."""
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        if language == "hi":
+            offer_summary_instructions = GeminiPrompts().offer_summary_instructions_hi
+        else:
+            offer_summary_instructions = GeminiPrompts().offer_summary_instructions
+        offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
+        offer_summary = llm_flash.invoke(offer_summary_prompt)
+        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
+        summary_in_words = llm_flash.invoke(prompt)
+        print(summary_in_words.content)
+    else:
+        offer_summary_instructions = OpenAIPrompts().offer_summary_instructions
+        offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
+        offer_summary = llm_4omini.invoke(offer_summary_prompt)
+        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
+        summary_in_words = llm_4omini.invoke(prompt)
+        print(summary_in_words.content)
+    offer_summary = offer_summary.content
+    # Write the list of analysis to state
+    return {
+        "offer_summary": offer_summary,
+        "agent_message": [offer_summary],
+        "agent_message_modified": summary_in_words.content,
+        "modified": True,
+    }
+
+
+def human_bureau_offer_feedback(state: SahayakState):
+    """No-op node that should be interrupted on"""
+    pass
+
+
+def user_intent_2(state: SahayakState):
+    logging.info("Inside user_intent_2")
+
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        structured_llm = llm_flash.with_structured_output(UserIntent2)
+        user_intent_instructions = GeminiPrompts().user_intent_1_instructions
+        user_intent_prompt = user_intent_instructions.format(
+            user_message=state.get("user_message")[-1]
+        )
+    else:
+        structured_llm = llm_4omini.with_structured_output(UserIntent2)
+        user_intent_instructions = OpenAIPrompts().user_intent_1_instructions
+        user_intent_prompt = user_intent_instructions.format(
+            user_message=state.get("user_message")[-1]
+        )
+
+    llm_response = structured_llm.invoke(user_intent_prompt)
+    user_intent = llm_response.user_intent
+    if user_intent.lower().strip() == "question":
+        return "answer_user_query_on_bureau_offer"
+    elif user_intent.lower().strip() == "acknowledgement":
+        return "select_offer"
+    return "aa_redirect"
+
+
+def answer_user_query_on_bureau_offer(state: SahayakState):
+    offer_list = state.get("offer_list")
+    language = state.get("language")
+    logging.info("Inside answer_user_query_on_bureau_offer")
+    # qna_prompt = f"""Offer details : {offer_list}.
+    # Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
+    # user_query: {state.get("user_message")[-1]}"""
+    if os.environ.get("LLM_CONFIG") == "GOOGLE":
+        if language == "hi":
+            offer_qna_instructions = GeminiPrompts().offer_qna_instructions_hi
+            offer_qna_prompt = offer_qna_instructions.format(
+                offer_list=offer_list, user_query=state.get("user_message")[-1]
+            )
+            llm_response = llm_flash.invoke(offer_qna_prompt)
+            prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. Generate output in Hindi. input_text: {llm_response.content}"
+            llm_response_in_words = llm_flash.invoke(prompt)
+            print(llm_response_in_words.content)
+        else:
+            offer_qna_instructions = GeminiPrompts().offer_qna_instructions
+            offer_qna_prompt = offer_qna_instructions.format(
+                offer_list=offer_list, user_query=state.get("user_message")[-1]
+            )
+            llm_response = llm_flash.invoke(offer_qna_prompt)
+            prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {llm_response.content}"
+            llm_response_in_words = llm_flash.invoke(prompt)
+            print(llm_response_in_words.content)
+    else:
+        offer_qna_instructions = OpenAIPrompts().offer_qna_instructions
+        offer_qna_prompt = offer_qna_instructions.format(
+            offer_list=offer_list, user_query=state.get("user_message")[-1]
+        )
+        llm_response = llm_4omini.invoke(offer_qna_prompt)
+        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {llm_response.content}"
+        llm_response_in_words = llm_4omini.invoke(prompt)
+        print(llm_response_in_words.content)
+    answer = llm_response.content
+    logging.info(f"{answer=}")
+    return {
+        "agent_message": [answer],
+        "agent_message_modified": llm_response_in_words.content,
+        "modified": True,
+    }
+
+
+def aa_redirect(state: SahayakState):
+    """No-op node that should be interrupted on"""
+    pass
+
+
 def collect_updated_details(state: SahayakState):
     return {
         "agent_message": ["Please let me know what do u want to update."],
@@ -124,6 +357,7 @@ def collect_updated_details(state: SahayakState):
 
 
 def human_update_feedback(state: SahayakState):
+    """No-op node that should be interrupted on"""
     pass
 
 
