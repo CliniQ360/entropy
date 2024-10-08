@@ -280,13 +280,13 @@ def user_intent_2(state: SahayakState):
 
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
         structured_llm = llm_flash.with_structured_output(UserIntent2)
-        user_intent_instructions = GeminiPrompts().user_intent_1_instructions
+        user_intent_instructions = GeminiPrompts().user_intent_2_instructions
         user_intent_prompt = user_intent_instructions.format(
             user_message=state.get("user_message")[-1]
         )
     else:
         structured_llm = llm_4omini.with_structured_output(UserIntent2)
-        user_intent_instructions = OpenAIPrompts().user_intent_1_instructions
+        user_intent_instructions = OpenAIPrompts().user_intent_2_instructions
         user_intent_prompt = user_intent_instructions.format(
             user_message=state.get("user_message")[-1]
         )

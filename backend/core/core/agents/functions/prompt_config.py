@@ -221,6 +221,9 @@ class GeminiPrompts:
         self.user_intent_1_instructions = """User message: {user_message}.
         Classify the user_message provided above between two categories: ["question", "acknowledgment"]. Respond in one word."""
 
+        self.user_intent_2_instructions = """User message: {user_message}.
+        Classify the user_message provided above between two categories: ["question", "acknowledgment", "get_more_offers"]. Respond in one word."""
+
         self.offer_summary_instructions = """Offer details: {offer_list}.
         Act as a financial adviser. From the credit offer list provided above, help customer understand each credit offer in simple paragraph focusing on important information. 
         Output should be in maximum 200 english characters including spaces and special characters. Keep the tone conversational."""
