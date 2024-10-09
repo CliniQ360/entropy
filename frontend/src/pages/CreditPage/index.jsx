@@ -99,11 +99,13 @@ const CreditPage = () => {
           setProgressValue(50);
         } else if (res?.payload?.data?.next_state === "human_selection") {
           setProgressValue(40);
-        } else if (
-          res?.payload?.data?.next_state === "human_bureau_offer_feedback"
-        ) {
-          navigate("/credit/availableOffers");
         }
+
+        // else if (
+        //   res?.payload?.data?.next_state === "human_bureau_offer_feedback"
+        // ) {
+        //   navigate("/credit/availableOffers");
+        // }
         clearBlobUrl();
       })
       .catch((error) => {

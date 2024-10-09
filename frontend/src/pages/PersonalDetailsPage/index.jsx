@@ -24,6 +24,7 @@ import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice"
 import { MediaContext } from "../../context/mediaContext";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
 import { Element, scroller } from "react-scroll";
+import CustomLoader from "../../components/CustomLoader";
 
 const PersonalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -214,9 +215,10 @@ const PersonalDetailsPage = () => {
   };
 
   useEffect(() => {
+    console.log("The Next State is : ", nextState);
     if (
-      nextState === "submit_form" ||
-      sessionStorage.getItem("next_state") === "submit_form"
+      nextState === "get_bureau_based_offers" ||
+      sessionStorage.getItem("next_state") === "get_bureau_based_offers"
     ) {
       setShowLoader(true);
       setProcessing(true);
@@ -658,6 +660,7 @@ const PersonalDetailsPage = () => {
 
   return (
     <>
+      <CustomLoader open={showLoader} />
       <PersonalDetailsContainer>
         <DocumentHeaderSection>
           <Typography
