@@ -82,17 +82,25 @@ function FacebookCircularProgress(props) {
 }
 
 const CustomTimer = ({ open, onClose, setShowTimer }) => {
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(120);
 
   useEffect(() => {
-    if (timeLeft > 0) {
+    if (open) {
       const timerId = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
+        setTimeLeft((prevTime) => {
+          if (prevTime > 0) {
+            return prevTime - 1;
+          } else {
+            clearInterval(timerId);
+            return 0; // Stop the timer at 0
+          }
+        });
       }, 1000);
 
-      return () => clearInterval(timerId);
+      return () => clearInterval(timerId); // Clean up the interval when component unmounts
     }
-  }, [timeLeft]);
+  }, [open]);
+
   return (
     open && (
       <TimeContainer open={true}>

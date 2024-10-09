@@ -25,6 +25,7 @@ import { MediaContext } from "../../context/mediaContext";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
 import { Element, scroller } from "react-scroll";
 import CustomLoader from "../../components/CustomLoader";
+import CustomTimer from "../../components/CustomTimer";
 
 const PersonalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -662,7 +663,7 @@ const PersonalDetailsPage = () => {
 
   return (
     <>
-      <CustomLoader open={showLoader} />
+      <CustomTimer open={showLoader} />
       <PersonalDetailsContainer>
         <DocumentHeaderSection>
           <Typography
