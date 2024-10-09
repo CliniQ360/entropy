@@ -2,8 +2,6 @@ import {
   Box,
   Divider,
   FormControl,
-  FormControlLabel,
-  Radio,
   RadioGroup,
   Stack,
   styled,
@@ -62,7 +60,7 @@ const SelectBoxContainer = styled("div")(({ theme }) => ({
   border: "1px solid #9E9E9E",
   padding: theme.spacing(4),
   borderRadius: "8px",
-  width: 320,
+  width: "100%",
   backgroundColor: "#FFFFFF",
   flex: "0 0 auto",
 }));
