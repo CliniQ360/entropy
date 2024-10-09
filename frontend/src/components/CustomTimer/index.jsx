@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { Backdrop, keyframes, Stack, styled, Typography } from "@mui/material";
+import {
+  Backdrop,
+  keyframes,
+  Stack,
+  styled,
+  Typography,
+  Box,
+} from "@mui/material";
+import CircularProgress, {
+  circularProgressClasses,
+} from "@mui/material/CircularProgress";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
 
 const TimeContainer = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -29,7 +42,57 @@ const DotsAnimationContainer = styled("span")(({ theme }) => ({
   },
 }));
 
+function FacebookCircularProgress(props) {
+  return (
+    <Box sx={{ position: "relative", marginTop: 2 }}>
+      <CircularProgress
+        variant="determinate"
+        sx={(theme) => ({
+          color: theme.palette.grey[200],
+          ...theme.applyStyles("dark", {
+            color: theme.palette.grey[800],
+          }),
+        })}
+        size={40}
+        thickness={4}
+        {...props}
+        value={100}
+      />
+      <CircularProgress
+        variant="indeterminate"
+        disableShrink
+        sx={(theme) => ({
+          color: "#0054BA",
+          animationDuration: "1000ms",
+          position: "absolute",
+          left: 0,
+          [`& .${circularProgressClasses.circle}`]: {
+            strokeLinecap: "round",
+          },
+          ...theme.applyStyles("dark", {
+            color: "#308fe8",
+          }),
+        })}
+        size={40}
+        thickness={4}
+        {...props}
+      />
+    </Box>
+  );
+}
+
 const CustomTimer = ({ open, onClose, setShowTimer }) => {
+  const [timeLeft, setTimeLeft] = useState(60);
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timerId = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+
+      return () => clearInterval(timerId);
+    }
+  }, [timeLeft]);
   return (
     open && (
       <TimeContainer open={true}>
@@ -46,7 +109,41 @@ const CustomTimer = ({ open, onClose, setShowTimer }) => {
             boxShadow: "0 0 10px 3px #d2d2d278",
           }}
         >
-          <svg width="0" height="0">
+          <Typography
+            fontSize={"1.6rem"}
+            color={"#171717"}
+            fontFamily={"plus jakarta sans bold"}
+          >
+            Almost There!
+          </Typography>
+          <Typography
+            fontSize={"1.2rem"}
+            color={"black"}
+            textAlign={"center"}
+            fontFamily={"Inter"}
+          >
+            We are currently fetching the best offers for you. We appreciate
+            your patience!
+          </Typography>
+          <FacebookCircularProgress />
+          <Typography
+            fontSize={"1.2rem"}
+            color={"black"}
+            textAlign={"center"}
+            fontFamily={"Inter"}
+          >
+            {timeLeft} second remaining
+          </Typography>
+        </Stack>
+      </TimeContainer>
+    )
+  );
+};
+
+export default CustomTimer;
+
+{
+  /* <svg width="0" height="0">
             <defs>
               <linearGradient
                 id="gradientColors"
@@ -59,16 +156,11 @@ const CustomTimer = ({ open, onClose, setShowTimer }) => {
                 <stop offset="100%" stopColor="#003aa6" stopOpacity="1" />
               </linearGradient>
             </defs>
-          </svg>
+          </svg> */
+}
 
-          <Typography
-            fontSize={"2.2rem"}
-            color={"#0054BA"}
-            fontFamily={"plus jakarta sans bold"}
-          >
-            Please be patient
-          </Typography>
-          <CountdownCircleTimer
+{
+  /* <CountdownCircleTimer
             isPlaying
             size={200}
             duration={60}
@@ -96,16 +188,5 @@ const CustomTimer = ({ open, onClose, setShowTimer }) => {
                 </Typography>
               </Stack>
             )}
-          </CountdownCircleTimer>
-          <Typography fontSize={"1.5rem"} color={"black"} textAlign={"center"}>
-            Hang tight! We're currently fetching the best offers for you. This
-            won't take long
-            <DotsAnimationContainer className={"dotsAnimation"} />
-          </Typography>
-        </Stack>
-      </TimeContainer>
-    )
-  );
-};
-
-export default CustomTimer;
+          </CountdownCircleTimer> */
+}

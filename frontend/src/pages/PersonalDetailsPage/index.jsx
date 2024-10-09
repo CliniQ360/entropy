@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AudioDataContext } from "../../context/audioDataContext";
 import { useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice";
 import { MediaContext } from "../../context/mediaContext";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
+import { Element, scroller } from "react-scroll";
 
 const PersonalDetailsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -75,6 +76,7 @@ const PersonalDetailsPage = () => {
     setProgressValue,
     setUserResponse,
     setProcessing,
+    messageResponse,
   } = useContext(MediaContext);
   const [showLoader, setShowLoader] = useState(false);
   const { customerDetails } = useContext(AudioDataContext);
@@ -82,6 +84,11 @@ const PersonalDetailsPage = () => {
   const [isFlying, setIsFlying] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
   const [aaRedirectUrl, setAaRedirectUrl] = useState("");
+  const personalDetailsRef = useRef(null);
+  const contactDetailsRef = useRef(null);
+  const addressInfoRef = useRef(null);
+  const professionDetailsRef = useRef(null);
+  const [render, setRender] = useState(false);
 
   let form_aa_URL;
   const [formData, setFormData] = useState({
@@ -322,331 +329,405 @@ const PersonalDetailsPage = () => {
     }
   };
 
+  const handleScrollToSection = (sectionName) => {
+    console.log(`Scrolling to ${sectionName}`);
+    scroller.scrollTo(sectionName, {
+      duration: 1200,
+      delay: 0,
+      smooth: "easeInOutQuart",
+      offset: -50,
+    });
+  };
+
+  useEffect(() => {
+    if (!messageResponse) return;
+    const personalKeywords = [
+      "personal details",
+      "first name",
+      "last name",
+      "dob",
+      "gender",
+    ];
+    const contactKeywords = [
+      "contact information",
+      "email",
+      "phone",
+      "mobile",
+      "contact",
+    ];
+    const addressKeywords = [
+      "address information",
+      "address Line 1",
+      "address Line 2",
+      "city",
+      "zip",
+      "address",
+      "pan",
+    ];
+    const professionKeywords = [
+      "professional details",
+      "job",
+      "occupation",
+      "company",
+      "work",
+      "employment type",
+      "income",
+      "official email id",
+    ];
+
+    const includesKeyword = (keywords) =>
+      keywords.some((keyword) =>
+        messageResponse.toLowerCase().includes(keyword)
+      );
+
+    // Scroll logic only when a specific keyword is detected
+    if (includesKeyword(personalKeywords)) {
+      console.log("Personal Detected");
+      handleScrollToSection("personal-details");
+    } else if (includesKeyword(professionKeywords)) {
+      console.log("Professional Detected");
+      handleScrollToSection("profession-section");
+    } else if (includesKeyword(contactKeywords)) {
+      console.log("Contact Detected");
+      handleScrollToSection("contact-details");
+    } else if (includesKeyword(addressKeywords)) {
+      console.log("Address Detected");
+      handleScrollToSection("address-info");
+    }
+  }, [messageResponse]);
+
   const steps = [
     {
       accordionSummary: "Personal Details",
       accordionDetail: (
-        <>
-          <FormControl fullWidth>
-            <FormLabel htmlFor="firstName">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.firstName ? "success" : "disabled"}
-                />
-                First Name
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+        <Element name="personal-details">
+          <Box ref={personalDetailsRef} id="personal-details">
+            <FormControl fullWidth>
+              <FormLabel htmlFor="firstName">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.firstName ? "success" : "disabled"}
+                  />
+                  First Name
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="lastName">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.lastName ? "success" : "disabled"}
-                />
-                Last Name
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="lastName">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.lastName ? "success" : "disabled"}
+                  />
+                  Last Name
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="dob">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.dob ? "success" : "disabled"}
-                />
-                Date of Birth
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="date"
-              id="dob"
-              name="dob"
-              value={formData.dob}
-              onChange={handleInputChange}
-              InputLabelProps={{ shrink: true }}
-            />
-          </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="dob">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.dob ? "success" : "disabled"}
+                  />
+                  Date of Birth
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="date"
+                id="dob"
+                name="dob"
+                value={formData.dob}
+                onChange={handleInputChange}
+                InputLabelProps={{ shrink: true }}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="gender">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.gender ? "success" : "disabled"}
-                />
-                Gender
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-        </>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="gender">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.gender ? "success" : "disabled"}
+                  />
+                  Gender
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+          </Box>
+        </Element>
       ),
     },
     {
       accordionSummary: "Contact Information",
       accordionDetail: (
-        <>
-          <FormControl fullWidth>
-            <FormLabel htmlFor="email">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.email ? "success" : "disabled"}
-                />
-                Email
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <FormLabel htmlFor="contactNumber">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.contactNumber ? "success" : "disabled"}
-                />
-                Contact Number
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="tel"
-              id="contactNumber"
-              name="contactNumber"
-              value={formData.contactNumber}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+        <Element name="contact-details">
+          <Box ref={contactDetailsRef} id="contact-details">
+            <FormControl fullWidth>
+              <FormLabel htmlFor="email">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.email ? "success" : "disabled"}
+                  />
+                  Email
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="contactNumber">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.contactNumber ? "success" : "disabled"}
+                  />
+                  Contact Number
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="tel"
+                id="contactNumber"
+                name="contactNumber"
+                value={formData.contactNumber}
+                onChange={handleInputChange}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="pan">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.pan ? "success" : "disabled"}
-                />
-                PAN
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="pan"
-              name="pan"
-              value={formData.pan}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-        </>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="pan">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.pan ? "success" : "disabled"}
+                  />
+                  PAN
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="pan"
+                name="pan"
+                value={formData.pan}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+          </Box>
+        </Element>
       ),
     },
     {
       accordionSummary: "Address Information",
       accordionDetail: (
-        <>
-          <FormControl fullWidth>
-            <FormLabel htmlFor="addressL1">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.addressL1 ? "success" : "disabled"}
-                />
-                Address Line 1
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="addressL1"
-              name="addressL1"
-              value={formData.addressL1}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+        <Element name="address-info">
+          <Box ref={addressInfoRef} id="address-info">
+            <FormControl fullWidth>
+              <FormLabel htmlFor="addressL1">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.addressL1 ? "success" : "disabled"}
+                  />
+                  Address Line 1
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="addressL1"
+                name="addressL1"
+                value={formData.addressL1}
+                onChange={handleInputChange}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="addressL2">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.addressL2 ? "success" : "disabled"}
-                />
-                Address Line 2
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="addressL2"
-              name="addressL2"
-              value={formData.addressL2}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="addressL2">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.addressL2 ? "success" : "disabled"}
+                  />
+                  Address Line 2
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="addressL2"
+                name="addressL2"
+                value={formData.addressL2}
+                onChange={handleInputChange}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="city">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.city ? "success" : "disabled"}
-                />
-                City
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="city">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.city ? "success" : "disabled"}
+                  />
+                  City
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="city"
+                name="city"
+                value={formData.city}
+                onChange={handleInputChange}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="state">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.state ? "success" : "disabled"}
-                />
-                State
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="state"
-              name="state"
-              value={formData.state}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="state">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.state ? "success" : "disabled"}
+                  />
+                  State
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="state"
+                name="state"
+                value={formData.state}
+                onChange={handleInputChange}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="pincode">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.pincode ? "success" : "disabled"}
-                />
-                Pincode
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="pincode"
-              name="pincode"
-              value={formData.pincode}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-        </>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="pincode">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.pincode ? "success" : "disabled"}
+                  />
+                  Pincode
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="pincode"
+                name="pincode"
+                value={formData.pincode}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+          </Box>
+        </Element>
       ),
     },
     {
       accordionSummary: "Professional Details",
       accordionDetail: (
-        <>
-          <FormControl fullWidth>
-            <FormLabel htmlFor="companyName">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.companyName ? "success" : "disabled"}
-                />
-                Company Name
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="companyName"
-              name="companyName"
-              value={formData.companyName}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <FormLabel htmlFor="officialEmail">
-              {" "}
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.officialEmail ? "success" : "disabled"}
-                />
-                Official Email
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="officialEmail"
-              name="officialEmail"
-              value={formData.officialEmail}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <FormLabel htmlFor="employmentType">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.employmentType ? "success" : "disabled"}
-                />
-                Employment Type
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="text"
-              id="employmentType"
-              name="employmentType"
-              value={formData.employmentType}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <FormLabel htmlFor="contactNumber">
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <CheckIcon
-                  fontSize="8px"
-                  color={formData.income ? "success" : "disabled"}
-                />
-                Income
-              </Stack>
-            </FormLabel>
-            <TextField
-              type="number"
-              id="income"
-              name="income"
-              value={formData.income}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          {/* <FormControl fullWidth>
+        <Element name="profession-section">
+          <Box ref={professionDetailsRef} id="profession-section">
+            <FormControl fullWidth>
+              <FormLabel htmlFor="companyName">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.companyName ? "success" : "disabled"}
+                  />
+                  Company Name
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="companyName"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="officialEmail">
+                {" "}
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.officialEmail ? "success" : "disabled"}
+                  />
+                  Official Email
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="officialEmail"
+                name="officialEmail"
+                value={formData.officialEmail}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="employmentType">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.employmentType ? "success" : "disabled"}
+                  />
+                  Employment Type
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="text"
+                id="employmentType"
+                name="employmentType"
+                value={formData.employmentType}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <FormLabel htmlFor="contactNumber">
+                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                  <CheckIcon
+                    fontSize="8px"
+                    color={formData.income ? "success" : "disabled"}
+                  />
+                  Income
+                </Stack>
+              </FormLabel>
+              <TextField
+                type="number"
+                id="income"
+                name="income"
+                value={formData.income}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+            {/* <FormControl fullWidth>
           <FormLabel htmlFor="udyamNumber">Udyam Number</FormLabel>
           <TextField
             type="text"
@@ -656,7 +737,8 @@ const PersonalDetailsPage = () => {
             onChange={handleInputChange}
           />
         </FormControl> */}
-        </>
+          </Box>
+        </Element>
       ),
     },
   ];
