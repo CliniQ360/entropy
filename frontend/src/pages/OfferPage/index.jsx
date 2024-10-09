@@ -2,8 +2,6 @@ import {
   Box,
   Divider,
   FormControl,
-  FormControlLabel,
-  Radio,
   RadioGroup,
   Stack,
   styled,
@@ -24,8 +22,6 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useLocation } from "react-router-dom";
-import { AudioDataContext } from "../../context/audioDataContext";
 import { useDispatch } from "react-redux";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
 import CustomLoader from "../../components/CustomLoader";
@@ -59,7 +55,7 @@ const SelectBoxContainer = styled("div")(({ theme }) => ({
   border: "1px solid #9E9E9E",
   padding: theme.spacing(4),
   borderRadius: "8px",
-  width: 320,
+  width: "100%",
   backgroundColor: "#FFFFFF",
   flex: "0 0 auto",
 }));
@@ -168,7 +164,7 @@ const AvailableOffersPage = () => {
       threadId: thread_id,
       uploadFlag: uploadFlag,
       state: "refresh_offer",
-      language: sessionStorage.getItem("activeLanguage"), 
+      language: sessionStorage.getItem("activeLanguage"),
     };
     const setTimeoutSeconds = showTimer ? 48000 : 0;
     setTimeout(() => {

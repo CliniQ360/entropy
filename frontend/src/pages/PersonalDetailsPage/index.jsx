@@ -156,7 +156,7 @@ const PersonalDetailsPage = () => {
         threadId: sessionStorage.getItem("thread_id"),
         uploadFlag: sessionStorage.getItem("document_upload_flag"),
         state: sessionStorage.getItem("next_state"),
-        language: sessionStorage.getItem("activeLanguage"), 
+        language: sessionStorage.getItem("activeLanguage"),
       };
       dispatch(agentConversation(payload)).then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
@@ -273,7 +273,7 @@ const PersonalDetailsPage = () => {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
             state: sessionStorage.getItem("next_state"),
-            language: sessionStorage.getItem("activeLanguage"), 
+            language: sessionStorage.getItem("activeLanguage"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
@@ -675,7 +675,7 @@ const PersonalDetailsPage = () => {
         </DocumentHeaderSection>
         <FormContainer>
           {steps.map((step, index) => (
-            <Stack flexDirection={"column"} gap={4}>
+            <Stack flexDirection={"column"} gap={5} mb={5}>
               <Stack flexDirection={"row"} alignItems={"center"}>
                 <Box mr={2}>
                   {!checkError(index) ? (
