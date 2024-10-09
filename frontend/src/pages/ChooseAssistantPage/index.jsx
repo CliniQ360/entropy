@@ -261,9 +261,13 @@ const ChooseAssistant = () => {
             textAlign={"center"}
             sx={{ fontSize: "1.2rem", color: "#535353" }}
           >
-            Welcome to CliniQ-360! My name is{" "}
-            {activeButton === 0 ? "Raju" : "Rani"} and I am excited to assist
-            you in your credit journey!
+            {activeLanguage === 0
+              ? "Welcome to CliniQ-360! My name is " +
+                (activeButton === 0 ? "Raju" : "Rani") +
+                " and I am excited to assist you in your credit journey!"
+              : "क्लिनीक-360 में आपका स्वागत है! मेरा नाम " +
+                (activeButton === 0 ? "राजू" : "रानी") +
+                " है और मैं आपकी क्रेडिट यात्रा में आपकी सहायता करने के लिए उत्साहित हूं !"}
           </Typography>
         </Stack>
       </AssistantProfilePhotoWrapper>

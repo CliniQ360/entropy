@@ -89,6 +89,7 @@ const DocumentUploadPage = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [uploadRestriction, setUploadRestriction] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   /*FOR ADDHAR CARD*/
   const handleFileChange = (event) => {
@@ -205,6 +206,9 @@ const DocumentUploadPage = () => {
             }}
           >
             Please upload your Aadhar and Pan Card Below
+            {/* {activeLanguage === "hi"
+              ? "कृपया नीचे अपने आधार और पैन कार्ड अपलोड करें"
+              : "Please upload your Aadhar and Pan Card Below"} */}
           </Typography>
         </DocumentHeaderSection>
         <UploadDocumentContainer>
