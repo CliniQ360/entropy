@@ -10,7 +10,7 @@ from num2words import num2words
 import re
 from core.utils.external_call import APIInterface
 import os, json, time, base64
-from core.utils.vertex_ai_helper.gemini_helper import llm_flash
+from core.utils.vertex_ai_helper.gemini_helper import llm_flash, llm_pro
 from core.utils.openai_helper import llm_4omini
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from core import logger
@@ -126,59 +126,78 @@ def get_bureau_based_offers(state: SahayakState):
     get_aa_url = f"{credit_base_url}/v1/credit/getAAUrl"
     get_bureau_offer_url = f"{credit_base_url}/v1/getApprovedOffers"
     # making initial search call
-    search_resp, search_resp_code = APIInterface().post_with_params(
-        route=search_url, params={"user_id": "3"}
-    )
-    collected_details_list = state.get("customer_details", None)
-    customer_details = {}
-    if collected_details_list:
-        for item in collected_details_list:
-            if isinstance(item, dict):
-                collected_details = item
-            else:
-                collected_details = item.dict()
-            for key, value in collected_details.items():
-                if (
-                    value != None
-                    and value != " "
-                    and value != "None"
-                    and value != "NA"
-                    and value != 0
-                ):
-                    customer_details[key] = value
-        logging.info(customer_details)
-    txn_id = search_resp.get("txn_id")
-    logging.info("Sleeping for 5 seconds")
-    time.sleep(5)
-    user_contact_number = customer_details.get("contactNumber")
-    user_contact_number = re.sub("[^A-Za-z0-9]+", "", user_contact_number)
-    finvu_user_id = f"{user_contact_number}@finvu"
-    user_income = customer_details.get("income")
-    customer_details.update(
-        {
-            "bureauConsent": True,
-            "aa_id": finvu_user_id,
-            "income": str(user_income),
-            "contactNumber": user_contact_number,
-        }
-    )
-    submit_payload = {"loanForm": customer_details}
-    logging.info(f"{submit_payload=}")
-    json_payload = json.dumps(submit_payload)
-    submit_resp, submit_resp_code = APIInterface().post_with_params(
-        route=submit_url, params={"txn_id": txn_id}, data=json_payload
-    )
+    # TODO: Remove this once the API is ready
+    # search_resp, search_resp_code = APIInterface().post_with_params(
+    #     route=search_url, params={"user_id": "3"}
+    # )
+    # collected_details_list = state.get("customer_details", None)
+    # customer_details = {}
+    # if collected_details_list:
+    #     for item in collected_details_list:
+    #         if isinstance(item, dict):
+    #             collected_details = item
+    #         else:
+    #             collected_details = item.dict()
+    #         for key, value in collected_details.items():
+    #             if (
+    #                 value != None
+    #                 and value != " "
+    #                 and value != "None"
+    #                 and value != "NA"
+    #                 and value != 0
+    #             ):
+    #                 customer_details[key] = value
+    #     logging.info(customer_details)
+    # txn_id = search_resp.get("txn_id")
+    # logging.info("Sleeping for 5 seconds")
+    # time.sleep(5)
+    # user_contact_number = customer_details.get("contactNumber")
+    # user_contact_number = re.sub("[^A-Za-z0-9]+", "", user_contact_number)
+    # finvu_user_id = f"{user_contact_number}@finvu"
+    # user_income = customer_details.get("income")
+    # customer_details.update(
+    #     {
+    #         "bureauConsent": True,
+    #         "aa_id": finvu_user_id,
+    #         "income": str(user_income),
+    #         "contactNumber": user_contact_number,
+    #     }
+    # )
+    # submit_payload = {"loanForm": customer_details}
+    # logging.info(f"{submit_payload=}")
+    # json_payload = json.dumps(submit_payload)
+    # submit_resp, submit_resp_code = APIInterface().post_with_params(
+    #     route=submit_url, params={"txn_id": txn_id}, data=json_payload
+    # )
+    submit_resp_code = 200
+    finvu_user_id = "9511878113@finvu"
+    txn_id = "b51ca76d-b6c4-4550-8688-f58da4402648"
     if submit_resp_code == 200:
         select_resp, select_resp_code = APIInterface().post_with_params(
             route=select_url, params={"txn_id": txn_id}
         )
         offer_list = []
         wait_seconds = 0
+        aa_url = None
         while wait_seconds <= 60:
             logging.info(f"Getting bureau based offers for {txn_id=}")
             get_bureau_offer_resp, get_bureau_offer_resp_code = APIInterface().get(
                 route=get_bureau_offer_url, params={"txn_id": txn_id}
             )
+            logging.info(f"Getting txn status for {txn_id=}")
+            get_txn_resp, get_txn_resp_code = APIInterface().get(
+                route=get_txn_url, params={"txn_id": txn_id}
+            )
+            current_action = get_txn_resp.get("current_action")
+            logging.info(f"{current_action=}")
+            if current_action == "ON_SELECT_CST":
+                logging.info(f"Getting AA Url for {txn_id=}")
+                get_aa_resp, get_aa_resp_code = APIInterface().get(
+                    route=get_aa_url,
+                    params={"user_id": finvu_user_id, "txn_id": txn_id},
+                )
+                aa_url = get_aa_resp.get("aa_url")
+                logging.info(f"{aa_url=}")
             if get_bureau_offer_resp is not None:
                 logging.info(f"Received bureau based offer for {txn_id=}")
                 offer_list = get_bureau_offer_resp.get("offer_list")
@@ -188,25 +207,7 @@ def get_bureau_based_offers(state: SahayakState):
             logging.info(f"Sleeping for {sleep_seconds} seconds")
             time.sleep(sleep_seconds)
             wait_seconds += sleep_seconds
-        current_action = None
-        counter = 0
-        while current_action != "ON_SELECT_CST":
-            if counter == 10:
-                logging.info("Did not receive submit form response.")
-                break
-            get_txn_resp, get_txn_resp_code = APIInterface().get(
-                route=get_txn_url, params={"txn_id": txn_id}
-            )
-            current_action = get_txn_resp.get("current_action")
-            logging.info(f"{current_action=}")
-            logging.info(f"Sleeping for 5 seconds")
-            time.sleep(5)
-            counter += 1
-        get_aa_resp, get_aa_resp_code = APIInterface().get(
-            route=get_aa_url, params={"user_id": finvu_user_id, "txn_id": txn_id}
-        )
-        aa_url = get_aa_resp.get("aa_url")
-        logging.info(f"{aa_url=}")
+            logging.info(f"{wait_seconds=}")
         return {
             "aa_url": aa_url,
             "offer_list": offer_list,
@@ -290,7 +291,7 @@ def user_intent_2(state: SahayakState):
         user_intent_prompt = user_intent_instructions.format(
             user_message=state.get("user_message")[-1]
         )
-
+    logging.info(f"{user_intent_prompt=}")
     llm_response = structured_llm.invoke(user_intent_prompt)
     user_intent = llm_response.user_intent
 
@@ -347,8 +348,12 @@ def answer_user_query_on_bureau_offer(state: SahayakState):
 
 
 def aa_redirect(state: SahayakState):
-    """No-op node that should be interrupted on"""
-    pass
+    return {
+        "agent_message": [
+            "Sure. To get more offers, we would like you to complete the account aggregator flow. Please click on proceed."
+        ],
+        "modified": False,
+    }
 
 
 def collect_updated_details(state: SahayakState):

@@ -221,12 +221,11 @@ class GeminiPrompts:
         self.user_intent_1_instructions = """User message: {user_message}.
         Classify the user_message provided above between two categories: ["question", "acknowledgment"]. Respond in one word."""
 
-        self.user_intent_2_instructions = """You are a helpful assistant that understands user sentiment and intent.
-        A user has provided a sentence related to an offer they were shown.
-        Your task is to determine if the user:
-        1. Likes the offer and whant to proceed with it. In this case, respond with "proceed_with_current_offer".
-        2. Wants to explore other offers. In this case, respond with "get_more_offers".
-        3. Has doubts or questions about the offer and needs clarification. In this case, respond with "get_more_details".
+        self.user_intent_2_instructions = """You are a helpful assistant that understands user intent.
+        A user has provided a message related to an offer they were shown. Output should strictly be one of the following:
+        1. "proceed_with_current_offer" - If the user likes the offer and wants to proceed with it.
+        2. "get_more_offers" - If the user wants to explore other offers.
+        3. "get_more_details" - If the user has doubts or questions about the offer and needs clarification.
         Analyze the following sentence and provide your response with one of the options above.
         user_message: {user_message}.
         Respond in one word."""

@@ -171,6 +171,22 @@ class AudioConversationController:
                         },
                         as_node=state,
                     )
+                elif state == "human_bureau_offer_feedback":
+                    workflow.update_state(
+                        thread,
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                            "offer_item_id": kwargs.get("offer_item_id"),
+                        },
+                        as_node=state,
+                    )
+                elif state == "aa_redirect":
+                    workflow.update_state(
+                        thread,
+                        {"dummy": "aa_redirect"},
+                        as_node=state,
+                    )
                 elif state == "resume_after_aa_redirect":
                     workflow.update_state(
                         thread,
