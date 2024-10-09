@@ -138,7 +138,7 @@ class GeminiPrompts:
         self.extractor_instructions = """You are tasked with extracting the user details from the customer's response.
         Question asked to the user: {agent_question}.
         User response: {user_answer}.
-        If values are not present, return None."""
+        If the information is not present in the user response, return 'None'."""
 
         self.intent_classification_instructions = """You are tasked to identify the intent from the user message.
         The user could either agree to the information or ask for updates. Classify the intent accordingly.
@@ -221,8 +221,15 @@ class GeminiPrompts:
         self.user_intent_1_instructions = """User message: {user_message}.
         Classify the user_message provided above between two categories: ["question", "acknowledgment"]. Respond in one word."""
 
-        self.user_intent_2_instructions = """User message: {user_message}.
-        Classify the user_message provided above between two categories: ["question", "acknowledgment", "get_more_offers"]. Respond in one word."""
+        self.user_intent_2_instructions = """You are a helpful assistant that understands user sentiment and intent.
+        A user has provided a sentence related to an offer they were shown.
+        Your task is to determine if the user:
+        1. Likes the offer and whant to proceed with it. In this case, respond with "proceed_with_current_offer".
+        2. Wants to explore other offers. In this case, respond with "get_more_offers".
+        3. Has doubts or questions about the offer and needs clarification. In this case, respond with "get_more_details".
+        Analyze the following sentence and provide your response with one of the options above.
+        user_message: {user_message}.
+        Respond in one word."""
 
         self.offer_summary_instructions = """Offer details: {offer_list}.
         Act as a financial adviser. From the credit offer list provided above, help customer understand each credit offer in simple paragraph focusing on important information. 

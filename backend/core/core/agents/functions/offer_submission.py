@@ -293,9 +293,11 @@ def user_intent_2(state: SahayakState):
 
     llm_response = structured_llm.invoke(user_intent_prompt)
     user_intent = llm_response.user_intent
-    if user_intent.lower().strip() == "question":
+
+    logging.info(f"{user_intent=}")
+    if user_intent.lower().strip() == "get_more_details":
         return "answer_user_query_on_bureau_offer"
-    elif user_intent.lower().strip() == "acknowledgement":
+    elif user_intent.lower().strip() == "proceed_with_current_offer":
         return "select_offer"
     return "aa_redirect"
 
