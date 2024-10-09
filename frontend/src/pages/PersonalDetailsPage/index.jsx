@@ -80,7 +80,7 @@ const PersonalDetailsPage = () => {
     setProcessing,
   } = useContext(MediaContext);
   const [showLoader, setShowLoader] = useState(false);
-  const { customerDetails } = useContext(AudioDataContext);
+  const { customerDetails, setOfferDetails } = useContext(AudioDataContext);
   const personalDetailsRef = useRef(null);
   const contactDetailsRef = useRef(null);
   const addressInfoRef = useRef(null);
@@ -243,6 +243,8 @@ const PersonalDetailsPage = () => {
         setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setUserResponse(res?.payload?.data?.user_message);
+        setOfferDetails(res?.payload?.data?.offer_list);
+
         if (res?.payload?.data?.next_state === "human_bureau_offer_feedback") {
           navigate("/credit/availableOffers");
         }

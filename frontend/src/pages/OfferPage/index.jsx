@@ -224,6 +224,10 @@ const AvailableOffersPage = () => {
   // }, []);
 
   useEffect(() => {
+    console.log(offerDetails);
+  });
+
+  useEffect(() => {
     if (nextState === "resume_after_aa_redirect") {
       setConfirmationDialog(true);
     }
