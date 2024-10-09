@@ -42,7 +42,12 @@ class AudioConversationController:
                         "resume_loan_agreement_signing",
                         "human_bureau_offer_feedback",
                     ],
-                    interrupt_after=["send_ack", "human_refreh_offer", "aa_redirect"],
+                    interrupt_after=[
+                        "send_ack",
+                        "submit_form_ack",
+                        "human_refreh_offer",
+                        "aa_redirect",
+                    ],
                     checkpointer=checkpointer,
                 )
 
@@ -123,7 +128,12 @@ class AudioConversationController:
                         "resume_loan_agreement_signing",
                         "human_bureau_offer_feedback",
                     ],
-                    interrupt_after=["send_ack", "human_refreh_offer", "aa_redirect"],
+                    interrupt_after=[
+                        "send_ack",
+                        "submit_form_ack",
+                        "human_refreh_offer",
+                        "aa_redirect",
+                    ],
                     checkpointer=checkpointer,
                 )
                 print("Workflow compiled")
