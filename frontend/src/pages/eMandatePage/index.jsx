@@ -64,6 +64,14 @@ const EmandatePage = () => {
   const [confirmation, setConfirmation] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState("");
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
+
+  const emandateConsent =
+    activeLanguage === "hi"
+      ? `ई-मैंडेट सेटअप करने" पर क्लिक करके, आप अपनी खाता जानकारी का उपयोग अपने ऋण के लिए भुगतान के एक तरीके के रूप में ई-आदेश स्थापित करने के लिए सहमति देते हैं।`
+      : `By clicking "Setup E-Mandate," you consent to use your account
+            information for setting up an eMandate as a mode of payment for your
+            loan.`;
 
   let emandate_url;
   let payment_url;
@@ -135,7 +143,7 @@ const EmandatePage = () => {
             state: sessionStorage.getItem("next_state"),
             offer_item_id: sessionStorage.getItem("offer_item_id"),
             selected_loan_amount: sessionStorage.getItem("selected_amt"),
-            language: sessionStorage.getItem("activeLanguage"), 
+            language: sessionStorage.getItem("activeLanguage"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
@@ -191,7 +199,7 @@ const EmandatePage = () => {
             state: sessionStorage.getItem("next_state"),
             offer_item_id: sessionStorage.getItem("offer_item_id"),
             selected_loan_amount: sessionStorage.getItem("selected_amt"),
-            language: sessionStorage.getItem("activeLanguage"), 
+            language: sessionStorage.getItem("activeLanguage"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
@@ -254,9 +262,7 @@ const EmandatePage = () => {
               fontFamily: "source sans pro",
             }}
           >
-            By clicking "Setup E-Mandate," you consent to use your account
-            information for setting up an eMandate as a mode of payment for your
-            loan.
+            {emandateConsent}
           </Typography>
         </Stack>
       </EMandateWrapper>
