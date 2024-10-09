@@ -42,8 +42,12 @@ const CreditPage = () => {
     setProcessing,
     processing,
   } = useContext(MediaContext);
-  const { setCustomerDetails, setAaRedirectUrl, setKycRedirectUrl } =
-    useContext(AudioDataContext);
+  const {
+    setCustomerDetails,
+    setAaRedirectUrl,
+    setKycRedirectUrl,
+    setOfferDetails,
+  } = useContext(AudioDataContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false);
@@ -66,7 +70,7 @@ const CreditPage = () => {
       threadId: thread_id,
       uploadFlag: uploadFlag,
       state: sessionStorage.getItem("next_state"),
-      language: sessionStorage.getItem("activeLanguage"), 
+      language: sessionStorage.getItem("activeLanguage"),
     };
     if (sessionStorage.getItem("offer_item_id")) {
       payload.offer_item_id = sessionStorage.getItem("offer_item_id");
@@ -83,8 +87,10 @@ const CreditPage = () => {
         setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setCustomerDetails(res?.payload?.data?.customer_details);
+        setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
         setUserResponse(res?.payload?.data?.user_message);
         setNextState(res?.payload?.data?.next_state);
+        setOfferDetails(res?.payload?.data?.offer_list);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
         setShowLoader(false);
@@ -93,6 +99,10 @@ const CreditPage = () => {
           setProgressValue(50);
         } else if (res?.payload?.data?.next_state === "human_selection") {
           setProgressValue(40);
+        } else if (
+          res?.payload?.data?.next_state === "human_bureau_offer_feedback"
+        ) {
+          navigate("/credit/availableOffers");
         }
         clearBlobUrl();
       })

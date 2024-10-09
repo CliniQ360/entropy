@@ -146,6 +146,10 @@ const BankDetailsPage = () => {
         setAudioResponse(res?.payload?.agent_audio_data);
         setMessageResponse(res?.payload?.agent_message);
         setUserResponse(res?.payload?.user_message);
+        sessionStorage.setItem(
+          "customer_details",
+          JSON.stringify(res?.payload?.customer_details)
+        );
         if (res?.payload?.next_state === "resume_after_emdt_redirect") {
           navigate("/credit/emandate-page");
           setEMandateRedirectUrl(res?.payload?.emndt_redirect_url);
