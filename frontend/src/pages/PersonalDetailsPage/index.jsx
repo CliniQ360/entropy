@@ -86,6 +86,7 @@ const PersonalDetailsPage = () => {
   const contactDetailsRef = useRef(null);
   const addressInfoRef = useRef(null);
   const professionDetailsRef = useRef(null);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -157,14 +158,26 @@ const PersonalDetailsPage = () => {
       "last name",
       "dob",
       "gender",
+      "व्यक्तिगत विवरण",
+      "पहला नाम",
+      "अंतिम नाम",
+      "जन्म तिथि",
+      "लिंग",
     ];
+
     const contactKeywords = [
       "contact information",
       "email",
       "phone",
       "mobile",
       "contact",
+      "संपर्क जानकारी",
+      "ईमेल",
+      "फ़ोन",
+      "मोबाइल",
+      "संपर्क",
     ];
+
     const addressKeywords = [
       "address information",
       "address Line 1",
@@ -173,7 +186,15 @@ const PersonalDetailsPage = () => {
       "zip",
       "address",
       "pan",
+      "पते की जानकारी",
+      "पता लाइन 1",
+      "पता लाइन 2",
+      "शहर",
+      "पिन कोड",
+      "पता",
+      "पैन",
     ];
+
     const professionKeywords = [
       "professional details",
       "job",
@@ -183,6 +204,14 @@ const PersonalDetailsPage = () => {
       "employment type",
       "income",
       "official email id",
+      "पेशेवर विवरण",
+      "नौकरी",
+      "व्यवसाय",
+      "कंपनी",
+      "कार्य",
+      "रोजगार प्रकार",
+      "आय",
+      "आधिकारिक ईमेल आईडी",
     ];
 
     const includesKeyword = (keywords) =>
@@ -316,7 +345,8 @@ const PersonalDetailsPage = () => {
 
   const steps = [
     {
-      accordionSummary: "Personal Details",
+      accordionSummary:
+        activeLanguage === "hi" ? "व्यक्तिगत विवरण" : "Personal Details",
       accordionDetail: (
         <Element name="personal-details">
           <Box ref={personalDetailsRef} id="personal-details">
@@ -401,7 +431,8 @@ const PersonalDetailsPage = () => {
       ),
     },
     {
-      accordionSummary: "Contact Information",
+      accordionSummary:
+        activeLanguage === "hi" ? "संपर्क जानकारी" : "Contact Information",
       accordionDetail: (
         <Element name="contact-details">
           <Box ref={contactDetailsRef} id="contact-details">
@@ -465,7 +496,8 @@ const PersonalDetailsPage = () => {
       ),
     },
     {
-      accordionSummary: "Address Information",
+      accordionSummary:
+        activeLanguage === "hi" ? "पता जानकारी" : "Address Information",
       accordionDetail: (
         <Element name="address-info">
           <Box ref={addressInfoRef} id="address-info">
@@ -568,7 +600,8 @@ const PersonalDetailsPage = () => {
       ),
     },
     {
-      accordionSummary: "Professional Details",
+      accordionSummary:
+        activeLanguage === "hi" ? "व्यावसायिक विवरण" : "Professional Details",
       accordionDetail: (
         <Element name="profession-section">
           <Box ref={professionDetailsRef} id="profession-section">
@@ -669,7 +702,7 @@ const PersonalDetailsPage = () => {
           <Typography
             sx={{ fontSize: "1.4rem", fontWeight: 700, textAlign: "left" }}
           >
-            Customer Details
+            {activeLanguage === "hi" ? "ग्राहक विवरण" : "Customer Details"}
           </Typography>
         </DocumentHeaderSection>
         <FormContainer>
