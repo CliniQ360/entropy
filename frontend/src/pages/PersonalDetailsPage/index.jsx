@@ -609,7 +609,7 @@ const PersonalDetailsPage = () => {
         activeLanguage === "hi" ? "व्यावसायिक विवरण" : "Professional Details",
       accordionDetail: (
         <Element name="profession-section">
-          <Box ref={professionDetailsRef} id="profession-section">
+          <FormBox ref={professionDetailsRef} id="profession-section">
             <FormControl fullWidth>
               <FormLabel htmlFor="companyName">
                 <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
@@ -693,7 +693,7 @@ const PersonalDetailsPage = () => {
             onChange={handleInputChange}
           />
         </FormControl> */}
-          </Box>
+          </FormBox>
         </Element>
       ),
     },
