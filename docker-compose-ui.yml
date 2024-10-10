@@ -4,7 +4,7 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
-    image: cliniq360/entropy-ui:0.2
+    image: cliniq360/entropy-ui:0.3
     container_name: entropy-ui
     ports:
       - "4000:80"
