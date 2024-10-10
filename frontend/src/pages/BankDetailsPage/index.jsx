@@ -67,6 +67,7 @@ const BankDetailsPage = () => {
   const [validateError, setValidateError] = useState(false);
   const [isMatched, setIsMatched] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
   const navigate = useNavigate();
 
   /* USE DISPATCH */
@@ -172,7 +173,7 @@ const BankDetailsPage = () => {
               fontFamily: "plus jakarta sans bold",
             }}
           >
-            Bank Details
+            {activeLanguage === "hi" ? "बैंक विवरण" : "Bank Details"}
           </Typography>
         </BankDetailHeader>
         <BankFormWrapper container>
@@ -193,14 +194,20 @@ const BankDetailsPage = () => {
                   }}
                 >
                   {" "}
-                  Account Holder Name
+                  {activeLanguage === "hi"
+                    ? "खाता धारक का नाम"
+                    : "Account Holder Name"}
                 </Typography>
               </FormLabel>
               <TextField
                 onChange={handleInputChange}
                 name="accHolderName"
                 value={formData.accHolderName}
-                placeholder="Enter Your Bank Name"
+                placeholder={
+                  activeLanguage === "hi"
+                    ? "अपने बैंक का नाम दर्ज क"
+                    : "Enter Your Bank Name"
+                }
                 error={!formData.accHolderName && validateError}
               />
               {!formData.accHolderName && validateError && (
@@ -218,7 +225,7 @@ const BankDetailsPage = () => {
                   }}
                 >
                   {" "}
-                  Account Type
+                  {activeLanguage === "hi" ? "खाता प्रकार" : "Account Type"}
                 </Typography>
               </FormLabel>
               {/* <RadioGroup
@@ -291,7 +298,7 @@ const BankDetailsPage = () => {
                       value="Savings"
                       name="Savings"
                       control={<Radio />}
-                      label="Saving"
+                      label={activeLanguage === "hi" ? "बचत" : "Saving"}
                     />
                   </Box>
                   <Box
@@ -314,7 +321,7 @@ const BankDetailsPage = () => {
                       value="current"
                       name="current"
                       control={<Radio />}
-                      label="Current"
+                      label={activeLanguage === "hi" ? "चालू" : "Current"}
                     />
                   </Box>
                 </Box>
@@ -337,15 +344,18 @@ const BankDetailsPage = () => {
                     fontSize: "1.2rem",
                   }}
                 >
-                  {" "}
-                  IFSC Code
+                  {activeLanguage === "hi" ? "आईएफएससी कोड" : "IFSC Code "}
                 </Typography>
               </FormLabel>
               <TextField
                 onChange={handleInputChange}
                 name="ifscCode"
                 value={formData.ifscCode}
-                placeholder="Enter Your IFSC Code"
+                placeholder={
+                  activeLanguage === "hi"
+                    ? "अपना आईएफएससी कोड दर्ज करें"
+                    : "Enter Your IFSC Code"
+                }
                 error={!formData.ifscCode && validateError}
               />
               {!formData.ifscCode && validateError && (
@@ -366,15 +376,18 @@ const BankDetailsPage = () => {
                     fontSize: "1.2rem",
                   }}
                 >
-                  {" "}
-                  Account Number
+                  {activeLanguage === "hi" ? "खाता संख्या" : "Account Number"}
                 </Typography>
               </FormLabel>
               <TextField
                 onChange={handleInputChange}
                 name="accNo"
                 value={formData.accNo}
-                placeholder="Enter Your Account Number"
+                placeholder={
+                  activeLanguage === "hi"
+                    ? "अपनी खाता संख्या दर्ज करें"
+                    : "Enter Your Account Number"
+                }
                 error={!formData.accNo && validateError}
               />
               {!formData.accNo && validateError && (
@@ -395,15 +408,20 @@ const BankDetailsPage = () => {
                     fontSize: "1.2rem",
                   }}
                 >
-                  {" "}
-                  Re-enter Account Number
+                  {activeLanguage === "hi"
+                    ? "खाता संख्या पुनः दर्ज करें"
+                    : "Re-enter Account Number"}
                 </Typography>
               </FormLabel>
               <TextField
                 onChange={handleReNumChange}
                 name="re_num"
                 value={re_num}
-                placeholder="Enter Your Re-Account Number"
+                placeholder={
+                  activeLanguage === "hi"
+                    ? "अपनी खाता संख्या पुनः दर्ज करें"
+                    : "Enter Your Re-Account Number"
+                }
                 error={!re_num && validateError}
               />
               <Typography color={"red"}>
@@ -425,7 +443,7 @@ const BankDetailsPage = () => {
             variant="contained"
             onClick={handleSubmit}
           >
-            Submit
+            {activeLanguage === "hi" ? "आगे बढ़े" : "Proceed"}
           </Button>
         </Stack>
       </BankDetailWrapper>

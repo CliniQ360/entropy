@@ -251,7 +251,7 @@ const EmandatePage = () => {
               fontFamily: "Plus Jakarta Sans bold",
             }}
           >
-            E-Mandate
+            {activeLanguage === "hi" ? "ई-जनादेश" : "E-Mandate"}
           </Typography>
           <Typography
             sx={{

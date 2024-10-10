@@ -250,7 +250,7 @@ const CustomizeOfferPage = () => {
               variant="contained"
               onClick={handleSubmit}
             >
-              {activeLanguage === "hi" ? "आगे बढ़े" : "Continue"}
+              {activeLanguage === "hi" ? "आगे बढ़े" : "Proceed"}
             </Button>
           </Stack>
         </FormContainer>
