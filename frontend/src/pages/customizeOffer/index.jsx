@@ -72,6 +72,7 @@ const CustomizeOfferPage = () => {
     setProcessing,
   } = useContext(MediaContext);
   const { setKycRedirectUrl } = useContext(AudioDataContext);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
   const navigate = useNavigate();
 
   const handleSliderChange = (event, newValue) => {
@@ -109,7 +110,7 @@ const CustomizeOfferPage = () => {
       offer_item_id: sessionStorage.getItem("offer_item_id"),
       selected_loan_amount: loanAmount,
       state: sessionStorage.getItem("next_state"),
-      language: sessionStorage.getItem("activeLanguage"), 
+      language: sessionStorage.getItem("activeLanguage"),
     };
     dispatch(agentConversation(payload)).then((res) => {
       if (res?.error && Object.keys(res?.error)?.length > 0) {
@@ -158,8 +159,13 @@ const CustomizeOfferPage = () => {
           >
             <CelebrationIcon sx={{ color: "#0561A0" }} />
             <Typography variant="body1">
-              Congratulations! You have been approved a loan of ₹
-              {formatNumber(maxLoanAmount)}
+              {activeLanguage === "hi"
+                ? `बधाई हो! आपका ₹${formatNumber(
+                    maxLoanAmount
+                  )} की लोन राशि स्वीकृत हो गई है `
+                : `Congratulations! You have been approved a loan of ₹ ${formatNumber(
+                    maxLoanAmount
+                  )}`}
             </Typography>
           </Stack>
           <Typography variant="body2">
@@ -213,9 +219,9 @@ const CustomizeOfferPage = () => {
           >
             <InfoOutlinedIcon fontSize="small" />
             <Typography variant="subtitle2" fontSize={12} fontWeight={550}>
-              The displayed EMI amount is indicative in nature, the final EMI
-              amount and associated repayment details will be shown after
-              proceed
+              {activeLanguage === "hi"
+                ? "दिखाई गई ईएमआई राशि सांकेतिक है, अंतिम ईएमआई राशि और संबंधित पुनर्भुगतान विवरणों को आगे की प्रक्रिया के बाद दिखाया जाएगा।"
+                : "The displayed EMI amount is indicative in nature, the final EMIamount and associated repayment details will be shown afterproceed"}
             </Typography>
           </Stack>
           <Stack
@@ -229,8 +235,9 @@ const CustomizeOfferPage = () => {
           >
             <InfoOutlinedIcon fontSize="small" />
             <Typography variant="subtitle2" fontSize={12} fontWeight={550}>
-              You will not be able to reselect the offer amount and tenure after
-              you submitted the details
+              {activeLanguage === "hi"
+                ? "विवरण सबमिट करने के बाद आप ऑफर राशि और कार्यकाल को फिर से नहीं चुन पाएंगे।"
+                : "You will not be able to reselect the offer amount and tenure after you submitted the details"}
             </Typography>
           </Stack>
           <Stack
@@ -243,7 +250,7 @@ const CustomizeOfferPage = () => {
               variant="contained"
               onClick={handleSubmit}
             >
-              Continue
+              {activeLanguage === "hi" ? "आगे बढ़े" : "Continue"}
             </Button>
           </Stack>
         </FormContainer>

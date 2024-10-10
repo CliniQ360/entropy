@@ -32,6 +32,7 @@ import CustomLoader from "../../components/CustomLoader";
 import CustomTimer from "../../components/CustomTimer";
 import { MediaContext } from "../../context/mediaContext";
 import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice";
+import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -178,6 +179,7 @@ const AvailableOffersPage = () => {
   const [confirmationDialog, setConfirmationDialog] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   let form_aa_URL;
 
@@ -312,7 +314,6 @@ const AvailableOffersPage = () => {
           setShowLoader(true);
           setProcessing(true);
           const secondpayload = {
-            threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
             state: sessionStorage.getItem("next_state"),
             language: sessionStorage.getItem("activeLanguage"),
@@ -580,15 +581,11 @@ const AvailableOffersPage = () => {
 
   return (
     <>
-      {!showTimer ? (
-        <CustomLoader open={showLoader} />
-      ) : (
-        <CustomTimer
-          open={showTimer}
-          onClose={() => setShowLoader(false)}
-          setShowTimer={setShowTimer}
-        />
-      )}
+      <CustomLoader open={showLoader} />
+      <RedirectionDialogComponent
+        open={redirectionVal}
+        setRedirectionVal={setRedirectionVal}
+      />
       <AvailableOffersContainer>
         <DocumentHeaderSection>
           <Typography
@@ -862,14 +859,20 @@ const AvailableOffersPage = () => {
             id="alert-dialog-description"
             style={{ textAlign: "center", marginTop: "20px" }}
           >
-            Please don't exit or press back.
+            {activeLanguage === "hi"
+              ? "कृपया बाहर न निकलें या वापस न जाएं ।"
+              : "Please don't exit or press back."}
             <br />
-            Please wait while we are redirecting you to the AA Verification
-            Page.
+
+            {activeLanguage === "hi"
+              ? "कृपया प्रतीक्षा करें, हम आपको एए वेरिफिकेशन पृष्ठ पर पुनः निर्देशित कर रहे हैं ।"
+              : "Please wait while we are redirecting you to the AA Verification Page."}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleDialogSubmit("YES")}>Proceed</Button>
+          <Button onClick={() => handleDialogSubmit("YES")}>
+            {activeLanguage === "hi" ? "आगे बढ़ें" : "Proceed"}
+          </Button>
         </DialogActions>
       </Dialog>
     </>

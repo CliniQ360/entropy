@@ -83,6 +83,7 @@ function FacebookCircularProgress(props) {
 
 const CustomTimer = ({ open, onClose, setShowTimer }) => {
   const [timeLeft, setTimeLeft] = useState(120);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   useEffect(() => {
     if (open) {
@@ -122,7 +123,9 @@ const CustomTimer = ({ open, onClose, setShowTimer }) => {
             color={"#171717"}
             fontFamily={"plus jakarta sans bold"}
           >
-            Almost There!
+            {activeLanguage === "hi"
+              ? "प्रक्रिया लगभग पूरी हो चुकी है"
+              : "Almost There!"}
           </Typography>
           <Typography
             fontSize={"1.2rem"}
@@ -130,8 +133,9 @@ const CustomTimer = ({ open, onClose, setShowTimer }) => {
             textAlign={"center"}
             fontFamily={"Inter"}
           >
-            We are currently fetching the best offers for you. We appreciate
-            your patience!
+            {activeLanguage === "hi"
+              ? "हम आपके लिए सर्वोत्तम ऑफर ला रहे हैं। कृपया धैर्य रखें, इसके लिए हम आपके आभारी हैं ।"
+              : "We are currently fetching the best offers for you. We appreciate your patience!"}
           </Typography>
           <FacebookCircularProgress />
           <Typography
@@ -140,7 +144,8 @@ const CustomTimer = ({ open, onClose, setShowTimer }) => {
             textAlign={"center"}
             fontFamily={"Inter"}
           >
-            {timeLeft} second remaining
+            {timeLeft}{" "}
+            {activeLanguage === "hi" ? "सेकंड शेष" : "second remaining"}
           </Typography>
         </Stack>
       </TimeContainer>

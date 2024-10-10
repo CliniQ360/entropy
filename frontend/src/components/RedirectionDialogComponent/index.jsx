@@ -24,10 +24,12 @@ const LogoSectionItem = styled(Stack)(({ theme }) => ({
   border: "2px solid #D2D2D2 ",
 }));
 
-const RedirectionDialogComponent = ({ open, setOpen }) => {
+const RedirectionDialogComponent = ({ open, setRedirectionVal }) => {
   const handleClose = () => {
-    setOpen(false);
+    setRedirectionVal(false);
   };
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
+
   return (
     <>
       <Dialog
@@ -53,7 +55,9 @@ const RedirectionDialogComponent = ({ open, setOpen }) => {
               fontFamily: "plus jakarta sans",
             }}
           >
-            Please don’t exit or press back{" "}
+            {activeLanguage === "hi"
+              ? "कृपया बाहर न निकलें या वापस न जाएं ।"
+              : "Please don’t exit or press back"}{" "}
           </Typography>
           <Typography
             sx={{
@@ -62,7 +66,9 @@ const RedirectionDialogComponent = ({ open, setOpen }) => {
               textAlign: "center",
             }}
           >
-            Please complete the redirection flow!
+            {activeLanguage === "hi"
+              ? "कृपया पुनः निर्देशण प्रक्रिया पूरी करें !"
+              : "Please complete the redirection flow!"}
           </Typography>
         </DialogContentSection>
       </Dialog>

@@ -158,10 +158,10 @@ const PersonalDetailsPage = () => {
       "last name",
       "dob",
       "gender",
-      "व्यक्तिगत विवरण",
       "पहला नाम",
       "अंतिम नाम",
       "जन्म तिथि",
+      "लिंग बताएं",
       "लिंग",
     ];
 
@@ -171,10 +171,10 @@ const PersonalDetailsPage = () => {
       "phone",
       "mobile",
       "contact",
-      "संपर्क जानकारी",
-      "ईमेल",
+      "व्यक्तिगत ईमेल आईडी",
+      "पैन नंबर",
       "फ़ोन",
-      "मोबाइल",
+      "संपर्क नंबर",
       "संपर्क",
     ];
 
@@ -186,13 +186,12 @@ const PersonalDetailsPage = () => {
       "zip",
       "address",
       "pan",
-      "पते की जानकारी",
+      "पता",
       "पता लाइन 1",
       "पता लाइन 2",
       "शहर",
       "पिन कोड",
-      "पता",
-      "पैन",
+      "राज्य",
     ];
 
     const professionKeywords = [
@@ -204,8 +203,8 @@ const PersonalDetailsPage = () => {
       "employment type",
       "income",
       "official email id",
-      "पेशेवर विवरण",
-      "नौकरी",
+      "रोजगार",
+      "कंपनी",
       "व्यवसाय",
       "कंपनी",
       "कार्य",

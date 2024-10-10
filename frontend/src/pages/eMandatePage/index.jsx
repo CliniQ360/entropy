@@ -283,6 +283,41 @@ const EmandatePage = () => {
             id="alert-dialog-description"
             style={{ textAlign: "center", marginTop: "20px" }}
           >
+            {activeLanguage === "hi"
+              ? "कृपया बाहर न निकलें या वापस न जाएं ।"
+              : "Please don't exit or press back."}
+            <br />
+
+            {activeLanguage === "hi"
+              ? "कृपया प्रतीक्षा करें, हम आपको ई-मंडेट पेज पर रीडायरेक्ट कर रहे हैं।"
+              : " Please wait while we are redirecting you to the E-Mandate Page."}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleDialogSubmit("YES")}>
+            {activeLanguage === "hi" ? "आगे बढ़ें" : "Proceed"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* <Dialog
+        open={confirmationDialog}
+        onClose={() => setConfirmationDialog(false)}
+        fullWidth
+        maxWidth={"xs"}
+      >
+        <DialogContent style={useStyles.dialogContent}>
+          <img
+            src="https://pngfre.com/wp-content/uploads/Airplane-4.png"
+            alt="Plane"
+            style={{
+              ...useStyles.planeImage,
+              ...(isFlying ? useStyles.planeImageFlying : {}),
+            }}
+          />
+          <DialogContentText
+            id="alert-dialog-description"
+            style={{ textAlign: "center", marginTop: "20px" }}
+          >
             Please don't exit or press back.
             <br />
             Please wait while we are redirecting you to the E-Mandate Page.
@@ -291,7 +326,7 @@ const EmandatePage = () => {
         <DialogActions>
           <Button onClick={() => handleDialogSubmit("YES")}>Proceed</Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 };
