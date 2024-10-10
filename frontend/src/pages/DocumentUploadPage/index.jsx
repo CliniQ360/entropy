@@ -205,10 +205,10 @@ const DocumentUploadPage = () => {
               textAlign: "left",
             }}
           >
-            Please upload your Aadhar and Pan Card Below
-            {/* {activeLanguage === "hi"
-              ? "कृपया नीचे अपने आधार और पैन कार्ड अपलोड करें"
-              : "Please upload your Aadhar and Pan Card Below"} */}
+            {/* Please upload your Aadhar and Pan Card Below */}
+            {activeLanguage === "hi"
+              ? "कृपया नीचे अपना आधार और पैन कार्ड अपलोड करें"
+              : "Please upload your Aadhar and Pan Card Below"}
           </Typography>
         </DocumentHeaderSection>
         <UploadDocumentContainer>
@@ -331,7 +331,7 @@ const DocumentUploadPage = () => {
             onClick={handleUploadImages}
             disabled={uploadRestriction}
           >
-            Upload
+            {activeLanguage === "hi" ? "अपलोड" : "Upload"}
           </Button>
         </Stack>
       </UploadDocumentWrapper>

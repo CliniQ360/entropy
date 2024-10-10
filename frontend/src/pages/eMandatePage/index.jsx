@@ -68,10 +68,8 @@ const EmandatePage = () => {
 
   const emandateConsent =
     activeLanguage === "hi"
-      ? `ई-मैंडेट सेटअप करने" पर क्लिक करके, आप अपनी खाता जानकारी का उपयोग अपने ऋण के लिए भुगतान के एक तरीके के रूप में ई-आदेश स्थापित करने के लिए सहमति देते हैं।`
-      : `By clicking "Setup E-Mandate," you consent to use your account
-            information for setting up an eMandate as a mode of payment for your
-            loan.`;
+      ? `"ई-मैंडेट सेटअप करने" पर क्लिक करके, आप अपनी खाता जानकारी का उपयोग अपने ऋण के लिए भुगतान के एक तरीके के रूप में ई-आदेश स्थापित करने के लिए सहमति देते हैं।`
+      : `By clicking "Setup E-Mandate", you consent to use your account information for setting up an eMandate as a mode of payment for your loan.`;
 
   let emandate_url;
   let payment_url;

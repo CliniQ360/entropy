@@ -66,12 +66,7 @@ const KYCPage = () => {
   const kycConsent =
     activeLanguage === "hi"
       ? "मैं घोषणा करता/करती हूं कि मैं अपनी आधार संख्या और UIDAI द्वारा जारी किए गए जनसांख्यिकी जानकारी को संबंधित अधिकारियों के साथ स्वेच्छा से साझा कर रहा/रही हूं, केवल KYC प्रक्रिया को पूरा करने के लिए। मैं समझता/समझती हूं कि मेरी जानकारी का उपयोग और साझा किया जा सकता है, जैसे कि समय-समय पर अधिसूचित किया जाएगा, जिसमें नियामक आवश्यकताओं के अनुपालन शामिल हैं"
-      : `I hereby declare that I am voluntarily sharing my Aadhaar Number and
-  demographic information issued by UIDAI with the concerned
-  authorities for the sole purpose of completing the KYC process. I
-  understand that my information can be used and shared for purposes
-  as may be notified from time to time, including compliance with
-  regulatory requirements.`;
+      : "I hereby declare that I am voluntarily sharing my Aadhaar Number and demographic information issued by UIDAI with the concerned authorities for the sole purpose of completing the KYC process. I understand that my information can be used and shared for purposes as may be notified from time to time, including compliance with regulatory requirements.";
 
   useEffect(() => {
     if (sessionStorage.getItem("next_state") === "resume_after_kyc_redirect") {

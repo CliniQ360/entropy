@@ -219,7 +219,9 @@ const ChooseAssistant = () => {
         <Typography
           sx={{ fontSize: "1.4rem", fontFamily: "plus jakarta sans bold" }}
         >
-          Choose your assistant for today
+          {activeLanguage === 0
+            ? "Choose your assistant for today"
+            : "आज के लिए अपने सहायक का चयन करें"}
         </Typography>
       </HeadingSection>
       <AssistantChangeSectionWrapper>
@@ -273,7 +275,7 @@ const ChooseAssistant = () => {
       </AssistantProfilePhotoWrapper>
       <FooterButtonWrapper>
         <FooterButton variant="contained" onClick={handleInitConversion}>
-          Start Your Journey
+          {activeButton === 0 ? "Start Your Journey" : "ऋण प्रक्रिया शुरू करें"}
         </FooterButton>
       </FooterButtonWrapper>
     </PageWrapper>
