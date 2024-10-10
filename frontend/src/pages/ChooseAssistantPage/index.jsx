@@ -6,7 +6,7 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
@@ -173,12 +173,24 @@ const ChooseAssistant = () => {
     setActiveButton(index);
   };
   const handleLanguageClick = (index) => {
+    // language en/hi
     setActiveLanguage(index);
   };
 
+  useEffect(() => {
+    sessionStorage.setItem(
+      "activeLanguage",
+      activeLanguage === 0 ? "en" : "hi"
+    );
+  }, [activeLanguage]);
+
   const handleInitConversion = () => {
     setShowLoader(true);
-    dispatch(startConversion()).then((res) => {
+    const payload = {
+      language: sessionStorage.getItem("activeLanguage"),
+    };
+
+    dispatch(startConversion(payload)).then((res) => {
       if (res?.error && Object.keys(res?.error)?.length > 0) {
         setError(true);
         return;
@@ -207,7 +219,9 @@ const ChooseAssistant = () => {
         <Typography
           sx={{ fontSize: "1.4rem", fontFamily: "plus jakarta sans bold" }}
         >
-          Choose your assistant for today
+          {activeLanguage === 0
+            ? "Choose your assistant for today"
+            : "अपने सहायक का चयन करें"}
         </Typography>
       </HeadingSection>
       <AssistantChangeSectionWrapper>
@@ -249,15 +263,21 @@ const ChooseAssistant = () => {
             textAlign={"center"}
             sx={{ fontSize: "1.2rem", color: "#535353" }}
           >
-            Welcome to CliniQ-360! My name is{" "}
-            {activeButton === 0 ? "Raju" : "Rani"} and I am excited to assist
-            you in your credit journey!
+            {activeLanguage === 0
+              ? "Welcome to CliniQ-360! My name is " +
+              (activeButton === 0 ? "Raju" : "Rani") +
+              " and I am excited to assist you in your credit journey!"
+              : "क्लिनीक-360 में आपका स्वागत है! मेरा नाम " +
+              (activeButton === 0 ? "राजू" : "रानी") +
+              " है और मैं आपकी क्रेडिट यात्रा में आपकी सहायता करने के लिए उत्साहित हूं !"}
           </Typography>
         </Stack>
       </AssistantProfilePhotoWrapper>
       <FooterButtonWrapper>
         <FooterButton variant="contained" onClick={handleInitConversion}>
-          Start Your Journey
+          {activeLanguage === 0
+            ? "Start Your Journey"
+            : "ऋण प्रक्रिया शुरू करें"}
         </FooterButton>
       </FooterButtonWrapper>
     </PageWrapper>

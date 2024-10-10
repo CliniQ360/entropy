@@ -11,7 +11,7 @@ export const agentConversation = createAsyncThunk(
       const response = await axios.post(
         BASE_URL +
           `/${apis?.resumeConversionApi}?` +
-          `thread_id=${payload?.threadId}&state=${payload?.state}&translate=false&document_upload_flag=${payload?.uploadFlag}&offer_item_id=${payload?.offer_item_id}&selected_loan_amount=${payload?.selected_loan_amount}`,
+          `thread_id=${payload?.threadId}&state=${payload?.state}&translate=false&document_upload_flag=${payload?.uploadFlag}&offer_item_id=${payload?.offer_item_id}&selected_loan_amount=${payload?.selected_loan_amount}&language=${payload?.language}`,
         payload?.file,
         {
           headers: {
@@ -55,15 +55,25 @@ export const documentUpload = createAsyncThunk(
   }
 );
 
-export const startConversion = createAsyncThunk("startConversion", async () => {
-  const response = await apiRequest("POST", apis?.startConversionApi);
-  return response;
-});
+export const startConversion = createAsyncThunk(
+  "startConversion",
+  async (payload) => {
+    const response = await apiRequest(
+      "POST",
+      `${apis?.startConversionApi}?language=${payload?.language}`
+    );
+    return response;
+  }
+);
 
 export const bankLoanDataResumeConversion = createAsyncThunk(
   "startConversion",
   async (payload) => {
-    const response = await apiRequest("POST", apis?.bankLoanDataApi, payload);
+    const response = await apiRequest(
+      "POST",
+      `${apis?.bankLoanDataApi}?language=${payload?.language}`,
+      payload
+    );
     return response;
   }
 );

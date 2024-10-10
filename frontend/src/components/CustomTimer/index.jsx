@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { Backdrop, keyframes, Stack, styled, Typography } from "@mui/material";
+import {
+  Backdrop,
+  keyframes,
+  Stack,
+  styled,
+  Typography,
+  Box,
+} from "@mui/material";
+import CircularProgress, {
+  circularProgressClasses,
+} from "@mui/material/CircularProgress";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
 
 const TimeContainer = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -29,7 +42,66 @@ const DotsAnimationContainer = styled("span")(({ theme }) => ({
   },
 }));
 
+function FacebookCircularProgress(props) {
+  return (
+    <Box sx={{ position: "relative", marginTop: 2 }}>
+      <CircularProgress
+        variant="determinate"
+        sx={(theme) => ({
+          color: theme.palette.grey[200],
+          ...theme.applyStyles("dark", {
+            color: theme.palette.grey[800],
+          }),
+        })}
+        size={40}
+        thickness={4}
+        {...props}
+        value={100}
+      />
+      <CircularProgress
+        variant="indeterminate"
+        disableShrink
+        sx={(theme) => ({
+          color: "#0054BA",
+          animationDuration: "1000ms",
+          position: "absolute",
+          left: 0,
+          [`& .${circularProgressClasses.circle}`]: {
+            strokeLinecap: "round",
+          },
+          ...theme.applyStyles("dark", {
+            color: "#308fe8",
+          }),
+        })}
+        size={40}
+        thickness={4}
+        {...props}
+      />
+    </Box>
+  );
+}
+
 const CustomTimer = ({ open, onClose, setShowTimer }) => {
+  const [timeLeft, setTimeLeft] = useState(120);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
+
+  useEffect(() => {
+    if (open) {
+      const timerId = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime > 0) {
+            return prevTime - 1;
+          } else {
+            clearInterval(timerId);
+            return 0; // Stop the timer at 0
+          }
+        });
+      }, 1000);
+
+      return () => clearInterval(timerId); // Clean up the interval when component unmounts
+    }
+  }, [open]);
+
   return (
     open && (
       <TimeContainer open={true}>
@@ -46,61 +118,34 @@ const CustomTimer = ({ open, onClose, setShowTimer }) => {
             boxShadow: "0 0 10px 3px #d2d2d278",
           }}
         >
-          <svg width="0" height="0">
-            <defs>
-              <linearGradient
-                id="gradientColors"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="#1976D2" stopOpacity="1" />
-                <stop offset="100%" stopColor="#003aa6" stopOpacity="1" />
-              </linearGradient>
-            </defs>
-          </svg>
-
           <Typography
-            fontSize={"2.2rem"}
-            color={"#0054BA"}
+            fontSize={"1.6rem"}
+            color={"#171717"}
             fontFamily={"plus jakarta sans bold"}
           >
-            Please be patient
+            {activeLanguage === "hi"
+              ? "प्रक्रिया लगभग पूरी हो चुकी है"
+              : "Almost There!"}
           </Typography>
-          <CountdownCircleTimer
-            isPlaying
-            size={200}
-            duration={60}
-            colors="url(#gradientColors)"
-            onComplete={() => {
-              onClose();
-              setShowTimer(false);
-              return { shouldRepeat: true };
-            }}
+          <Typography
+            fontSize={"1.2rem"}
+            color={"black"}
+            textAlign={"center"}
+            fontFamily={"Inter"}
           >
-            {({ remainingTime }) => (
-              <Stack
-                direction={"column"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Typography fontSize={"1.2rem"} color={"black"}>
-                  Remaining
-                </Typography>
-                <Typography fontSize={"2.5rem"} color={"#0054BA"}>
-                  {remainingTime}
-                </Typography>
-                <Typography fontSize={"1.2rem"} color={"black"}>
-                  Seconds
-                </Typography>
-              </Stack>
-            )}
-          </CountdownCircleTimer>
-          <Typography fontSize={"1.5rem"} color={"black"} textAlign={"center"}>
-            Hang tight! We're currently fetching the best offers for you. This
-            won't take long
-            <DotsAnimationContainer className={"dotsAnimation"} />
+            {activeLanguage === "hi"
+              ? "हम आपके लिए सर्वोत्तम ऑफर ला रहे हैं। कृपया धैर्य रखें, इसके लिए हम आपके आभारी हैं ।"
+              : "We are currently fetching the best offers for you. We appreciate your patience!"}
+          </Typography>
+          <FacebookCircularProgress />
+          <Typography
+            fontSize={"1.2rem"}
+            color={"black"}
+            textAlign={"center"}
+            fontFamily={"Inter"}
+          >
+            {timeLeft}{" "}
+            {activeLanguage === "hi" ? "सेकंड शेष" : "second remaining"}
           </Typography>
         </Stack>
       </TimeContainer>

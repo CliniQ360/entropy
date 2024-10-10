@@ -47,6 +47,8 @@ const SubmitDialogBox = ({
   const handleClose = () => {
     setConfirmation(false);
   };
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
+
   return (
     <Dialog
       open={confirmation}
@@ -66,7 +68,9 @@ const SubmitDialogBox = ({
             fontFamily: "plus jakarta sans bold",
           }}
         >
-          Are you sure you want to submit?
+          {activeLanguage === "hi"
+            ? "क्या आप निश्चित रूप से सबमिट करना चाहते हैं?"
+            : "Are you sure you want to submit?"}
         </Typography>
         <Typography
           sx={{
@@ -75,16 +79,17 @@ const SubmitDialogBox = ({
             textAlign: "center",
           }}
         >
-          If everything looks correct, click “Yes, Submit” to proceed. If you
-          need to make any changes, click “No” to go back.
+          {activeLanguage === "hi"
+            ? "यदि सब कुछ सही लग रहा है, तो आगे बढ़ने के लिए “हाँ, सबमिट करें” पर क्लिक करें। यदि आपको कोई परिवर्तन करने की आवश्यकता है, तो वापस जाने के लिए “नहीं” पर क्लिक करें ।"
+            : "If everything looks correct, click “Yes, Submit” to proceed. If you need to make any changes, click “No” to go back."}
         </Typography>
       </DialogContentSection>
       <DialogActionSection>
         <CustomOutlinedButton onClick={() => setConfirmation(false)}>
-          No
+          {activeLanguage === "hi" ? "नहीं" : " No"}
         </CustomOutlinedButton>
         <CustomContainedButton onClick={() => handlePaymentDialogSubmit("YES")}>
-          Yes, Submit
+          {activeLanguage === "hi" ? "हाँ, सबमिट करें" : "Yes, Submit"}
         </CustomContainedButton>
       </DialogActionSection>
     </Dialog>

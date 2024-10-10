@@ -9,6 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
+import felameAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 import { MediaContext } from "../../context/mediaContext";
 
 const ellipsisAnimation = keyframes`
@@ -107,6 +108,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
   const previousAudioUrlRef = useRef(null);
   const [messageVisible, setMessageVisible] = useState(false);
   const [xPosition, setXPosition] = useState(screenWidth - 60);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   useEffect(() => {
     if (messageResponse || listening || processing || uploadDocument) {
@@ -169,7 +171,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise
-          .then(() => {})
+          .then(() => { })
           .catch((error) => {
             console.error("Error attempting to play audio:", error);
           });
@@ -223,7 +225,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                     textTransform: "initial",
                   }}
                 >
-                  Processing
+                  {activeLanguage === "hi" ? "प्रक्रिया में है" : "Processing"}
                   <DotsAnimationContainer className="dotsAnimation" />
                 </Typography>
               ) : listening ? (
@@ -236,7 +238,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                     textTransform: "initial",
                   }}
                 >
-                  Listening
+                  {activeLanguage === "hi" ? "सुनना जारी है" : "Listening"}
                   <DotsAnimationContainer className="dotsAnimation" />
                 </Typography>
               ) : uploadDocument ? (
@@ -249,7 +251,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                     textTransform: "initial",
                   }}
                 >
-                  Uploading
+                  {activeLanguage === "hi" ? "अपलोड जारी है" : "Uploading"}
                   <DotsAnimationContainer className="dotsAnimation" />
                 </Typography>
               ) : (
@@ -279,8 +281,9 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
                   textTransform: "initial",
                 }}
               >
-                Oops! Please bring the mic closer to your mouth for better
-                communication.
+                {activeLanguage === "hi"
+                  ? "अरे! कृपया बेहतर संवाद के लिए माइक को अपने मुंह के करीब लाएँ।"
+                  : "Oops! Please bring the mic closer to your mouth for better communication."}
               </Typography>
             )}
           </MessageBox>

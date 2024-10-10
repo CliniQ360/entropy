@@ -21,9 +21,16 @@ def build_workflow():
     builder.add_node("verify_user_details", verify_user_details)
     builder.add_node("human_verification_feedback", human_verification_feedback)
     builder.add_node("submit_form_ack", submit_form_ack)
-    builder.add_node("submit_form", submit_form)
+    builder.add_node("get_bureau_based_offers", get_bureau_based_offers)
+    builder.add_node("summarise_bureau_based_offers", summarise_bureau_based_offers)
+    builder.add_node("get_aa_url", get_aa_url)
+    builder.add_node("human_bureau_offer_feedback", human_bureau_offer_feedback)
     builder.add_node("collect_updated_details", collect_updated_details)
     builder.add_node("human_update_feedback", human_update_feedback)
+    builder.add_node(
+        "answer_user_query_on_bureau_offer", answer_user_query_on_bureau_offer
+    )
+    builder.add_node("aa_redirect", aa_redirect)
     builder.add_node("resume_after_aa_redirect", resume_after_aa_redirect)
     builder.add_node("send_ack", send_ack)
     builder.add_node("approval_pending", approval_pending)
@@ -48,22 +55,17 @@ def build_workflow():
     )
     builder.add_node("human_account_details_feedback", human_account_details_feedback)
     builder.add_node("extract_user_account_details", extract_user_account_details)
-    # builder.add_node("verify_user_account_details", verify_user_account_details)
-    # builder.add_node(
-    #     "human_account_details_verification_feedback",
-    #     human_account_details_verification_feedback,
-    # )
     builder.add_node("submit_account_details_form", submit_account_details_form)
     builder.add_node("resume_after_emdt_redirect", resume_after_emdt_redirect)
     builder.add_node("emdt_approval_pending", emdt_approval_pending)
     builder.add_node("send_emdt_ack", send_emdt_ack)
     builder.add_node("summarise_loan_tnc", summarise_loan_tnc)
+    builder.add_node("finalize_offer", finalize_offer)
     builder.add_node("human_loan_tnc_feedback", human_loan_tnc_feedback)
     builder.add_node("answer_tnc_query", answer_tnc_query)
     builder.add_node("resume_loan_agreement_signing", resume_loan_agreement_signing)
     builder.add_node("loan_agreement_signing_pending", loan_agreement_signing_pending)
     builder.add_node("confirm_loan", confirm_loan)
-    builder.add_node("finalize_offer", finalize_offer)
 
     # Add edges
     builder.add_edge(START, "welcome_message")
@@ -87,8 +89,21 @@ def build_workflow():
     )
     builder.add_edge("collect_updated_details", "human_update_feedback")
     builder.add_edge("human_update_feedback", "extract_user_details")
-    builder.add_edge("submit_form_ack", "submit_form")
-    builder.add_edge("submit_form", "resume_after_aa_redirect")
+    builder.add_edge("submit_form_ack", "get_bureau_based_offers")
+    builder.add_conditional_edges(
+        "get_bureau_based_offers",
+        is_bureau_offer_received,
+        ["get_aa_url", "summarise_bureau_based_offers"],
+    )
+    builder.add_edge("get_aa_url", "human_bureau_offer_feedback")
+    builder.add_edge("summarise_bureau_based_offers", "human_bureau_offer_feedback")
+    builder.add_conditional_edges(
+        "human_bureau_offer_feedback",
+        user_intent_2,
+        ["aa_redirect", "select_offer", "answer_user_query_on_bureau_offer"],
+    )
+    builder.add_edge("answer_user_query_on_bureau_offer", "human_bureau_offer_feedback")
+    builder.add_edge("aa_redirect", "resume_after_aa_redirect")
     builder.add_conditional_edges(
         "resume_after_aa_redirect", is_aa_approved, ["send_ack", "approval_pending"]
     )
@@ -125,23 +140,7 @@ def build_workflow():
     builder.add_edge(
         "generate_account_details_questions", "human_account_details_feedback"
     )
-    # builder.add_conditional_edges(
-    #     "generate_account_details_questions",
-    #     should_verify_account_details,
-    #     ["verify_user_account_details", "human_account_details_feedback"],
-    # )
     builder.add_edge("human_account_details_feedback", "extract_user_account_details")
-    # builder.add_edge(
-    #     "verify_user_account_details", "human_account_details_verification_feedback"
-    # )
-    # builder.add_conditional_edges(
-    #     "human_account_details_verification_feedback",
-    #     should_submit_account_details,
-    #     ["submit_account_details_form"],
-    # )
-    # builder.add_edge(
-    #     "extract_user_account_details", "generate_account_details_questions"
-    # )
     builder.add_edge("extract_user_account_details", "submit_account_details_form")
     builder.add_edge("submit_account_details_form", "resume_after_emdt_redirect")
     builder.add_conditional_edges(
@@ -150,7 +149,6 @@ def build_workflow():
         ["send_emdt_ack", "emdt_approval_pending"],
     )
     builder.add_edge("emdt_approval_pending", "resume_after_emdt_redirect")
-
     builder.add_edge("send_emdt_ack", "resume_loan_agreement_signing")
     builder.add_conditional_edges(
         "resume_loan_agreement_signing",
@@ -158,31 +156,13 @@ def build_workflow():
         ["loan_agreement_signing_pending", "confirm_loan"],
     )
     builder.add_edge("loan_agreement_signing_pending", "resume_loan_agreement_signing")
-    # builder.add_edge("confirm_loan", "summarise_loan_tnc")
-    builder.add_edge("confirm_loan", "summarise_loan_tnc")
-    builder.add_edge("summarise_loan_tnc", "finalize_offer")
-    builder.add_edge("finalize_offer", "human_loan_tnc_feedback")
+    builder.add_edge("confirm_loan", "finalize_offer")
+    builder.add_edge("finalize_offer", "summarise_loan_tnc")
+    builder.add_edge("summarise_loan_tnc", "human_loan_tnc_feedback")
     builder.add_conditional_edges(
         "human_loan_tnc_feedback",
         user_intent_1,
         ["answer_tnc_query", END],
     )
     builder.add_edge("answer_tnc_query", "human_loan_tnc_feedback")
-    # builder.add_edge("send_emdt_ack", "summarise_loan_tnc")
-    # builder.add_edge("summarise_loan_tnc", "human_loan_tnc_feedback")
-    # builder.add_conditional_edges(
-    #     "human_loan_tnc_feedback",
-    #     user_intent_1,
-    #     ["answer_tnc_query", "loan_agreement_signing"],
-    # )
-    # builder.add_edge("answer_tnc_query", "human_loan_tnc_feedback")
-    # builder.add_edge("loan_agreement_signing", "resume_loan_agreement_signing")
-    # builder.add_conditional_edges(
-    #     "resume_loan_agreement_signing",
-    #     is_loan_agreement_signed,
-    #     ["loan_agreement_signing_pending", "confirm_loan"],
-    # )
-    # builder.add_edge("loan_agreement_signing_pending", "resume_loan_agreement_signing")
-    # builder.add_edge("confirm_loan", END)
     return builder
-    # Compile

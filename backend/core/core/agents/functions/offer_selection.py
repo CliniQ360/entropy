@@ -68,13 +68,22 @@ def submit_loan_amount(state: SahayakState):
         route=get_form_url, params={"offer_item_id": offer_item_id, "txn_id": txn_id}
     )
     kyc_url = get_kyc_url_resp.get("form_url")
-    return {
-        "kyc_url": kyc_url,
-        "agent_message": [
-            "Your details are successfully submitted. Please click proceed to complete your KYC."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "kyc_url": kyc_url,
+            "agent_message": [
+                "Your details are successfully submitted. Please click proceed to complete your KYC."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "kyc_url": kyc_url,
+            "agent_message": [
+                "आपका विवरण सफलतापूर्वक सबमिट कर दिया गया है. कृपया अपना केवाईसी पूरा करने के लिए आगे बढ़ें पर क्लिक करें।"
+            ],
+            "modified": False,
+        }
 
 
 def human_refreh_offer(state: SahayakState):
@@ -115,12 +124,20 @@ def human_invalid_loan_amount_selection(state: SahayakState):
     min_loan_amt = selected_offer.get("offer_details").get("MIN_LOAN_AMOUNT")
     max_loan_amt = selected_offer.get("quote_details").get("PRINCIPAL")
     # max_loan_amt = selected_offer.get("offer_details").get("MAX_LOAN_AMOUNT")
-    return {
-        "agent_message": [
-            f"Minimum loan amount is {min_loan_amt} and maximum loan amount is {max_loan_amt}. Please select the loan amount within the range provided"
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                f"Minimum loan amount is {min_loan_amt} and maximum loan amount is {max_loan_amt}. Please select the loan amount within the range provided"
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                f"न्यूनतम ऋण राशि {min_loan_amt} है और अधिकतम ऋण राशि {max_loan_amt} है। कृपया दी गई सीमा के भीतर ऋण राशि का चयन करें"
+            ],
+            "modified": False,
+        }
 
 
 def resume_after_kyc_redirect(state: SahayakState):
@@ -227,12 +244,20 @@ def generate_account_details_questions(state: SahayakState):
 
     # # Write the list of analysis to state
     # return {"agent_message": [generated_data.text]}
-    return {
-        "agent_message": [
-            "Please provide your bank account details and click on submit to proceed further."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Please provide your bank account details and click on submit to proceed further."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "कृपया अपना बैंक खाता विवरण प्रदान करें और आगे बढ़ने के लिए सबमिट पर क्लिक करें।"
+            ],
+            "modified": False,
+        }
 
 
 def human_account_details_feedback(state: SahayakState):
@@ -351,13 +376,22 @@ def submit_account_details_form(state: SahayakState):
         params={"offer_item_id": offer_item_id, "txn_id": txn_id},
     )
     emandate_url = get_emandate_resp.get("form_url")
-    return {
-        "emndt_url": emandate_url,
-        "agent_message": [
-            "Your details are successfully submitted. Please click proceed to setup your e-mandate."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "emndt_url": emandate_url,
+            "agent_message": [
+                "Your details are successfully submitted. Please click proceed to setup your e-mandate."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "emndt_url": emandate_url,
+            "agent_message": [
+                "आपका विवरण सफलतापूर्वक सबमिट कर दिया गया है. कृपया अपना ई-मैंडेट सेटअप करने के लिए आगे बढ़ें पर क्लिक करें।"
+            ],
+            "modified": False,
+        }
 
 
 # def should_verify_account_details(state: SahayakState):
@@ -413,12 +447,18 @@ def is_emdt_approved(state: SahayakState):
 
 
 def emdt_approval_pending(state: SahayakState):
-    return {
-        "agent_message": [
-            "To proceed further, please provide an approval for eMandate flow."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "To proceed further, please provide an approval for eMandate flow."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": ["आगे बढ़ने के लिए, कृपया ई-मैंडेट प्रवाह के लिए अनुमोदन प्रदान करें।"],
+            "modified": False,
+        }
 
 
 def send_emdt_ack(state: SahayakState):
@@ -450,13 +490,22 @@ def send_emdt_ack(state: SahayakState):
         params={"offer_item_id": offer_item_id, "txn_id": txn_id},
     )
     loan_signing_redirect_url = get_loan_agrmt_resp.get("form_url")
-    return {
-        "loan_signing_redirect_url": loan_signing_redirect_url,
-        "agent_message": [
-            "Your e-mandate setup was successfull. Please click on proceed to sign your loan agreement."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "loan_signing_redirect_url": loan_signing_redirect_url,
+            "agent_message": [
+                "Your e-mandate setup was successfull. Please click on proceed to sign your loan agreement."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "loan_signing_redirect_url": loan_signing_redirect_url,
+            "agent_message": [
+                "आपका ई-मैंडेट सेटअप सफल रहा. कृपया अपने ऋण समझौते पर हस्ताक्षर करने के लिए आगे बढ़ें पर क्लिक करें।"
+            ],
+            "modified": False,
+        }
 
 
 def summarise_loan_tnc(state: SahayakState):
@@ -466,6 +515,7 @@ def summarise_loan_tnc(state: SahayakState):
     txn_id = state.get("txn_id")
     thread_id = state.get("thread_id")
     offer_item_id = state.get("offer_item_id")
+    language = state.get("language")
     current_action = None
     counter = 0
     while current_action != "ON_CONFIRM":
@@ -496,9 +546,14 @@ def summarise_loan_tnc(state: SahayakState):
         pages = loader.load_and_split()
         text = " ".join([page.page_content.replace("\t", " ") for page in pages])
         if os.environ.get("LLM_CONFIG") == "GOOGLE":
-            summarise_loan_agreement_instruction = (
-                GeminiPrompts().summarise_loan_agreement_instructions
-            )
+            if language == "hi":
+                summarise_loan_agreement_instruction = (
+                    GeminiPrompts().summarise_loan_agreement_instructions_hi
+                )
+            else:
+                summarise_loan_agreement_instruction = (
+                    GeminiPrompts().summarise_loan_agreement_instructions
+                )
             summarise_loan_agreement_prompt = (
                 summarise_loan_agreement_instruction.format(text=text)
             )
@@ -537,13 +592,22 @@ def finalize_offer(state: SahayakState):
     offer_list = get_offer_details_resp.get("offer_list")
     logging.info(f"{offer_list=}")
     loan_provider_name = offer_list[0].get("provider_details").get("name")
-    return {
-        "final_offer": offer_list,
-        "modified": False,
-        "agent_message": [
-            f"Congratulations! Your loan from {loan_provider_name} has been successfully processed."
-        ],
-    }
+    if state.get("language") == "en":
+        return {
+            "final_offer": offer_list,
+            "modified": False,
+            "agent_message": [
+                f"Congratulations! Your loan from {loan_provider_name} has been successfully processed."
+            ],
+        }
+    else:
+        return {
+            "final_offer": offer_list,
+            "modified": False,
+            "agent_message": [
+                f"बधाई हो! {loan_provider_name} से आपका ऋण सफलतापूर्वक संसाधित हो गया है।"
+            ],
+        }
 
 
 def human_loan_tnc_feedback(state: SahayakState):
@@ -553,6 +617,7 @@ def human_loan_tnc_feedback(state: SahayakState):
 def answer_tnc_query(state: SahayakState):
     user_query = state.get("user_message")[-1]
     loan_agreement_text = state.get("loan_agreement_text")
+    language = state.get("language")
     # qna_prompt = f"""
     #     Given is the text from loan agreement document.
     #     Act as a financial advisor and try to answer the user query about the loan agreement strictly based on the text provided.
@@ -565,7 +630,10 @@ def answer_tnc_query(state: SahayakState):
     #     Answer:
     # """
     if os.environ.get("LLM_CONFIG") == "GOOGLE":
-        qna_instructions = GeminiPrompts().qna_instructions
+        if language == "hi":
+            qna_instructions = GeminiPrompts().qna_instructions_hi
+        else:
+            qna_instructions = GeminiPrompts().qna_instructions
         qna_prompt = qna_instructions.format(
             loan_agreement_text=loan_agreement_text, user_query=user_query
         )
@@ -607,10 +675,18 @@ def resume_loan_agreement_signing(state: SahayakState):
 
 
 def loan_agreement_signing_pending(state: SahayakState):
-    return {
-        "user_message": ["Please sign your loan agreeement form to proceed further."],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "user_message": [
+                "Please sign your loan agreeement form to proceed further."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "user_message": ["कृपया आगे बढ़ने के लिए अपने ऋण अनुबंध फॉर्म पर हस्ताक्षर करें।"],
+            "modified": False,
+        }
 
 
 def is_loan_agreement_signed(state: SahayakState):
@@ -635,9 +711,17 @@ def confirm_loan(state: SahayakState):
         route=offer_confirm_url,
         params={"txn_id": txn_id, "offer_item_id": offer_item_id},
     )
-    return {
-        "agent_message": [
-            "Your loan has been confirmed. Thank you for choosing CliniQ 360. Have a great day ahead!"
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Your loan has been confirmed. Thank you for choosing CliniQ 360. Have a great day ahead!"
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "आपके ऋण की पुष्टि हो गई है. क्लिनीक्यू 360 को चुनने के लिए धन्यवाद। आपका दिन मंगलमय हो!"
+            ],
+            "modified": False,
+        }

@@ -94,6 +94,7 @@ const CreditOfferPage = () => {
   const { offerList } = useContext(AudioDataContext);
   const lottieRef = useRef(null);
   const [playCount, setPlayCount] = useState(0);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -237,7 +238,9 @@ const CreditOfferPage = () => {
             fontFamily: "plus jakarta sans bold",
           }}
         >
-          Loan Process Successfully Completed!
+          {activeLanguage === "hi"
+            ? "लोन प्रक्रिया सफलतापूर्वक पूरी हो गई!"
+            : "Loan Process Successfully Completed! "}
         </Typography>
         <Typography
           sx={{
@@ -246,8 +249,9 @@ const CreditOfferPage = () => {
             fontFamily: "inter",
           }}
         >
-          Congratulations your Loan is processed. Let me know if you have any
-          queries regarding your Loan Document
+          {activeLanguage === "hi"
+            ? "बधाई हो, आपका लोन प्रक्रिया में है। यदि आपके Loan दस्तावेज़ के संबंध में कोई प्रश्न हैं, तो मुझे बताएं।"
+            : "Congratulations your Loan is processed. Let me know if you have any queries regarding your Loan Document "}
         </Typography>
       </CreditHeaderSection>
       <PDFPreviewSection>
@@ -259,7 +263,9 @@ const CreditOfferPage = () => {
             <Typography
               sx={{ fontFamily: "source sans pro", fontSize: "1.1rem" }}
             >
-              Loan Agreement.pdf
+              {activeLanguage === "hi"
+                ? "लोन एग्रीमेंट.pdf"
+                : "Loan Agreement.pdf"}
             </Typography>
           </Box>
           <Stack mr={6}>

@@ -15,7 +15,7 @@ class AudioConversationController:
         self.DB_URI = os.getenv("DB_URI")
         self.stt_service = os.getenv("STT_SERVICE")
 
-    def start_conversation(self, thread_id: str):
+    def start_conversation(self, thread_id: str, language: str):
         try:
             logging.info(f"AudioConversationController: start_conversation")
             logging.info(f"Stating workflow with thread_id: {thread_id}")
@@ -32,29 +32,33 @@ class AudioConversationController:
                         "human_document_upload_feedback",
                         "human_feedback",
                         "human_verification_feedback",
-                        "human_update_feedback",
                         "human_selection",
                         "human_loan_amount_selection",
                         "human_recheck_approval",
                         "human_account_details_feedback",
                         "resume_after_kyc_redirect",
-                        # "human_account_details_verification_feedback",
                         "resume_after_emdt_redirect",
                         "human_loan_tnc_feedback",
                         "resume_loan_agreement_signing",
+                        "human_bureau_offer_feedback",
                     ],
                     interrupt_after=[
-                        "submit_form_ack",
-                        "submit_form",
                         "send_ack",
+                        "submit_form_ack",
                         "human_refreh_offer",
+                        "aa_redirect",
                     ],
                     checkpointer=checkpointer,
                 )
 
                 thread = {"configurable": {"thread_id": thread_id}}
                 for event in workflow.stream(
-                    {"agent_message": ["Hello!"], "thread_id": thread_id}, thread
+                    {
+                        "agent_message": ["Hello!"],
+                        "language": language,
+                        "thread_id": thread_id,
+                    },
+                    thread,
                 ):
                     agent_message = event.get("agent_message", "")
                     logging.info(f"{agent_message=}")
@@ -74,11 +78,13 @@ class AudioConversationController:
                 else:
                     user_message = "None"
                 next_state = workflow.get_state(thread).next[0]
+                language = workflow.get_state(thread).values.get("language")
                 return_payload = {
                     "thread_id": thread_id,
                     "user_message": user_message,
                     "agent_message": agent_message,
                     "next_state": next_state,
+                    "language": language,
                     "customer_details": {},
                     "customer_account_details": {},
                 }
@@ -112,22 +118,21 @@ class AudioConversationController:
                         "human_document_upload_feedback",
                         "human_feedback",
                         "human_verification_feedback",
-                        "human_update_feedback",
                         "human_selection",
                         "human_loan_amount_selection",
                         "human_recheck_approval",
                         "human_account_details_feedback",
                         "resume_after_kyc_redirect",
-                        # "human_account_details_verification_feedback",
                         "resume_after_emdt_redirect",
                         "human_loan_tnc_feedback",
                         "resume_loan_agreement_signing",
+                        "human_bureau_offer_feedback",
                     ],
                     interrupt_after=[
-                        "submit_form_ack",
-                        "submit_form",
                         "send_ack",
+                        "submit_form_ack",
                         "human_refreh_offer",
+                        "aa_redirect",
                     ],
                     checkpointer=checkpointer,
                 )
@@ -170,7 +175,26 @@ class AudioConversationController:
                 ):
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
+                        as_node=state,
+                    )
+                elif state == "human_bureau_offer_feedback":
+                    workflow.update_state(
+                        thread,
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                            "offer_item_id": kwargs.get("offer_item_id"),
+                        },
+                        as_node=state,
+                    )
+                elif state == "aa_redirect":
+                    workflow.update_state(
+                        thread,
+                        {"dummy": "aa_redirect"},
                         as_node=state,
                     )
                 elif state == "resume_after_aa_redirect":
@@ -190,6 +214,7 @@ class AudioConversationController:
                         thread,
                         {
                             "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
                             "offer_item_id": kwargs.get("offer_item_id"),
                         },
                         as_node=state,
@@ -217,19 +242,28 @@ class AudioConversationController:
                 elif state == "human_account_details_verification_feedback":
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
                         as_node=state,
                     )
                 elif state == "resume_after_emdt_redirect":
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
                         as_node=state,
                     )
                 elif state == "human_loan_tnc_feedback":
                     workflow.update_state(
                         thread,
-                        {"user_message": kwargs.get("user_message")},
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                        },
                         as_node=state,
                     )
                 elif state == "resume_loan_agreement_signing":
@@ -257,6 +291,12 @@ class AudioConversationController:
                     )[-1]
                 else:
                     user_message = "None"
+                if workflow.get_state(thread).values.get("user_message_hindi"):
+                    user_message_hindi = workflow.get_state(thread).values.get(
+                        "user_message_hindi"
+                    )[-1]
+                else:
+                    user_message_hindi = "None"
                 next_state = workflow.get_state(thread).next[0]
                 collected_details_list = workflow.get_state(thread).values.get(
                     "customer_details"
@@ -312,6 +352,7 @@ class AudioConversationController:
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
                 final_offer = workflow.get_state(thread).values.get("final_offer")
                 modified = workflow.get_state(thread).values.get("modified")
+                language = workflow.get_state(thread).values.get("language")
                 agent_message_modified = workflow.get_state(thread).values.get(
                     "agent_message_modified"
                 )
@@ -339,9 +380,11 @@ class AudioConversationController:
                         audio_base64 = agent_audio_data
                     else:
                         audio_base64 = ""
+
                 return {
                     "thread_id": thread_id,
                     "user_message": user_message,
+                    "user_message_hindi": user_message_hindi,
                     "agent_message": agent_message,
                     "next_state": next_state,
                     "customer_details": customer_details,
@@ -370,6 +413,7 @@ class AudioConversationController:
                         agent_message_modified if agent_message_modified else "None"
                     ),
                     "agent_audio_data": audio_base64,
+                    "language": language,
                 }
         except Exception as error:
             logging.error(

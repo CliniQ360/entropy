@@ -10,7 +10,7 @@ from core.utils.groq.stt import GroqHelper
 from core.utils.elevenlabs.tts import ElevenLabsHelper
 from core.utils.sarvam_helper import SarvamAPI
 from core.controllers.audio_conversation_controller import AudioConversationController
-from core.utils.vertex_ai_helper.gemini_helper import transcribe
+from core.utils.vertex_ai_helper.gemini_helper import transcribe, translate
 from core.utils.vertex_ai_helper.gcs_helper import upload_blob_string
 from core.utils.openai_helper import WhisperHelper
 
@@ -25,19 +25,6 @@ class SahayakController:
         self.bucket_name = os.getenv("GCS_BUCKET_NAME")
         self.stt_service = os.getenv("STT_SERVICE")
         self.audio_file_folder_path = f"/app/audio_data"
-        self.welcome_message_audio_path = (
-            f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/welcome_message.txt"
-        )
-        self.form_submit_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/form_submission_message.txt"
-        self.aa_redirect_message_audio_path = (
-            f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/aa_redirect_message.txt"
-        )
-        self.kyc_redirect_message_audio_path = (
-            f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/kyc_redirect_message.txt"
-        )
-        self.eMandate_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/eMandate_redirect_message.txt"
-        self.sign_loan_agreement_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/sign_loan_agreement_message.txt"
-        self.congratulations_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/congratulations_message.txt"
         self.local_testing = os.getenv("LOCAL_TESTING")
 
     def text_generator(self, transcribed_text: str):
@@ -72,11 +59,11 @@ class SahayakController:
             logging.error(f"Error in SahayakController.upload_documents: {error}")
             raise error
 
-    def start_audio_conversation(self):
+    def start_audio_conversation(self, language: str):
         thread_id = str(uuid.uuid4())
         logging.debug(f"{thread_id=}")
         conversation_response = AudioConversationController().start_conversation(
-            thread_id=thread_id
+            thread_id=thread_id, language=language
         )
         agent_message = conversation_response.get("agent_message")
         output_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-output.mp3"
@@ -86,9 +73,9 @@ class SahayakController:
         #     text=agent_message, output_path=output_audio_file_path
         # )
         # Encode audio bytes as base64
-        logging.info(f"{self.stt_service=}")
-        logging.info(f"{self.welcome_message_audio_path=}")
-        audio_base64_str = open(self.welcome_message_audio_path, "r").read()
+        language = conversation_response.get("language")
+        welcome_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/welcome_message.txt"
+        audio_base64_str = open(welcome_message_audio_path, "r").read()
         # audio_base64 = ""
         conversation_response.update({"agent_audio_data": audio_base64_str})
         return conversation_response
@@ -127,9 +114,17 @@ class SahayakController:
                         content_type="audio/mpeg",
                         file=audio_data,
                     )
-                    transcription_result = transcribe(
-                        gcs_uri=gcs_uri, input_prompt=custom_prompt
-                    )
+                    if request.get("language") == "en":
+                        logging.info(f"Transcribing file")
+                        transcription_result = transcribe(
+                            gcs_uri=gcs_uri, input_prompt=custom_prompt
+                        )
+                    else:
+                        logging.info(f"Translating file")
+                        transcription_result = translate(
+                            gcs_uri=gcs_uri,
+                            # input_prompt=custom_prompt
+                        )
                 else:
                     logging.info(
                         f"Saving audio file to local at {inp_audio_file_path=}"
@@ -153,8 +148,11 @@ class SahayakController:
                 end = time.time()
                 logging.info(f"Transcription Time: {end-master_start}")
                 transcribed_text = transcription_result.get("transcription")
+                translated_text = transcription_result.get("transcription_hindi", None)
                 logging.info(f"Transcription Text: {transcribed_text=}")
                 request.update({"user_message": [transcribed_text]})
+                if translated_text:
+                    request.update({"user_message_hindi": [translated_text]})
                 # request.update({"gcs_uri": gcs_uri})
             else:
                 logging.info(f"Audio data not received")
@@ -164,10 +162,12 @@ class SahayakController:
                 "thread_id": request.get("thread_id"),
                 "state": request.get("state"),
                 "user_message": request.get("user_message"),
+                "user_message_hindi": request.get("user_message_hindi", []),
                 "document_upload_flag": request.get("document_upload_flag"),
                 "offer_item_id": request.get("offer_item_id"),
                 "selected_loan_amount": request.get("selected_loan_amount"),
             }
+            logging.info(f"{workflow_payload=}")
             conversation_response = AudioConversationController().resume_conversation(
                 **workflow_payload
             )
@@ -175,40 +175,43 @@ class SahayakController:
             agent_message = conversation_response.get("agent_message")
             modified = conversation_response.get("modified")
             next_state = conversation_response.get("next_state")
+            language = conversation_response.get("language")
             if modified:
                 agent_message = conversation_response.get("agent_message_modified")
             if next_state == "submit_form":
                 logging.info(f"Reading default audio message for submit_form")
-                audio_base64 = open(self.form_submit_message_audio_path, "r").read()
+                form_submit_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/form_submission_message.txt"
+                audio_base64 = open(form_submit_message_audio_path, "r").read()
             elif next_state == "resume_after_aa_redirect":
                 logging.info(
                     f"Reading default audio message for resume_after_aa_redirect"
                 )
-                audio_base64 = open(self.aa_redirect_message_audio_path, "r").read()
+                aa_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/aa_redirect_message.txt"
+                audio_base64 = open(aa_redirect_message_audio_path, "r").read()
             elif next_state == "resume_after_kyc_redirect":
                 logging.info(
                     f"Reading default audio message for resume_after_kyc_redirect"
                 )
-                audio_base64 = open(self.kyc_redirect_message_audio_path, "r").read()
+                kyc_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/kyc_redirect_message.txt"
+                audio_base64 = open(kyc_redirect_message_audio_path, "r").read()
             elif next_state == "resume_after_emdt_redirect":
                 logging.info(
                     f"Reading default audio message for resume_after_emdt_redirect"
                 )
-                audio_base64 = open(
-                    self.eMandate_redirect_message_audio_path, "r"
-                ).read()
+                eMandate_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/eMandate_redirect_message.txt"
+                audio_base64 = open(eMandate_redirect_message_audio_path, "r").read()
             elif next_state == "resume_loan_agreement_signing":
                 logging.info(
                     f"Reading default audio message for resume_loan_agreement_signing"
                 )
-                audio_base64 = open(
-                    self.sign_loan_agreement_message_audio_path, "r"
-                ).read()
+                sign_loan_agreement_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/sign_loan_agreement_message.txt"
+                audio_base64 = open(sign_loan_agreement_message_audio_path, "r").read()
             # elif next_state == "human_loan_tnc_feedback":
             #     logging.info(
             #         f"Reading default audio message for human_loan_tnc_feedback"
             #     )
-            #     audio_base64 = open(self.congratulations_message_audio_path, "r").read()
+            #     congratulations_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/congratulations_message.txt"
+            #     audio_base64 = open(congratulations_message_audio_path, "r").read()
             else:
                 logging.info(f"executing text to speech function")
                 if self.stt_service == "11LABS":
@@ -231,6 +234,9 @@ class SahayakController:
                         audio_base64 = agent_audio_data
                     else:
                         audio_base64 = ""
+            if language == "hi":
+                user_message_hindi = conversation_response.get("user_message_hindi")
+                conversation_response.update({"user_message": user_message_hindi})
             conversation_response.update({"agent_audio_data": audio_base64})
             return conversation_response
         except Exception as error:

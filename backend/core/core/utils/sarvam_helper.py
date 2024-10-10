@@ -6,11 +6,11 @@ class SarvamAPI:
     def __init__(self) -> None:
         self.api_key = os.environ.get("SARVAM_API_KEY")
         self.sarvam_base_url = "https://api.sarvam.ai"
-        self.speaker_map = {"raju": "arvind", "rani": "meera"}
+        self.speaker_map = {"raju": "arvind", "rani": "pavithra"}
         self.local_testing = os.environ.get("LOCAL_TESTING")
 
     def sarvam_tts(
-        self, text: str, target_language_code: str = "hi-IN", speaker: str = "raju"
+        self, text: str, target_language_code: str = "hi-IN", speaker: str = "rani"
     ):
         if self.local_testing == "True":
             print(f"Bypassing audio generation")
@@ -22,7 +22,7 @@ class SarvamAPI:
             "target_language_code": target_language_code,
             "speaker": self.speaker_map[speaker],
             "pitch": 0,
-            "pace": 1.2,
+            "pace": 1.0,
             "loudness": 1.5,
             "speech_sample_rate": 8000,
             "enable_preprocessing": True,
@@ -33,7 +33,7 @@ class SarvamAPI:
             "Content-Type": "application/json",
         }
 
-        response, response_code = APIInterface.post(
+        response, response_code = APIInterface.post_without_logs(
             route=route, json=payload, headers=headers
         )
         return response.get("audios")[0]

@@ -30,6 +30,26 @@ class APIInterface:
             raise error
 
     @staticmethod
+    def post_without_logs(route, data=None, json=None, headers=None):
+        try:
+            url = route
+            logging.info("POST request sent")
+            logging.debug(f"url = {url}, data = {data}")
+            response = requests.post(url, data=data, json=json, headers=headers)
+            # if response.status_code >= 400:
+            #     raise Exception(
+            #         f"Call to {route} failed with {response.status_code} and response {response.text}"
+            #     )
+            # logging.debug(f"response = {response}")
+            logging.debug(f"response.status_code = {response.status_code}")
+            if response.text:
+                return response.json(), response.status_code
+            return None, response.status_code
+        except Exception as error:
+            logging.error(f"Error in POST API request: {error}")
+            raise error
+
+    @staticmethod
     def post_v1(route, data=None, json=None, headers=None):
         try:
             url = route

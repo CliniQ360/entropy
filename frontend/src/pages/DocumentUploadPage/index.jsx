@@ -89,6 +89,7 @@ const DocumentUploadPage = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [uploadRestriction, setUploadRestriction] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   /*FOR ADDHAR CARD*/
   const handleFileChange = (event) => {
@@ -144,6 +145,7 @@ const DocumentUploadPage = () => {
     const payload = {
       threadId: sessionStorage.getItem("thread_id"),
       files: formData,
+      // language: sessionStorage.getItem("activeLanguage"),
     };
 
     dispatch(documentUpload(payload)).then((res) => {
@@ -159,6 +161,7 @@ const DocumentUploadPage = () => {
           threadId: sessionStorage.getItem("thread_id"),
           uploadFlag: true,
           state: sessionStorage.getItem("next_state"),
+          language: sessionStorage.getItem("activeLanguage"),
         };
         dispatch(agentConversation(secondpayload)).then((res) => {
           if (res?.error && Object.keys(res?.error)?.length > 0) {
@@ -202,7 +205,10 @@ const DocumentUploadPage = () => {
               textAlign: "left",
             }}
           >
-            Please upload your Aadhar and Pan Card Below
+            {/* Please upload your Aadhar and Pan Card Below */}
+            {activeLanguage === "hi"
+              ? "कृपया नीचे अपना आधार और पैन कार्ड अपलोड करें"
+              : "Please upload your Aadhar and Pan Card Below"}
           </Typography>
         </DocumentHeaderSection>
         <UploadDocumentContainer>
@@ -220,7 +226,7 @@ const DocumentUploadPage = () => {
                 <Typography
                   sx={{ fontFamily: "plus jakarta sans bold", ml: 3, mr: 3 }}
                 >
-                  AADHAR
+                  {activeLanguage === "hi" ? "आधार" : "AADHAR"}
                 </Typography>
                 {uploadSuccess && images.length > 0 && <CorrectIcon />}
               </Stack>
@@ -276,7 +282,7 @@ const DocumentUploadPage = () => {
                 <Typography
                   sx={{ fontFamily: "plus jakarta sans bold", ml: 3, mr: 3 }}
                 >
-                  PAN
+                  {activeLanguage === "hi" ? "पैन" : "PAN"}
                 </Typography>
                 {uploadSuccess && panImages.length > 0 && <CorrectIcon />}
               </Stack>
@@ -325,7 +331,7 @@ const DocumentUploadPage = () => {
             onClick={handleUploadImages}
             disabled={uploadRestriction}
           >
-            Upload
+            {activeLanguage === "hi" ? "अपलोड" : "Upload"}
           </Button>
         </Stack>
       </UploadDocumentWrapper>

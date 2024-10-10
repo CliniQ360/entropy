@@ -104,6 +104,7 @@ const ProfessionalDetailsPage = () => {
         threadId: sessionStorage.getItem("thread_id"),
         uploadFlag: sessionStorage.getItem("document_upload_flag"),
         state: sessionStorage.getItem("next_state"),
+        language: sessionStorage.getItem("activeLanguage"),
       };
       dispatch(agentConversation(payload)).then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
@@ -196,6 +197,7 @@ const ProfessionalDetailsPage = () => {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
             state: sessionStorage.getItem("next_state"),
+            language: sessionStorage.getItem("activeLanguage"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {

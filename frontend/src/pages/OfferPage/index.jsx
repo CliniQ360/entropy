@@ -2,8 +2,6 @@ import {
   Box,
   Divider,
   FormControl,
-  FormControlLabel,
-  Radio,
   RadioGroup,
   Stack,
   styled,
@@ -18,19 +16,23 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AudioDataContext } from "../../context/audioDataContext";
 import { useDispatch } from "react-redux";
 import { agentConversation } from "../CreditPage/audioAgent.slice";
 import CustomLoader from "../../components/CustomLoader";
 import CustomTimer from "../../components/CustomTimer";
 import { MediaContext } from "../../context/mediaContext";
+import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice";
+import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -59,7 +61,7 @@ const SelectBoxContainer = styled("div")(({ theme }) => ({
   border: "1px solid #9E9E9E",
   padding: theme.spacing(4),
   borderRadius: "8px",
-  width: 320,
+  width: "100%",
   backgroundColor: "#FFFFFF",
   flex: "0 0 auto",
 }));
@@ -140,9 +142,24 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   },
 }));
 
+const useStyles = {
+  dialogContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  planeImage: {
+    width: "50px",
+    height: "50px",
+    transition: "transform 1s ease-in-out",
+  },
+  planeImageFlying: {
+    transform: "translateX(250px) rotate(-20deg)",
+  },
+};
+
 const AvailableOffersPage = () => {
   const [selectedOffer, setSelectedOffer] = useState(null);
-  const [offerDetails, setOfferDetails] = useState([]);
   const {
     nextState,
     setError,
@@ -150,53 +167,72 @@ const AvailableOffersPage = () => {
     setMessageResponse,
     setUserResponse,
     setProcessing,
+    setProgressValue,
   } = useContext(MediaContext);
+  const { aaRedirectUrl, offerDetails } = useContext(AudioDataContext);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const [openViewDetails, setOpenViewDetails] = useState(false);
   const scrollRef = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [confirmationDialog, setConfirmationDialog] = useState(false);
+  const [isFlying, setIsFlying] = useState(false);
+  const [redirectionVal, setRedirectionVal] = useState(false);
+
+  let form_aa_URL;
 
   /*APIS FOR REFERESH OFFER */
-  useEffect(() => {
-    setShowLoader(true);
-    const thread_id = sessionStorage.getItem("thread_id");
-    const uploadFlag = sessionStorage.getItem("document_upload_flag");
-    const next_state = sessionStorage.getItem("next_state");
-    setProcessing(true);
-    const payload = {
-      threadId: thread_id,
-      uploadFlag: uploadFlag,
-      state: "refresh_offer",
-    };
-    const setTimeoutSeconds = showTimer ? 48000 : 0;
-    setTimeout(() => {
-      setShowLoader(true);
-      dispatch(agentConversation(payload)).then((res) => {
-        if (res?.error && Object.keys(res?.error)?.length > 0) {
-          setShowLoader(false);
-          setError(true);
-          setProcessing(false);
-          return;
-        }
-        setError(false);
-        setProcessing(false);
-        setAudioResponse(res?.payload?.data?.agent_audio_data);
-        setMessageResponse(res?.payload?.data?.agent_message);
-        setOfferDetails(res?.payload?.data?.offer_list);
-        setUserResponse(res?.payload?.data?.user_message);
+  // useEffect(() => {
+  //   setShowLoader(true);
+  //   const thread_id = sessionStorage.getItem("thread_id");
+  //   const uploadFlag = sessionStorage.getItem("document_upload_flag");
+  //   const next_state = sessionStorage.getItem("next_state");
+  //   setProcessing(true);
+  //   const payload = {
+  //     threadId: thread_id,
+  //     uploadFlag: uploadFlag,
+  //     state: "refresh_offer",
+  //     language: sessionStorage.getItem("activeLanguage"),
+  //   };
+  //   const setTimeoutSeconds = showTimer ? 48000 : 0;
+  //   setTimeout(() => {
+  //     setShowLoader(true);
+  //     dispatch(agentConversation(payload)).then((res) => {
+  //       if (res?.error && Object.keys(res?.error)?.length > 0) {
+  //         setShowLoader(false);
+  //         setError(true);
+  //         setProcessing(false);
+  //         return;
+  //       }
+  //       setError(false);
+  //       setProcessing(false);
+  //       setAudioResponse(res?.payload?.data?.agent_audio_data);
+  //       setMessageResponse(res?.payload?.data?.agent_message);
+  //       setOfferDetails(res?.payload?.data?.offer_list);
+  //       setUserResponse(res?.payload?.data?.user_message);
 
-        sessionStorage.setItem(
-          "customer_details",
-          JSON.stringify(res?.payload?.data?.customer_details)
-        );
-        setShowLoader(false);
-        setTimeout(() => {
-          sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
-        }, 300);
-      });
-    }, setTimeoutSeconds);
-  }, []);
+  //       sessionStorage.setItem(
+  //         "customer_details",
+  //         JSON.stringify(res?.payload?.data?.customer_details)
+  //       );
+  //       setShowLoader(false);
+  //       setTimeout(() => {
+  //         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
+  //       }, 300);
+  //     });
+  //   }, setTimeoutSeconds);
+  // }, []);
+
+  useEffect(() => {
+    console.log(offerDetails);
+  });
+
+  useEffect(() => {
+    if (nextState === "resume_after_aa_redirect") {
+      setConfirmationDialog(true);
+    }
+  }, [nextState]);
 
   const filteredLoanOffers = offerDetails?.filter((offer) =>
     offer?.provider_details?.name.toLowerCase().includes("")
@@ -249,6 +285,87 @@ const AvailableOffersPage = () => {
     }
   };
 
+  const fetchTransactionStatus = async (retryCount = 0) => {
+    setTimeout(() => {
+      setRedirectionVal(true);
+    }, 1100);
+    if (retryCount >= 50) {
+      console.log(
+        "Maximum retry limit reached. Unable to get desired response."
+      );
+      return;
+    }
+
+    setTimeout(() => {
+      const payload = {
+        txnId: sessionStorage.getItem("txn_id"),
+      };
+      dispatch(creditStatusCheck(payload)).then((res) => {
+        if (res?.error && Object.keys(res?.error)?.length > 0) {
+          setError(true);
+          return;
+        }
+        setError(false);
+        if (res?.payload?.redirection_status === "AA_APPROVED") {
+          console.log("Desired response received:");
+          form_aa_URL.close();
+          setRedirectionVal(false);
+          setShowLoader(true);
+          setProcessing(true);
+          const secondpayload = {
+            uploadFlag: sessionStorage.getItem("document_upload_flag"),
+            state: sessionStorage.getItem("next_state"),
+            language: sessionStorage.getItem("activeLanguage"),
+          };
+          dispatch(agentConversation(secondpayload)).then((res) => {
+            if (res?.error && Object.keys(res?.error)?.length > 0) {
+              setError(true);
+              setProcessing(false);
+              return;
+            }
+            setError(false);
+            setShowLoader(false);
+            setProgressValue(30);
+            setProcessing(false);
+            sessionStorage.setItem(
+              "next_state",
+              res?.payload?.data?.next_state
+            );
+            setAudioResponse(res?.payload?.data?.agent_audio_data);
+            setMessageResponse(res?.payload?.data?.agent_message);
+            setUserResponse(res?.payload?.data?.user_message);
+            sessionStorage.setItem("showTimer", true);
+            navigate("/credit/availableOffers");
+          });
+        } else if (res?.payload?.redirection_status === "AA_REJECTED") {
+          form_aa_URL.close();
+          setConfirmationDialog(true);
+        } else {
+          console.log("Not AA_APPROVED");
+          fetchTransactionStatus(retryCount + 1);
+        }
+      });
+    }, 5000);
+  };
+
+  const handleDialogSubmit = (value) => {
+    if (value === "YES") {
+      setIsFlying(true);
+      setTimeout(() => {
+        setConfirmationDialog(false);
+        setIsFlying(false);
+      }, 1000);
+      setTimeout(() => {
+        form_aa_URL = window.open(aaRedirectUrl, "_blank");
+      }, 1800);
+      fetchTransactionStatus();
+    } else {
+      setRedirectionVal(false);
+      setConfirmationDialog(false);
+      return;
+    }
+  };
+
   useEffect(() => {
     const ref = scrollRef.current;
     if (ref) {
@@ -260,7 +377,7 @@ const AvailableOffersPage = () => {
   }, []);
 
   useEffect(() => {
-    if (offerDetails.length > 0) {
+    if (offerDetails?.length > 0) {
       sessionStorage.setItem(
         "selected_offer",
         JSON.stringify(offerDetails?.[currentSlide])
@@ -456,27 +573,24 @@ const AvailableOffersPage = () => {
     sessionStorage.getItem("showTimer") === "true" ? true : false;
   const [showTimer, setShowTimer] = useState(initialShowTimer);
   const [showLoader, setShowLoader] = useState(false);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
   useEffect(() => {
     sessionStorage.setItem("showTimer", showTimer);
   }, [showTimer]);
 
   return (
     <>
-      {!showTimer ? (
-        <CustomLoader open={showLoader} />
-      ) : (
-        <CustomTimer
-          open={showTimer}
-          onClose={() => setShowLoader(false)}
-          setShowTimer={setShowTimer}
-        />
-      )}
+      <CustomLoader open={showLoader} />
+      <RedirectionDialogComponent
+        open={redirectionVal}
+        setRedirectionVal={setRedirectionVal}
+      />
       <AvailableOffersContainer>
         <DocumentHeaderSection>
           <Typography
             sx={{ fontSize: "1.4rem", fontWeight: 700, textAlign: "left" }}
           >
-            Available Offers
+            {activeLanguage === "hi" ? "उपलब्ध ऑफर" : "Available Offers"}
           </Typography>
         </DocumentHeaderSection>
         <FormContainer>
@@ -533,13 +647,15 @@ const AvailableOffersPage = () => {
                               color={"#5A5A5A"}
                               fontSize={16}
                             >
-                              Loan Amount
+                              {activeLanguage === "hi"
+                                ? "ऋण राशि"
+                                : "Loan Amount"}
                             </Typography>
                             <Typography
                               fontFamily={"Source Sans Pro"}
                               fontSize={16}
                             >
-                              Rs.{" "}
+                              {activeLanguage === "hi" ? "रु." : "Rs."}
                               {formatNumber(offer.offer_details.item_price) ||
                                 ""}
                             </Typography>
@@ -550,7 +666,9 @@ const AvailableOffersPage = () => {
                               color={"#5A5A5A"}
                               fontSize={16}
                             >
-                              Interest Rate
+                              {activeLanguage === "hi"
+                                ? "ब्याज दर"
+                                : "Interest Rate"}
                             </Typography>
                             <Typography
                               fontFamily={"Source Sans Pro"}
@@ -568,14 +686,14 @@ const AvailableOffersPage = () => {
                               color={"#5A5A5A"}
                               fontSize={16}
                             >
-                              Tenure
+                              {activeLanguage === "hi" ? "अवधि" : "Tenure"}
                             </Typography>
                             <Typography
                               fontFamily={"Source Sans Pro"}
                               fontSize={16}
                             >
                               {formatNumber(offer.offer_details.TERM) || ""}{" "}
-                              Months
+                              {activeLanguage === "hi" ? "महीने" : "Months"}
                             </Typography>
                           </DetailRow>
                           <DetailRow>
@@ -584,7 +702,9 @@ const AvailableOffersPage = () => {
                               color={"#5A5A5A"}
                               fontSize={16}
                             >
-                              Installment Amount
+                              {activeLanguage === "hi"
+                                ? "किस्त राशि"
+                                : "Installment Amount"}
                             </Typography>
                             <Typography
                               fontFamily={"Source Sans Pro"}
@@ -594,7 +714,7 @@ const AvailableOffersPage = () => {
                               {formatNumber(
                                 offer.offer_details.INSTALLMENT_AMOUNT
                               ) || ""}{" "}
-                              /Month
+                              {activeLanguage === "hi" ? "/माह" : "/Month"}
                             </Typography>
                           </DetailRow>
                         </SelectBoxDetails>
@@ -616,18 +736,9 @@ const AvailableOffersPage = () => {
                               setOpenViewDetails(true);
                             }}
                           >
-                            {" "}
-                            View Details{" "}
-                          </Button>
-                          <Divider orientation="vertical" flexItem />
-
-                          <Button
-                            variant="text"
-                            fontFamily={"Source Sans Pro SemiBold"}
-                            fontSize={20}
-                            sx={{ textTransform: "initial" }}
-                          >
-                            Customize
+                            {activeLanguage === "hi"
+                              ? "विवरण देखें"
+                              : "View Details"}
                           </Button>
                         </Box>
                       </SelectBoxContainer>
@@ -728,6 +839,41 @@ const AvailableOffersPage = () => {
           ))}
         </StyledDialogContent>
       </BootstrapDialog>
+      <Dialog
+        open={confirmationDialog}
+        onClose={() => setConfirmationDialog(false)}
+        fullWidth
+        maxWidth={"xs"}
+      >
+        <DialogContent style={useStyles.dialogContent}>
+          <img
+            src="https://pngfre.com/wp-content/uploads/Airplane-4.png"
+            alt="Plane"
+            style={{
+              ...useStyles.planeImage,
+              ...(isFlying ? useStyles.planeImageFlying : {}),
+            }}
+          />
+          <DialogContentText
+            id="alert-dialog-description"
+            style={{ textAlign: "center", marginTop: "20px" }}
+          >
+            {activeLanguage === "hi"
+              ? "कृपया बाहर न निकलें या वापस न जाएं ।"
+              : "Please don't exit or press back."}
+            <br />
+
+            {activeLanguage === "hi"
+              ? "कृपया प्रतीक्षा करें, हम आपको एए वेरिफिकेशन पृष्ठ पर पुनः निर्देशित कर रहे हैं ।"
+              : "Please wait while we are redirecting you to the AA Verification Page."}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleDialogSubmit("YES")}>
+            {activeLanguage === "hi" ? "आगे बढ़ें" : "Proceed"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
