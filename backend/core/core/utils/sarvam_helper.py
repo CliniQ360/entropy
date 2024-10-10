@@ -10,7 +10,7 @@ class SarvamAPI:
         self.local_testing = os.environ.get("LOCAL_TESTING")
 
     def sarvam_tts(
-        self, text: str, target_language_code: str = "hi-IN", speaker: str = "rani"
+        self, text: str, target_language_code: str = "hi-IN", speaker: str = "raju"
     ):
         if self.local_testing == "True":
             print(f"Bypassing audio generation")
@@ -22,7 +22,7 @@ class SarvamAPI:
             "target_language_code": target_language_code,
             "speaker": self.speaker_map[speaker],
             "pitch": 0,
-            "pace": 1.0,
+            "pace": 1.2,
             "loudness": 1.5,
             "speech_sample_rate": 8000,
             "enable_preprocessing": True,
