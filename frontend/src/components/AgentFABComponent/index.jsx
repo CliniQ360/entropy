@@ -9,6 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
+import felameAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 import { MediaContext } from "../../context/mediaContext";
 
 const ellipsisAnimation = keyframes`
@@ -42,7 +43,7 @@ const ProfileIcon = styled("div")({
   width: "56px",
   border: "2px solid #00A91C",
   borderRadius: "50%",
-  backgroundImage: `url(${maleAst})`,
+  backgroundImage: `url(${felameAst})`,
   backgroundSize: "cover",
   backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
@@ -170,7 +171,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise
-          .then(() => {})
+          .then(() => { })
           .catch((error) => {
             console.error("Error attempting to play audio:", error);
           });
