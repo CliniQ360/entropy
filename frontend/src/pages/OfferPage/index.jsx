@@ -179,7 +179,6 @@ const AvailableOffersPage = () => {
   const [confirmationDialog, setConfirmationDialog] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
-  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   let form_aa_URL;
 
