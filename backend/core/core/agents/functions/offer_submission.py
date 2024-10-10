@@ -199,7 +199,7 @@ def get_bureau_based_offers(state: SahayakState):
     # )
     submit_resp_code = 200
     finvu_user_id = "8552012549@finvu"
-    txn_id = "12f647fb-7c86-409b-a143-c57b8d2a022f"
+    txn_id = "30896010-6272-4d2c-a7a9-e5ba9adbef1d"
     if submit_resp_code == 200:
         select_resp, select_resp_code = APIInterface().post_with_params(
             route=select_url, params={"txn_id": txn_id}
