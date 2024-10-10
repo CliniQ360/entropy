@@ -573,6 +573,7 @@ const AvailableOffersPage = () => {
     sessionStorage.getItem("showTimer") === "true" ? true : false;
   const [showTimer, setShowTimer] = useState(initialShowTimer);
   const [showLoader, setShowLoader] = useState(false);
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
   useEffect(() => {
     sessionStorage.setItem("showTimer", showTimer);
   }, [showTimer]);
@@ -593,7 +594,7 @@ const AvailableOffersPage = () => {
           <Typography
             sx={{ fontSize: "1.4rem", fontWeight: 700, textAlign: "left" }}
           >
-            Available Offers
+            {activeLanguage === "hi" ? "उपलब्ध ऑफर" : "Available Offers"}
           </Typography>
         </DocumentHeaderSection>
         <FormContainer>
@@ -650,13 +651,15 @@ const AvailableOffersPage = () => {
                               color={"#5A5A5A"}
                               fontSize={16}
                             >
-                              Loan Amount
+                              {activeLanguage === "hi"
+                                ? "ऋण राशि"
+                                : "Loan Amount"}
                             </Typography>
                             <Typography
                               fontFamily={"Source Sans Pro"}
                               fontSize={16}
                             >
-                              Rs.{" "}
+                              {activeLanguage === "hi" ? "रु." : "Rs."}
                               {formatNumber(offer.offer_details.item_price) ||
                                 ""}
                             </Typography>
@@ -667,7 +670,9 @@ const AvailableOffersPage = () => {
                               color={"#5A5A5A"}
                               fontSize={16}
                             >
-                              Interest Rate
+                              {activeLanguage === "hi"
+                                ? "ब्याज दर"
+                                : "Interest Rate"}
                             </Typography>
                             <Typography
                               fontFamily={"Source Sans Pro"}
@@ -685,14 +690,14 @@ const AvailableOffersPage = () => {
                               color={"#5A5A5A"}
                               fontSize={16}
                             >
-                              Tenure
+                              {activeLanguage === "hi" ? "अवधि" : "Tenure"}
                             </Typography>
                             <Typography
                               fontFamily={"Source Sans Pro"}
                               fontSize={16}
                             >
                               {formatNumber(offer.offer_details.TERM) || ""}{" "}
-                              Months
+                              {activeLanguage === "hi" ? "महीने" : "Months"}
                             </Typography>
                           </DetailRow>
                           <DetailRow>
@@ -701,7 +706,9 @@ const AvailableOffersPage = () => {
                               color={"#5A5A5A"}
                               fontSize={16}
                             >
-                              Installment Amount
+                              {activeLanguage === "hi"
+                                ? "किस्त राशि"
+                                : "Installment Amount"}
                             </Typography>
                             <Typography
                               fontFamily={"Source Sans Pro"}
@@ -711,7 +718,7 @@ const AvailableOffersPage = () => {
                               {formatNumber(
                                 offer.offer_details.INSTALLMENT_AMOUNT
                               ) || ""}{" "}
-                              /Month
+                              {activeLanguage === "hi" ? "/माह" : "/Month"}
                             </Typography>
                           </DetailRow>
                         </SelectBoxDetails>
@@ -733,18 +740,9 @@ const AvailableOffersPage = () => {
                               setOpenViewDetails(true);
                             }}
                           >
-                            {" "}
-                            View Details{" "}
-                          </Button>
-                          <Divider orientation="vertical" flexItem />
-
-                          <Button
-                            variant="text"
-                            fontFamily={"Source Sans Pro SemiBold"}
-                            fontSize={20}
-                            sx={{ textTransform: "initial" }}
-                          >
-                            Customize
+                            {activeLanguage === "hi"
+                              ? "विवरण देखें"
+                              : "View Details"}
                           </Button>
                         </Box>
                       </SelectBoxContainer>

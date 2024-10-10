@@ -226,7 +226,7 @@ const DocumentUploadPage = () => {
                 <Typography
                   sx={{ fontFamily: "plus jakarta sans bold", ml: 3, mr: 3 }}
                 >
-                  AADHAR
+                  {activeLanguage === "hi" ? "आधार" : "AADHAR"}
                 </Typography>
                 {uploadSuccess && images.length > 0 && <CorrectIcon />}
               </Stack>
@@ -282,7 +282,7 @@ const DocumentUploadPage = () => {
                 <Typography
                   sx={{ fontFamily: "plus jakarta sans bold", ml: 3, mr: 3 }}
                 >
-                  PAN
+                  {activeLanguage === "hi" ? "पैन" : "PAN"}
                 </Typography>
                 {uploadSuccess && panImages.length > 0 && <CorrectIcon />}
               </Stack>

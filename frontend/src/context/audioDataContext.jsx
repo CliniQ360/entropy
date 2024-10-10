@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { offersDump } from "../assets/dump";
 
 const AudioDataContext = createContext();
 
@@ -8,7 +9,7 @@ const AudioContextProvider = ({ children }) => {
   const [kycRedirectUrl, setKycRedirectUrl] = useState("");
   const [eMandateRedirectUrl, setEMandateRedirectUrl] = useState("");
   const [offerList, setOfferList] = useState([]);
-  const [offerDetails, setOfferDetails] = useState([]);
+  const [offerDetails, setOfferDetails] = useState(offersDump);
 
   return (
     <AudioDataContext.Provider

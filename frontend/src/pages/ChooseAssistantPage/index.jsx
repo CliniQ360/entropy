@@ -275,7 +275,9 @@ const ChooseAssistant = () => {
       </AssistantProfilePhotoWrapper>
       <FooterButtonWrapper>
         <FooterButton variant="contained" onClick={handleInitConversion}>
-          {activeButton === 0 ? "Start Your Journey" : "ऋण प्रक्रिया शुरू करें"}
+          {activeLanguage === 0
+            ? "Start Your Journey"
+            : "ऋण प्रक्रिया शुरू करें"}
         </FooterButton>
       </FooterButtonWrapper>
     </PageWrapper>
