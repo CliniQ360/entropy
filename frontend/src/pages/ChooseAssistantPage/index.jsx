@@ -221,7 +221,7 @@ const ChooseAssistant = () => {
         >
           {activeLanguage === 0
             ? "Choose your assistant for today"
-            : "आज के लिए अपने सहायक का चयन करें"}
+            : "अपने सहायक का चयन करें"}
         </Typography>
       </HeadingSection>
       <AssistantChangeSectionWrapper>
@@ -265,11 +265,11 @@ const ChooseAssistant = () => {
           >
             {activeLanguage === 0
               ? "Welcome to CliniQ-360! My name is " +
-                (activeButton === 0 ? "Raju" : "Rani") +
-                " and I am excited to assist you in your credit journey!"
+              (activeButton === 0 ? "Raju" : "Rani") +
+              " and I am excited to assist you in your credit journey!"
               : "क्लिनीक-360 में आपका स्वागत है! मेरा नाम " +
-                (activeButton === 0 ? "राजू" : "रानी") +
-                " है और मैं आपकी क्रेडिट यात्रा में आपकी सहायता करने के लिए उत्साहित हूं !"}
+              (activeButton === 0 ? "राजू" : "रानी") +
+              " है और मैं आपकी क्रेडिट यात्रा में आपकी सहायता करने के लिए उत्साहित हूं !"}
           </Typography>
         </Stack>
       </AssistantProfilePhotoWrapper>
