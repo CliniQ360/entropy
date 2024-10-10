@@ -43,7 +43,7 @@ const ProfileIcon = styled("div")({
   width: "56px",
   border: "2px solid #00A91C",
   borderRadius: "50%",
-  backgroundImage: `url(${felameAst})`,
+  backgroundImage: `url(${maleAst})`,
   backgroundSize: "cover",
   backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
