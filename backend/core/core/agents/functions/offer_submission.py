@@ -20,12 +20,20 @@ logging = logger(__name__)
 
 
 def submit_form_ack(state: SahayakState):
-    return {
-        "agent_message": [
-            "Please wait while we submit your details. This may take a few seconds."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Please wait while we submit your details. This may take a few seconds."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "कृपया प्रतीक्षा करें। हम आपका विवरण जमा कर रहे हैं. इसमें कुछ समय लग सकता है।"
+            ],
+            "modified": False,
+        }
 
 
 def submit_form(state: SahayakState):
@@ -100,21 +108,41 @@ def submit_form(state: SahayakState):
         )
         aa_url = get_aa_resp.get("aa_url")
         logging.info(f"{aa_url=}")
-        return {
-            "aa_url": aa_url,
-            "txn_id": txn_id,
-            "agent_message": [
-                f"Your details are successfully submitted. Please click proceed to complete account aggregator flow."
-            ],
-            "modified": False,
-        }
+        if state.get("language") == "en":
+            return {
+                "aa_url": aa_url,
+                "txn_id": txn_id,
+                "agent_message": [
+                    f"Your details are successfully submitted. Please click proceed to complete account aggregator flow."
+                ],
+                "modified": False,
+            }
+        else:
+            return {
+                "aa_url": aa_url,
+                "txn_id": txn_id,
+                "agent_message": [
+                    f"आपका विवरण सफलतापूर्वक सबमिट कर दिया गया है. खाता एग्रीगेटर प्रवाह पूरा करने के लिए कृपया आगे बढ़ें पर क्लिक करें।"
+                ],
+                "modified": False,
+            }
     else:
-        return {
-            "aa_url": None,
-            "txn_id": txn_id,
-            "agent_message": [f"Error in submitting the form. Please try again later."],
-            "modified": False,
-        }
+        if state.get("language") == "en":
+            return {
+                "aa_url": None,
+                "txn_id": txn_id,
+                "agent_message": [
+                    f"Error in submitting the form. Please try again later."
+                ],
+                "modified": False,
+            }
+        else:
+            return {
+                "aa_url": None,
+                "txn_id": txn_id,
+                "agent_message": [f"फॉर्म सबमिट करने में त्रुटि. कृपया बाद में पुन: प्रयास करें।"],
+                "modified": False,
+            }
 
 
 def get_bureau_based_offers(state: SahayakState):
@@ -170,8 +198,8 @@ def get_bureau_based_offers(state: SahayakState):
     #     route=submit_url, params={"txn_id": txn_id}, data=json_payload
     # )
     submit_resp_code = 200
-    finvu_user_id = "9511878113@finvu"
-    txn_id = "b51ca76d-b6c4-4550-8688-f58da4402648"
+    finvu_user_id = "8552012549@finvu"
+    txn_id = "12f647fb-7c86-409b-a143-c57b8d2a022f"
     if submit_resp_code == 200:
         select_resp, select_resp_code = APIInterface().post_with_params(
             route=select_url, params={"txn_id": txn_id}
@@ -179,7 +207,7 @@ def get_bureau_based_offers(state: SahayakState):
         offer_list = []
         wait_seconds = 0
         aa_url = None
-        while wait_seconds <= 60:
+        while wait_seconds <= 200:
             logging.info(f"Getting bureau based offers for {txn_id=}")
             get_bureau_offer_resp, get_bureau_offer_resp_code = APIInterface().get(
                 route=get_bureau_offer_url, params={"txn_id": txn_id}
@@ -231,10 +259,20 @@ def is_bureau_offer_received(state: SahayakState):
 
 
 def get_aa_url(state: SahayakState):
-    return {
-        "agent_message": ["Please click proceed to complete account aggregator flow."],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Please click proceed to complete account aggregator flow."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "खाता एग्रीगेटर प्रवाह पूरा करने के लिए कृपया आगे बढ़ें पर क्लिक करें।"
+            ],
+            "modified": False,
+        }
 
 
 def summarise_bureau_based_offers(state: SahayakState):
@@ -251,7 +289,10 @@ def summarise_bureau_based_offers(state: SahayakState):
             offer_summary_instructions = GeminiPrompts().offer_summary_instructions
         offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
         offer_summary = llm_flash.invoke(offer_summary_prompt)
-        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
+        if language == "hi":
+            prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. Generate output in Hindi. input_text: {offer_summary.content}"
+        else:
+            prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
         summary_in_words = llm_flash.invoke(prompt)
         print(summary_in_words.content)
     else:
@@ -262,11 +303,13 @@ def summarise_bureau_based_offers(state: SahayakState):
         summary_in_words = llm_4omini.invoke(prompt)
         print(summary_in_words.content)
     offer_summary = offer_summary.content
+    summary_in_words = summary_in_words.content
+    summary_in_words = summary_in_words.replace("*", "")
     # Write the list of analysis to state
     return {
         "offer_summary": offer_summary,
         "agent_message": [offer_summary],
-        "agent_message_modified": summary_in_words.content,
+        "agent_message_modified": summary_in_words,
         "modified": True,
     }
 
@@ -294,7 +337,8 @@ def user_intent_2(state: SahayakState):
     logging.info(f"{user_intent_prompt=}")
     llm_response = structured_llm.invoke(user_intent_prompt)
     user_intent = llm_response.user_intent
-
+    user_intent = user_intent.lower().strip()
+    user_intent = re.sub("[^A-Za-z_]+", "", user_intent)
     logging.info(f"{user_intent=}")
     if user_intent.lower().strip() == "get_more_details":
         return "answer_user_query_on_bureau_offer"
@@ -340,20 +384,30 @@ def answer_user_query_on_bureau_offer(state: SahayakState):
         print(llm_response_in_words.content)
     answer = llm_response.content
     logging.info(f"{answer=}")
+    llm_response_in_words = llm_response_in_words.content
+    llm_response_in_words = llm_response_in_words.replace("*", "")
     return {
         "agent_message": [answer],
-        "agent_message_modified": llm_response_in_words.content,
+        "agent_message_modified": llm_response_in_words,
         "modified": True,
     }
 
 
 def aa_redirect(state: SahayakState):
-    return {
-        "agent_message": [
-            "Sure. To get more offers, we would like you to complete the account aggregator flow. Please click on proceed."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "Sure. To get more offers, we would like you to complete the account aggregator flow. Please click on proceed."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                "ज़रूर। अधिक ऑफ़र प्राप्त करने के लिए, हम चाहेंगे कि आप खाता एग्रीगेटर प्रवाह पूरा करें। कृपया आगे बढ़ें पर क्लिक करें."
+            ],
+            "modified": False,
+        }
 
 
 def collect_updated_details(state: SahayakState):
@@ -408,11 +462,18 @@ def is_aa_approved(state: SahayakState):
 
 
 def approval_pending(state: SahayakState):
-    return {
-        "agent_message": [
-            "To proceed further, please provide an approval for account aggregator flow."
-        ]
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                "To proceed further, please provide an approval for account aggregator flow."
+            ]
+        }
+    else:
+        return {
+            "agent_message": [
+                "आगे बढ़ने के लिए, कृपया खाता एग्रीगेटर प्रवाह के लिए अनुमोदन प्रदान करें।"
+            ]
+        }
 
 
 def resume_after_aa_redirect(state: SahayakState):
@@ -477,7 +538,10 @@ def summarise_offers(state: SahayakState):
             offer_summary_instructions = GeminiPrompts().offer_summary_instructions
         offer_summary_prompt = offer_summary_instructions.format(offer_list=offer_list)
         offer_summary = llm_flash.invoke(offer_summary_prompt)
-        prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
+        if language == "hi":
+            prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. Generate output in hindi. input_text: {offer_summary.content}"
+        else:
+            prompt = f"Consider all the numeric values in the text and convert them into words. Currency is in Indian Rupees. Keep the tone conversational. input_text: {offer_summary.content}"
         summary_in_words = llm_flash.invoke(prompt)
         print(summary_in_words.content)
     else:
@@ -585,12 +649,20 @@ def select_offer(state: SahayakState):
     max_loan_amt_words = num2words(
         re.sub(r"[^A-Za-z0-9]+", "", str(max_loan_amt).split(".")[0]), lang="en_IN"
     )
-    return {
-        "agent_message": [
-            f"Please select the loan amount you want to avail. You can select any amount between {min_loan_amt_words} rupees and {max_loan_amt_words} rupees."
-        ],
-        "modified": False,
-    }
+    if state.get("language") == "en":
+        return {
+            "agent_message": [
+                f"Please select the loan amount you want to avail. You can select any amount between {min_loan_amt_words} rupees and {max_loan_amt_words} rupees."
+            ],
+            "modified": False,
+        }
+    else:
+        return {
+            "agent_message": [
+                f"कृपया अपनी ऋण राशि चुनें. आप {min_loan_amt_words} रुपये और {max_loan_amt_words} रुपये के बीच कोई भी राशि चुन सकते हैं।"
+            ],
+            "modified": False,
+        }
 
 
 def human_loan_amount_selection(state: SahayakState):

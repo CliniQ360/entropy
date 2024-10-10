@@ -236,10 +236,7 @@ class AudioConversationController:
                 elif state == "human_account_details_feedback":
                     workflow.update_state(
                         thread,
-                        {
-                            "user_message": kwargs.get("user_message"),
-                            "user_message_hindi": kwargs.get("user_message_hindi"),
-                        },
+                        {"user_message": kwargs.get("user_message")},
                         as_node=state,
                     )
                 elif state == "human_account_details_verification_feedback":

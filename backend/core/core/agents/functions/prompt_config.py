@@ -236,13 +236,14 @@ class GeminiPrompts:
 
         self.offer_summary_instructions_hi = """Offer details: {offer_list}.
         Act as a financial adviser. From the credit offer list provided above, help customer understand each credit offer in simple paragraph focusing on important information. 
-        Generate output in Hindi.
-        Output should be in maximum 200 characters including spaces and special characters. Keep the tone conversational."""
+        Keep the tone conversational and generate output in Hindi. Avoid any salutations or greetings.
+        Output should be in maximum 200 characters including spaces and special characters."""
 
         self.offer_qna_instructions = """Offer details : {offer_list}.
         Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
         user_query: {user_query}"""
 
         self.offer_qna_instructions_hi = """Offer details : {offer_list}.
-        Try to answer the user_query in brief based on the offer details. Generate output in Hindi. If applicable, provide the details from the offer details above. Keep the tone conversational.
+        Try to answer the user_query in brief based on the offer details. Keep the tone conversational and generate output in Hindi. Avoid any salutations or greetings. If applicable, provide the details from the offer details above.
+        Output should be in maximum 200 characters including spaces and special characters.
         user_query: {user_query}"""
