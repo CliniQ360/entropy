@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
 import { MediaContext } from "../../context/mediaContext";
+import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
 
 const ellipsisAnimation = keyframes`
   0%, 100% {
@@ -37,16 +38,16 @@ const Container = styled("div")({
   zIndex: 1000,
 });
 
-const ProfileIcon = styled("div")({
+const ProfileIcon = styled("div")(({ theme, type }) => ({
   height: "56px",
   width: "56px",
   border: "2px solid #00A91C",
   borderRadius: "50%",
-  backgroundImage: `url(${maleAst})`,
+  backgroundImage: type === "male" ? `url(${maleAst})` : `url(${femaleAst})`,
   backgroundSize: "cover",
   backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
-});
+}));
 
 const MessageBox = styled(Button)(
   ({ theme }) =>
@@ -108,6 +109,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
   const [messageVisible, setMessageVisible] = useState(false);
   const [xPosition, setXPosition] = useState(screenWidth - 60);
   const activeLanguage = sessionStorage.getItem("activeLanguage");
+  const assistantType = sessionStorage.getItem("assistantType");
 
   useEffect(() => {
     if (messageResponse || listening || processing || uploadDocument) {
@@ -203,7 +205,7 @@ const DraggableAgentFAB = ({ setDrawerOpen }) => {
         onDrag={handleDrag}
       >
         <Container>
-          <ProfileIcon />
+          <ProfileIcon type={assistantType} />
           <MessageBox
             onClick={() => {
               console.log("MessageBox clicked");
