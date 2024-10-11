@@ -50,6 +50,12 @@ const FormContainer = styled(Box)(({ theme }) => ({
   gap: theme.spacing(4),
 }));
 
+const FormBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: 10,
+}));
+
 const useStyles = {
   dialogContent: {
     display: "flex",
@@ -348,7 +354,7 @@ const PersonalDetailsPage = () => {
         activeLanguage === "hi" ? "व्यक्तिगत विवरण" : "Personal Details",
       accordionDetail: (
         <Element name="personal-details">
-          <Box ref={personalDetailsRef} id="personal-details">
+          <FormBox ref={personalDetailsRef} id="personal-details">
             <FormControl fullWidth>
               <FormLabel htmlFor="firstName">
                 <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
@@ -425,7 +431,7 @@ const PersonalDetailsPage = () => {
                 onChange={handleInputChange}
               />
             </FormControl>
-          </Box>
+          </FormBox>
         </Element>
       ),
     },
@@ -434,7 +440,7 @@ const PersonalDetailsPage = () => {
         activeLanguage === "hi" ? "संपर्क जानकारी" : "Contact Information",
       accordionDetail: (
         <Element name="contact-details">
-          <Box ref={contactDetailsRef} id="contact-details">
+          <FormBox ref={contactDetailsRef} id="contact-details">
             <FormControl fullWidth>
               <FormLabel htmlFor="email">
                 <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
@@ -490,7 +496,7 @@ const PersonalDetailsPage = () => {
                 onChange={handleInputChange}
               />
             </FormControl>
-          </Box>
+          </FormBox>
         </Element>
       ),
     },
@@ -499,7 +505,7 @@ const PersonalDetailsPage = () => {
         activeLanguage === "hi" ? "पता जानकारी" : "Address Information",
       accordionDetail: (
         <Element name="address-info">
-          <Box ref={addressInfoRef} id="address-info">
+          <FormBox ref={addressInfoRef} id="address-info">
             <FormControl fullWidth>
               <FormLabel htmlFor="addressL1">
                 <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
@@ -594,7 +600,7 @@ const PersonalDetailsPage = () => {
                 onChange={handleInputChange}
               />
             </FormControl>
-          </Box>
+          </FormBox>
         </Element>
       ),
     },
@@ -603,7 +609,7 @@ const PersonalDetailsPage = () => {
         activeLanguage === "hi" ? "व्यावसायिक विवरण" : "Professional Details",
       accordionDetail: (
         <Element name="profession-section">
-          <Box ref={professionDetailsRef} id="profession-section">
+          <FormBox ref={professionDetailsRef} id="profession-section">
             <FormControl fullWidth>
               <FormLabel htmlFor="companyName">
                 <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
@@ -687,7 +693,7 @@ const PersonalDetailsPage = () => {
             onChange={handleInputChange}
           />
         </FormControl> */}
-          </Box>
+          </FormBox>
         </Element>
       ),
     },
