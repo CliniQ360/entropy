@@ -184,6 +184,14 @@ const ChooseAssistant = () => {
     );
   }, [activeLanguage]);
 
+  useEffect(() => {
+    if (activeButton === 0) {
+      sessionStorage.setItem("assistantType", "male");
+    } else {
+      sessionStorage.setItem("assistantType", "female");
+    }
+  }, [activeButton]);
+
   const handleInitConversion = () => {
     setShowLoader(true);
     const payload = {
