@@ -262,6 +262,7 @@ const PersonalDetailsPage = () => {
         uploadFlag: sessionStorage.getItem("document_upload_flag"),
         state: sessionStorage.getItem("next_state"),
         language: sessionStorage.getItem("activeLanguage"),
+        agentGender: sessionStorage.getItem("assistantType"),
       };
       dispatch(agentConversation(payload)).then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {

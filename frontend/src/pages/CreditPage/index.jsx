@@ -71,6 +71,7 @@ const CreditPage = () => {
       uploadFlag: uploadFlag,
       state: sessionStorage.getItem("next_state"),
       language: sessionStorage.getItem("activeLanguage"),
+      agentGender: sessionStorage.getItem("assistantType"),
     };
     if (sessionStorage.getItem("offer_item_id")) {
       payload.offer_item_id = sessionStorage.getItem("offer_item_id");

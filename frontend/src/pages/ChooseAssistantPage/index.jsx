@@ -196,6 +196,7 @@ const ChooseAssistant = () => {
     setShowLoader(true);
     const payload = {
       language: sessionStorage.getItem("activeLanguage"),
+      agentGender: sessionStorage.getItem("assistantType"),
     };
 
     dispatch(startConversion(payload)).then((res) => {

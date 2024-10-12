@@ -133,6 +133,7 @@ const BankDetailsPage = () => {
         ],
         state: sessionStorage.getItem("next_state"),
         language: sessionStorage.getItem("activeLanguage"),
+        agentGender: sessionStorage.getItem("assistantType"),
       };
       dispatch(bankLoanDataResumeConversion(payload)).then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {

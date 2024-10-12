@@ -51,6 +51,7 @@ const CustomNavbar = () => {
   const thread_id = sessionStorage.getItem("thread_id");
   const uploadFlag = sessionStorage.getItem("document_upload_flag");
   const next_state = sessionStorage.getItem("next_state");
+
   const handleSkip = () => {
     setShowLoader(true);
     const payload = {
@@ -58,6 +59,7 @@ const CustomNavbar = () => {
       uploadFlag: false,
       state: sessionStorage.getItem("next_state"),
       language: sessionStorage.getItem("activeLanguage"),
+      agentGender: sessionStorage.getItem("assistantType"),
     };
     dispatch(agentConversation(payload)).then((res) => {
       if (res?.error && Object.keys(res?.error)?.length > 0) {

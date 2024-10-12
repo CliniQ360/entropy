@@ -118,6 +118,7 @@ const KYCPage = () => {
             offer_item_id: sessionStorage.getItem("offer_item_id"),
             selected_loan_amount: sessionStorage.getItem("selected_amt"),
             language: sessionStorage.getItem("activeLanguage"),
+            agentGender: sessionStorage.getItem("assistantType"),
           };
           dispatch(agentConversation(secondpayload)).then((res) => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
