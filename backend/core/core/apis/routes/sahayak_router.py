@@ -14,9 +14,11 @@ logging = logger(__name__)
 
 
 @sahayak_router.post("/v1/sahayak/start_conversation", response_model=SahayakOutput)
-def start_conversation(language: str):
+def start_conversation(language: str, agent_gender: str):
     try:
-        return SahayakController().start_audio_conversation(language=language)
+        return SahayakController().start_audio_conversation(
+            language=language, agent_gender=agent_gender
+        )
     except Exception as error:
         logging.error(f"Error in /v1/sahayak/start_conversation endpoint: {error}")
         raise HTTPException(
@@ -31,6 +33,7 @@ async def resume_conversation(
     thread_id: str,
     state: str,
     language: str = "en",
+    agent_gender: str = "male",
     translate: bool = False,
     document_upload_flag: bool = False,
     file: UploadFile | None = None,
@@ -56,6 +59,7 @@ async def resume_conversation(
             "audio_file_name": audio_file_name,
             "offer_item_id": offer_item_id,
             "selected_loan_amount": selected_loan_amount,
+            "agent_gender": agent_gender,
         }
         return SahayakController().resume_audio_conversation(request=payload)
     except Exception as error:

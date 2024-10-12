@@ -59,7 +59,7 @@ class SahayakController:
             logging.error(f"Error in SahayakController.upload_documents: {error}")
             raise error
 
-    def start_audio_conversation(self, language: str):
+    def start_audio_conversation(self, language: str, agent_gender: str):
         thread_id = str(uuid.uuid4())
         logging.debug(f"{thread_id=}")
         conversation_response = AudioConversationController().start_conversation(
@@ -74,7 +74,7 @@ class SahayakController:
         # )
         # Encode audio bytes as base64
         language = conversation_response.get("language")
-        welcome_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/welcome_message.txt"
+        welcome_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{agent_gender}/{language}/welcome_message.txt"
         audio_base64_str = open(welcome_message_audio_path, "r").read()
         # audio_base64 = ""
         conversation_response.update({"agent_audio_data": audio_base64_str})
@@ -89,6 +89,7 @@ class SahayakController:
             os.makedirs(self.audio_file_folder_path, exist_ok=True)
             audio_data = request.get("audio_data", None)
             output_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-output.mp3"
+            agent_gender = request.get("agent_gender")
             if audio_data:
                 logging.info(f"Audio data received")
                 audio_file_name = request.get("audio_file_name", None)
@@ -180,31 +181,31 @@ class SahayakController:
                 agent_message = conversation_response.get("agent_message_modified")
             if next_state == "submit_form":
                 logging.info(f"Reading default audio message for submit_form")
-                form_submit_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/form_submission_message.txt"
+                form_submit_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{agent_gender}/{language}/form_submission_message.txt"
                 audio_base64 = open(form_submit_message_audio_path, "r").read()
             elif next_state == "resume_after_aa_redirect":
                 logging.info(
                     f"Reading default audio message for resume_after_aa_redirect"
                 )
-                aa_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/aa_redirect_message.txt"
+                aa_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{agent_gender}/{language}/aa_redirect_message.txt"
                 audio_base64 = open(aa_redirect_message_audio_path, "r").read()
             elif next_state == "resume_after_kyc_redirect":
                 logging.info(
                     f"Reading default audio message for resume_after_kyc_redirect"
                 )
-                kyc_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/kyc_redirect_message.txt"
+                kyc_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{agent_gender}/{language}/kyc_redirect_message.txt"
                 audio_base64 = open(kyc_redirect_message_audio_path, "r").read()
             elif next_state == "resume_after_emdt_redirect":
                 logging.info(
                     f"Reading default audio message for resume_after_emdt_redirect"
                 )
-                eMandate_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/eMandate_redirect_message.txt"
+                eMandate_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{agent_gender}/{language}/eMandate_redirect_message.txt"
                 audio_base64 = open(eMandate_redirect_message_audio_path, "r").read()
             elif next_state == "resume_loan_agreement_signing":
                 logging.info(
                     f"Reading default audio message for resume_loan_agreement_signing"
                 )
-                sign_loan_agreement_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/sign_loan_agreement_message.txt"
+                sign_loan_agreement_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{agent_gender}/{language}/sign_loan_agreement_message.txt"
                 audio_base64 = open(sign_loan_agreement_message_audio_path, "r").read()
             # elif next_state == "human_loan_tnc_feedback":
             #     logging.info(
@@ -228,7 +229,13 @@ class SahayakController:
                         audio_base64 = ""
                 else:
                     logging.info(f"executing text to speech with Sarvam")
-                    agent_audio_data = SarvamAPI().sarvam_tts(text=agent_message)
+                    if agent_gender == "female":
+                        speaker = "rani"
+                    else:
+                        speaker = "raju"
+                    agent_audio_data = SarvamAPI().sarvam_tts(
+                        text=agent_message, speaker=speaker
+                    )
                     # Encode audio bytes as base64
                     if agent_audio_data:
                         audio_base64 = agent_audio_data
