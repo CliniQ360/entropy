@@ -155,51 +155,51 @@ def get_bureau_based_offers(state: SahayakState):
     get_bureau_offer_url = f"{credit_base_url}/v1/getApprovedOffers"
     # making initial search call
     # TODO: Remove this once the API is ready
-    # search_resp, search_resp_code = APIInterface().post_with_params(
-    #     route=search_url, params={"user_id": "3"}
-    # )
-    # collected_details_list = state.get("customer_details", None)
-    # customer_details = {}
-    # if collected_details_list:
-    #     for item in collected_details_list:
-    #         if isinstance(item, dict):
-    #             collected_details = item
-    #         else:
-    #             collected_details = item.dict()
-    #         for key, value in collected_details.items():
-    #             if (
-    #                 value != None
-    #                 and value != " "
-    #                 and value != "None"
-    #                 and value != "NA"
-    #                 and value != 0
-    #             ):
-    #                 customer_details[key] = value
-    #     logging.info(customer_details)
-    # txn_id = search_resp.get("txn_id")
-    # logging.info("Sleeping for 5 seconds")
-    # time.sleep(5)
-    # user_contact_number = customer_details.get("contactNumber")
-    # user_contact_number = re.sub("[^A-Za-z0-9]+", "", user_contact_number)
-    # finvu_user_id = f"{user_contact_number}@finvu"
-    # user_income = customer_details.get("income")
-    # customer_details.update(
-    #     {
-    #         "bureauConsent": True,
-    #         "aa_id": finvu_user_id,
-    #         "income": str(user_income),
-    #         "contactNumber": user_contact_number,
-    #     }
-    # )
-    # submit_payload = {"loanForm": customer_details}
-    # logging.info(f"{submit_payload=}")
-    # json_payload = json.dumps(submit_payload)
-    # submit_resp, submit_resp_code = APIInterface().post_with_params(
-    #     route=submit_url, params={"txn_id": txn_id}, data=json_payload
-    # )
-    submit_resp_code = 200
-    finvu_user_id = "8552012549@finvu"
-    txn_id = "30896010-6272-4d2c-a7a9-e5ba9adbef1d"
+    search_resp, search_resp_code = APIInterface().post_with_params(
+        route=search_url, params={"user_id": "3"}
+    )
+    collected_details_list = state.get("customer_details", None)
+    customer_details = {}
+    if collected_details_list:
+        for item in collected_details_list:
+            if isinstance(item, dict):
+                collected_details = item
+            else:
+                collected_details = item.dict()
+            for key, value in collected_details.items():
+                if (
+                    value != None
+                    and value != " "
+                    and value != "None"
+                    and value != "NA"
+                    and value != 0
+                ):
+                    customer_details[key] = value
+        logging.info(customer_details)
+    txn_id = search_resp.get("txn_id")
+    logging.info("Sleeping for 5 seconds")
+    time.sleep(5)
+    user_contact_number = customer_details.get("contactNumber")
+    user_contact_number = re.sub("[^A-Za-z0-9]+", "", user_contact_number)
+    finvu_user_id = f"{user_contact_number}@finvu"
+    user_income = customer_details.get("income")
+    customer_details.update(
+        {
+            "bureauConsent": True,
+            "aa_id": finvu_user_id,
+            "income": str(user_income),
+            "contactNumber": user_contact_number,
+        }
+    )
+    submit_payload = {"loanForm": customer_details}
+    logging.info(f"{submit_payload=}")
+    json_payload = json.dumps(submit_payload)
+    submit_resp, submit_resp_code = APIInterface().post_with_params(
+        route=submit_url, params={"txn_id": txn_id}, data=json_payload
+    )
+    # submit_resp_code = 200
+    # finvu_user_id = "8552012549@finvu"
+    # txn_id = "30896010-6272-4d2c-a7a9-e5ba9adbef1d"
     if submit_resp_code == 200:
         select_resp, select_resp_code = APIInterface().post_with_params(
             route=select_url, params={"txn_id": txn_id}
