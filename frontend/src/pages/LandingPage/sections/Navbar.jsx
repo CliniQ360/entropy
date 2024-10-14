@@ -20,6 +20,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
+import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
 import { useNavigate } from "react-router-dom";
 
 const NavbarHeader = styled("div")(({ theme }) => ({
@@ -104,6 +105,19 @@ export const Navbar = () => {
               >
                 Apply for Loan
               </Button>
+              <Button
+                variant="contained"
+                onClick={() => navigate("/insurance/register")}
+                sx={{
+                  backgroundColor: "#0054BA",
+                  textTransform: "none",
+                  paddingX: 3,
+                  fontWeight: 600,
+                  fontSize: "1rem",
+                }}
+              >
+                Apply for Insurance
+              </Button>
             </>
           ) : (
             <>
@@ -137,6 +151,16 @@ export const Navbar = () => {
               </ListItemIcon>
               <Typography fontWeight={700} fontSize={"1rem"} color={"#1976d2"}>
                 Apply for Loan
+              </Typography>
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate("/insurance/register")}>
+              <ListItemIcon>
+                <HealthAndSafetyIcon sx={{ color: "#1976d2" }} />
+              </ListItemIcon>
+              <Typography fontWeight={700} fontSize={"1rem"} color={"#1976d2"}>
+                Apply for Insurance
               </Typography>
             </ListItemButton>
           </ListItem>

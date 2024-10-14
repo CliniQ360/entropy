@@ -15,6 +15,9 @@ import CreditOfferPage from "../pages/CreditOfferDetail";
 import AvailableOffersPage from "../pages/OfferPage";
 import PreviewDocumentPage from "../pages/PreviewDocumentPage";
 import CustomizeOfferPage from "../pages/customizeOffer";
+import InsuranceOfferPage from "../pages/InsuranceOfferPage";
+import InsuranceRegistration from "../pages/InsuranceRegistration";
+import InsurancePage from "../pages/InsurancePage";
 
 function App() {
   return (
@@ -40,6 +43,10 @@ function App() {
           <Route path="emandate-page" element={<EmandatePage />} />
           <Route path="offer-page" element={<CreditOfferPage />} />
           <Route path="preview-offer" element={<PreviewDocumentPage />} />
+        </Route>
+        <Route path="/insurance" element={<InsurancePage />}>
+          <Route path="register" element={<InsuranceRegistration />} />
+          <Route path="offers" element={<InsuranceOfferPage />} />
         </Route>
       </Routes>
     </div>
