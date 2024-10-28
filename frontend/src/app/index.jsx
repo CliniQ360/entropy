@@ -18,12 +18,19 @@ import CustomizeOfferPage from "../pages/customizeOffer";
 import InsuranceOfferPage from "../pages/InsuranceOfferPage";
 import InsuranceRegistration from "../pages/InsuranceRegistration";
 import InsurancePage from "../pages/InsurancePage";
+import BuyerFormPage from "../pages/BuyerFormPage";
+import NomineeFormPage from "../pages/NomineePage";
+import WelcomePage from "../pages/WelcomePage";
+import ServiceInfoPage from "../pages/ServiceInfoPage";
 
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/welcome-page" element={<WelcomePage />} />
+        <Route path="/service-info" element={<ServiceInfoPage />} />
+
         {/* ASSISTANTROUTING */}
         <Route path="/route-1" element={<AssistantHomepage />} />
         <Route path="/route-2" element={<ChooseAssistant />} />
@@ -47,6 +54,8 @@ function App() {
         <Route path="/insurance" element={<InsurancePage />}>
           <Route path="register" element={<InsuranceRegistration />} />
           <Route path="offers" element={<InsuranceOfferPage />} />
+          <Route path="buyer-form" element={<BuyerFormPage />} />
+          <Route path="nominee-form" element={<NomineeFormPage />} />
         </Route>
       </Routes>
     </div>

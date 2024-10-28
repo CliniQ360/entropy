@@ -661,7 +661,6 @@ import CustomTimer from "../../components/CustomTimer";
 import { MediaContext } from "../../context/mediaContext";
 import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice";
 import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
-import { insuranceOffer } from "../../assets/dump";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -799,7 +798,7 @@ const InsuranceOfferPage = () => {
     setProgressValue,
   } = useContext(MediaContext);
   const { aaRedirectUrl, offerDetails } = useContext(AudioDataContext);
-  const [offers, setOffers] = useState(insuranceOffer);
+  const [offers, setOffers] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const [openViewDetails, setOpenViewDetails] = useState(false);
