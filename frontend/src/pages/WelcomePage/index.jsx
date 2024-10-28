@@ -305,6 +305,11 @@ const EmpowerWrapper = styled(Stack)(({ theme }) => ({
   backgroundColor: "#F8F8F8",
 }));
 
+const FaqWrapper = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(4),
+  backgroundColor: "#F8F8F8",
+}));
+
 const EmpowerCardContainer = styled(Stack)(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
@@ -450,9 +455,18 @@ const serviceStyling = {
   fontSize: "2rem",
 };
 
+const CustomAccordianContainer = styled(Accordion)(({ theme }) => ({
+  "&:first-of-type": {
+    borderRadius: "10px 10px 0 0",
+  },
+  "&:last-of-type": {
+    borderRadius: " 0 0 10px 10px",
+  },
+}));
+
 function CustomAccordion({ acordianHeading, acordianContent, expanded }) {
   return (
-    <Accordion defaultExpanded={expanded}>
+    <CustomAccordianContainer defaultExpanded={expanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ color: "black", fontSize: 24 }} />}
         aria-controls="panel1-content"
@@ -486,7 +500,7 @@ function CustomAccordion({ acordianHeading, acordianContent, expanded }) {
           {acordianContent}
         </Typography>
       </AccordionDetails>
-    </Accordion>
+    </CustomAccordianContainer>
   );
 }
 
@@ -783,12 +797,33 @@ const WelcomePage = () => {
               ))}
             </Stack>
           </EmpowerWrapper>
-          {Faq?.map((faq, index) => (
-            <CustomAccordion
-              acordianHeading={faq.faqQuestion}
-              acordianContent={faq.faqAnswer}
-            />
-          ))}
+
+          <FaqWrapper>
+            <Stack mt={6} gap={2}>
+              <Typography
+                sx={{
+                  fontFamily: "plus jakarta sans semibold",
+                  fontSize: "1.8rem",
+                }}
+              >
+                Frequently asked questions
+              </Typography>
+            </Stack>
+            <Stack
+              sx={{
+                boxShadow: "0px 4px 16px 0px rgba(0, 0, 0, 0.08)",
+              }}
+              mt={4}
+            >
+              {Faq?.map((faq, index) => (
+                <CustomAccordion
+                  key={index}
+                  acordianHeading={faq.faqQuestion}
+                  acordianContent={faq.faqAnswer}
+                />
+              ))}
+            </Stack>
+          </FaqWrapper>
           <ContactUsWrapper>
             <ContactUsContainer>
               <Typography
@@ -818,7 +853,7 @@ const WelcomePage = () => {
         </WelcomePageContainer>
       </WelcomePageWrapper>
       <SahayakFooter />
-      <BootstrapDialog
+      {/* <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={true}
@@ -867,7 +902,7 @@ const WelcomePage = () => {
             Save changes
           </Button>
         </DialogActions>
-      </BootstrapDialog>
+      </BootstrapDialog> */}
     </>
   );
 };
