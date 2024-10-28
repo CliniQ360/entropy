@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { generateOTP, loginUsingOtp } from "./initiateJourney.slice";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import EligibilityCriteriaComponent from "../../components/EligibilityCriteriaComponent";
 
 const PageContainer = styled("div")(({ theme }) => ({
   padding: theme.spacing(10, 4),
@@ -196,6 +197,7 @@ const InitiateJourneyPage = () => {
   const mobileNumError = mobileNumber !== "" && mobileNumber?.length < 10;
   return (
     <>
+      <EligibilityCriteriaComponent />
       <CustomLoader open={showLoader} />
       <ToastContainer />
       <PageContainer>
