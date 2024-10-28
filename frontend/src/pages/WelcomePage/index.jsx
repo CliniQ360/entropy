@@ -43,7 +43,7 @@ import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import AodIcon from "@mui/icons-material/Aod";
 import bg1 from "../../assets/v4DesignImages/bg/bgEligibility.png";
 import bg2 from "../../assets/v4DesignImages/bg/loanImg.png";
-import bg3 from "../../assets/v4DesignImages/bg/SahayakHeader.png";
+import WavesVector from "../../assets/v4DesignImages/bg/wavesVectorPng.png";
 import bg4 from "../../assets/v4DesignImages/bg/bg4.png";
 import InsuranceIcon from "../../assets/v4DesignImages/Icons/insuranceIcon.png";
 import handIndexIcon from "../../assets/v4DesignImages/Icons/1.png";
@@ -68,10 +68,10 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 
 const FinancialContainer = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(4),
-  backgroundImage: `url(${bg3})`,
-  // backgroundRepeat: "no-repeat",
-  backgroundSize: "cover",
-  backgroundPosition: "center bottom",
+  backgroundImage: `url(${WavesVector})`,
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "contain",
+  backgroundPosition: "bottom",
   position: "relative",
 }));
 
