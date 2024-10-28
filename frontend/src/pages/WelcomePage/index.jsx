@@ -20,6 +20,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   FormLabel,
+  FormHelperText,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import SahayakHeader from "../../components/SahayakHeader";
@@ -195,7 +196,7 @@ const FormContainer = styled(Box)(({ theme }) => ({
 const FormBox = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: 10,
+  padding: theme.spacing(2),
 }));
 
 // const MeetOurAgentContainer = styled(Stack)(({ theme }) => ({
@@ -376,6 +377,12 @@ const ContactButton = styled(Button)(({ theme }) => ({
 }));
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialog-paper": {
+    minWidth: "90%", // Ensures the minimum width of the dialog is 80% of the viewport
+    width: "90%", // Sets the initial width to 80%
+    maxWidth: "none",
+    borderRadius: "10px", // Prevents Material-UI's maxWidth from overriding it
+  },
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
@@ -383,6 +390,26 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
+
+const DialogHeaderContent = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(4),
+  justifyContent: "space-between",
+  alignItems: "center",
+  flexDirection: "row",
+}));
+
+const DialogFormContent = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(3),
+  flexDirection: "column",
+}));
+
+const ErrorMessageBox = styled(FormHelperText)(({ theme }) => ({
+  margin: "4px 0",
+}));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const partners = [
   { id: 2, image: adityaCapital },
@@ -494,7 +521,8 @@ const WelcomePage = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeButton, setActiveButton] = useState(0);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [validateError, setValidateError] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -506,12 +534,23 @@ const WelcomePage = () => {
 
   const [formData, setFormData] = useState({
     mobile_number: "",
-    email_id: "",
     first_name: "",
     last_name: "",
-    role: "",
     message: "",
   });
+
+  const checkError = () => {
+    if (
+      !formData.mobile_number ||
+      !formData.first_name ||
+      !formData.last_name ||
+      !formData.message
+    ) {
+      setValidateError(true);
+      return true;
+    }
+    return false;
+  };
 
   const handleButtonClick = (index) => {
     setActiveButton(index);
@@ -532,6 +571,10 @@ const WelcomePage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const hasError = checkError();
+    if (hasError) {
+      return;
+    }
     const payload = {
       ...formData,
       lead_category: "HIMS",
@@ -812,7 +855,9 @@ const WelcomePage = () => {
                 Get personalized credit advice and quick support to find the
                 right coverage effortlessly.
               </Typography>
-              <ContactButton variant="contained">Contact Us</ContactButton>
+              <ContactButton variant="contained" onClick={handleClickOpen}>
+                Contact Us
+              </ContactButton>
             </ContactUsContainer>
           </ContactUsWrapper>
         </WelcomePageContainer>
@@ -821,52 +866,146 @@ const WelcomePage = () => {
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
-        open={true}
+        open={open}
+        TransitionComponent={Transition}
       >
-        <DialogTitle
-          sx={{ m: 0, p: 2, fontFamily: "plus jakarta sans semibold" }}
-          id="customized-dialog-title"
-        >
-          Contact Us
-        </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={(theme) => ({
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: theme.palette.grey[500],
-          })}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent>
+        <DialogHeaderContent>
+          <Stack>
+            <Typography
+              sx={{
+                fontFamily: "plus jakarta sans semibold",
+                fontSize: "1.5rem",
+              }}
+            >
+              Contact Us
+            </Typography>
+          </Stack>
+          <Stack>
+            <IconButton aria-label="close" onClick={handleClose}>
+              <CloseIcon sx={{ fontSize: "2rem", color: "#000000" }} />
+            </IconButton>
+          </Stack>
+        </DialogHeaderContent>
+        <DialogFormContent>
           <FormContainer>
             <FormBox id="personal-details">
-              <FormControl fullWidth>
-                <FormLabel htmlFor="first_name">
-                  <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                    First Name
-                  </Stack>
-                </FormLabel>
-                <TextField
-                  type="text"
-                  id="first_name"
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleFormData}
+              <Stack mb={5}>
+                <FormControl
                   fullWidth
-                />
-              </FormControl>
+                  error={!formData.first_name && validateError}
+                >
+                  <FormLabel
+                    htmlFor="first_name"
+                    sx={{ marginBottom: "5px", color: "#171717" }}
+                  >
+                    First Name
+                  </FormLabel>
+                  <TextField
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    value={formData.first_name}
+                    placeholder="First name"
+                    onChange={handleFormData}
+                    fullWidth
+                    error={!formData.first_name && validateError}
+                  />
+
+                  {!formData.first_name && validateError && (
+                    <ErrorMessageBox>Enter Your First Name</ErrorMessageBox>
+                  )}
+                </FormControl>
+              </Stack>
+              <Stack mb={5}>
+                <FormControl
+                  fullWidth
+                  error={!formData.last_name && validateError}
+                >
+                  <FormLabel sx={{ marginBottom: "5px", color: "#171717" }}>
+                    Last Name
+                  </FormLabel>
+                  <TextField
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    value={formData.last_name}
+                    placeholder="Last name"
+                    onChange={handleFormData}
+                    fullWidth
+                    error={!formData.last_name && validateError}
+                  />
+                  {!formData.last_name && validateError && (
+                    <ErrorMessageBox>Enter Your Last Name</ErrorMessageBox>
+                  )}
+                </FormControl>
+              </Stack>
+              <Stack mb={5}>
+                <FormControl
+                  fullWidth
+                  error={!formData.mobile_number && validateError}
+                >
+                  <FormLabel sx={{ marginBottom: "5px", color: "#171717" }}>
+                    Phone
+                  </FormLabel>
+                  <TextField
+                    type="text"
+                    id="mobile_number"
+                    name="mobile_number"
+                    value={formData.mobile_number}
+                    placeholder="Enter Your Phone"
+                    onChange={handleFormData}
+                    fullWidth
+                    error={!formData.mobile_number && validateError}
+                  />
+                  {!formData.mobile_number && validateError && (
+                    <ErrorMessageBox>Enter Your Mobile Number </ErrorMessageBox>
+                  )}
+                </FormControl>
+              </Stack>
+              <Stack mb={5}>
+                <FormControl
+                  fullWidth
+                  error={!formData.message && validateError}
+                >
+                  <FormLabel sx={{ marginBottom: "5px", color: "#171717" }}>
+                    Message
+                  </FormLabel>
+                  <TextField
+                    type="text"
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    placeholder="Enter Your Message"
+                    onChange={handleFormData}
+                    fullWidth
+                    multiline
+                    rows={6}
+                    error={!formData.message && validateError}
+                  />
+                  {!formData.message && validateError && (
+                    <ErrorMessageBox>Enter Your Message </ErrorMessageBox>
+                  )}
+                </FormControl>
+              </Stack>
+              <Stack mb={5}>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#0054BA",
+                    textTransform: "none",
+                    color: "white",
+                    fontFamily: "source sans pro semibold",
+                    padding: 2,
+                    fontSize: "1.1rem",
+                  }}
+                >
+                  Request Callback
+                </Button>
+              </Stack>
             </FormBox>
           </FormContainer>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
-          </Button>
-        </DialogActions>
+        </DialogFormContent>
       </BootstrapDialog>
     </>
   );
