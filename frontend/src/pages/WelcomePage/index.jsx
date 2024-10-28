@@ -114,6 +114,12 @@ const CustomizedButton = styled(Button)(({ theme, type }) => ({
   margin: (2, 0),
   textTransform: "none",
   fontSize: "1rem",
+  "&:hover": {
+    backgroundColor: "#0054BA", // Optional: hover background color
+  },
+  "&:active": {
+    backgroundColor: "#0054BA", // Background color when clicked
+  },
 }));
 
 const MeetOurAgentWrapper = styled(Stack)(({ theme }) => ({
@@ -411,6 +417,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const FaqWrapper = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(4),
+  backgroundColor: "#F8F8F8",
+}));
+
+const CustomAccordianContainer = styled(Accordion)(({ theme }) => ({
+  "&:first-of-type": {
+    borderRadius: "10px 10px 0 0",
+  },
+  "&:last-of-type": {
+    borderRadius: " 0 0 10px 10px",
+  },
+}));
+
 const partners = [
   { id: 2, image: adityaCapital },
   { id: 4, image: Karnataka },
@@ -479,7 +499,7 @@ const serviceStyling = {
 
 function CustomAccordion({ acordianHeading, acordianContent, expanded }) {
   return (
-    <Accordion defaultExpanded={expanded}>
+    <CustomAccordianContainer defaultExpanded={expanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ color: "black", fontSize: 24 }} />}
         aria-controls="panel1-content"
@@ -513,7 +533,7 @@ function CustomAccordion({ acordianHeading, acordianContent, expanded }) {
           {acordianContent}
         </Typography>
       </AccordionDetails>
-    </Accordion>
+    </CustomAccordianContainer>
   );
 }
 
@@ -826,12 +846,32 @@ const WelcomePage = () => {
               ))}
             </Stack>
           </EmpowerWrapper>
-          {Faq?.map((faq, index) => (
-            <CustomAccordion
-              acordianHeading={faq.faqQuestion}
-              acordianContent={faq.faqAnswer}
-            />
-          ))}
+          <FaqWrapper>
+            <Stack mt={6} gap={2}>
+              <Typography
+                sx={{
+                  fontFamily: "plus jakarta sans semibold",
+                  fontSize: "1.8rem",
+                }}
+              >
+                Frequently asked questions
+              </Typography>
+            </Stack>
+            <Stack
+              sx={{
+                boxShadow: "0px 4px 16px 0px rgba(0, 0, 0, 0.08)",
+              }}
+              mt={4}
+            >
+              {Faq?.map((faq, index) => (
+                <CustomAccordion
+                  key={index}
+                  acordianHeading={faq.faqQuestion}
+                  acordianContent={faq.faqAnswer}
+                />
+              ))}
+            </Stack>
+          </FaqWrapper>
           <ContactUsWrapper>
             <ContactUsContainer>
               <Typography
