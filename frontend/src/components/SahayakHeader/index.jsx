@@ -29,10 +29,10 @@ const SahayakHamburger = styled("div")(({ theme }) => ({
   alignItems: "center",
 }));
 const SahayakLogo = styled(Typography)(({ theme }) => ({
-  fontFamily: "Red Hat Display",
+  fontFamily: "plus jakarta sans semibold",
   fontWeight: 700,
-  fontSize: "1.6rem",
-  marginLeft: 1,
+  fontSize: "1.4rem",
+  marginLeft: "10px",
   letterSpacing: "2px",
 }));
 
@@ -80,7 +80,7 @@ const SahayakHeader = () => {
           <IconButton onClick={() => setOpen(true)}>
             <MenuIcon sx={{ color: "black", fontSize: "2rem" }} />
           </IconButton>
-          <SahayakLogo>Sahayak</SahayakLogo>
+          <SahayakLogo>SAHAYAK</SahayakLogo>
         </SahayakHamburger>
       </SahayakHeaderWrapper>
     </>

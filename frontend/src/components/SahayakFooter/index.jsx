@@ -7,7 +7,7 @@ const ShayakFooterWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   padding: theme.spacing(5),
-  backgroundColor: "#000000",
+  backgroundColor: "#07192E",
 }));
 const LogosContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -19,10 +19,18 @@ const LogosContainer = styled("div")(({ theme }) => ({
 
 const CompanyInfo = styled("div")(({ theme }) => ({
   display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
+  flexDirection: "row",
+  justifyContent: "space-between",
   alignItems: "center",
   padding: theme.spacing(2),
+}));
+
+const SahayakLogo = styled(Typography)(({ theme }) => ({
+  fontFamily: "plus jakarta sans semibold",
+  fontWeight: 700,
+  fontSize: "1.4rem",
+  letterSpacing: "2px",
+  color: "white",
 }));
 
 const SahayakFooter = () => {
@@ -30,20 +38,9 @@ const SahayakFooter = () => {
     <ShayakFooterWrapper>
       <LogosContainer>
         <Stack>
-          <img
-            alt="ClinQ360 Logo"
-            className="object-contain"
-            src={logo}
-            width={153}
-          />
+          <SahayakLogo>SAHAYAK</SahayakLogo>
         </Stack>
         <Stack flexDirection={"row"} alignItems={"center"}>
-          <IconButton>
-            <FaFacebook style={{ color: "white" }} />
-          </IconButton>
-          <IconButton>
-            <FaTwitter style={{ color: "white" }} />
-          </IconButton>
           <IconButton>
             <FaInstagram style={{ color: "white" }} />
           </IconButton>
@@ -52,12 +49,16 @@ const SahayakFooter = () => {
           </IconButton>
         </Stack>
       </LogosContainer>
-      <Divider sx={{ backgroundColor: "white", mt: 3 }} />
+      <Divider sx={{ backgroundColor: "#ffffff5c", my: 1 }} />
       <CompanyInfo>
-        <Typography sx={{ color: "white" }}>
-          Powered by cliniQ360 – Crafted with love in India.
-        </Typography>
-        <Typography sx={{ color: "#535353" }}>© 2023 clinq360</Typography>
+        <Stack>
+          {" "}
+          <Typography sx={{ color: "white" }}>© 2024 sahayak </Typography>
+        </Stack>
+        <Stack>
+          {" "}
+          <Typography sx={{ color: "white" }}>Made with ❤️ in India</Typography>
+        </Stack>
       </CompanyInfo>
     </ShayakFooterWrapper>
   );

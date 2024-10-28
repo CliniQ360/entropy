@@ -5,17 +5,31 @@ import {
   Button,
   Grid,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Slide,
+  TextField,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  FormLabel,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import SahayakHeader from "../../components/SahayakHeader";
 import { TypeAnimation } from "react-type-animation";
-import maleAst from "../../assets/v4DesignImages/Patners/maleast.png";
-import femaleAst from "../../assets/v4DesignImages/Patners/femaleast.png";
+import femaleAst from "../../assets/v4DesignImages/Patners/femalenewAst.png";
 import { useNavigate } from "react-router-dom";
 import adityaCapital from "../../assets/v4DesignImages/Patners/1.png";
 import ADBM from "../../assets/v4DesignImages/Patners/2.png";
 import adityaBirlaInsurance from "../../assets/v4DesignImages/Patners/6.png";
-import Karnataka from "../../assets/v4DesignImages/Patners/4.avif";
+import Karnataka from "../../assets/v4DesignImages/Patners/4.png";
 import ondc from "../../assets/v4DesignImages/Patners/5.png";
 import dmi from "../../assets/v4DesignImages/Patners/3.png";
 import Marquee from "react-marquee-slider";
@@ -28,58 +42,160 @@ import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import AodIcon from "@mui/icons-material/Aod";
 import bg1 from "../../assets/v4DesignImages/bg/bgEligibility.png";
 import bg2 from "../../assets/v4DesignImages/bg/loanImg.png";
-import financeIcon from "../../assets/v4DesignImages/Icons/1.png";
-import repaymentIcon from "../../assets/v4DesignImages/Icons/2.png";
-import hospitalIcon from "../../assets/v4DesignImages/Icons/3.png";
-import handIndexIcon from "../../assets/v4DesignImages/Icons/4.png";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import bg3 from "../../assets/v4DesignImages/bg/SahayakHeader.png";
+import bg4 from "../../assets/v4DesignImages/bg/bg4.png";
+import InsuranceIcon from "../../assets/v4DesignImages/Icons/insuranceIcon.png";
+import handIndexIcon from "../../assets/v4DesignImages/Icons/1.png";
+import HealthLoanIcon from "../../utils/CustomIcons/healthLoanIcon";
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const WelcomePageWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(4),
-}));
+const WelcomePageWrapper = styled("div")(({ theme }) => ({}));
 
 const WelcomePageContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
 }));
-const WelcomeTypography = styled(Typography)(({ theme }) => ({
-  fontFamily: "pacifico",
-  fontSize: "3rem",
-  textAlign: "center",
-  color: "#1976d2",
-}));
-const WelcomeTypeTypography = styled(Typography)(({ theme }) => ({
-  fontFamily: "pacifico",
-  fontSize: "3rem",
-  textAlign: "center",
-  color: "#1976d2",
-}));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  fontSize: "1rem",
+  fontSize: "1.2rem",
   lineHeight: 1.6,
+  fontFamily: "Source Sans Pro",
   color: "#535353",
   marginTop: theme.spacing(2),
-  fontWeight: 400,
-}));
-const FinancialContainer = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1),
-  // backgroundColor: "#F2F2F2",
-  borderRadius: "10px",
-  marginTop: "15px",
-}));
-const MeetOurAgentWrapper = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1),
-  gap: theme.spacing(1),
-  marginTop: "20px",
 }));
 
-const MeetOurAgentContainer = styled(Stack)(({ theme }) => ({
-  height: "150px",
-  width: "45%",
-  direction: "row",
+const FinancialContainer = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(4),
+  backgroundImage: `url(${bg3})`,
+  // backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
+  backgroundPosition: "center bottom",
+  position: "relative",
+}));
+
+const ServiceTypesWrapper = styled(Grid)(({ theme }) => ({
+  gap: theme.spacing(3),
+  margin: "30px 0",
+}));
+
+const ServiceTypesContainer = styled(Grid)(({ theme }) => ({
+  gap: theme.spacing(2),
+  padding: theme.spacing(4),
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "#ffffffdb",
+  borderRadius: "10px",
+}));
+
+const ServiceIcon = styled("div")(({ theme, img, index }) => ({
+  padding: theme.spacing(1),
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundImage: `url(${img})`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  height: index === 1 ? "22px" : "30px",
+  width: index === 1 ? "22px" : "30px",
+}));
+
+const CustomizedButton = styled(Button)(({ theme, type }) => ({
+  boxShadow: "none",
+  backgroundColor: "#0054BA",
+  width: "92%",
+  position: "absolute",
+  color: "white",
+  padding: theme.spacing(2),
+  bottom: -20,
+  margin: (2, 0),
+  textTransform: "none",
+  fontSize: "1rem",
+}));
+
+const MeetOurAgentWrapper = styled(Stack)(({ theme }) => ({
+  gap: theme.spacing(1),
+  marginTop: "40px",
+  justifyContent: "space-between",
+  alignItems: "center",
+  height: "550px",
+  width: "100%",
+  backgroundImage: `url(${femaleAst})`,
+  // backgroundRepeat: "no-repeat",
+  backgroundSize: "100% 550px",
+}));
+
+const AssistantChangeSectionWrapper = styled("div")(({ theme }) => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: theme.spacing(5),
+}));
+
+const ActionChangeSectionContainer = styled("div")(({ theme }) => ({
+  display: "flex",
+  padding: theme.spacing(3),
+  gap: theme.spacing(2),
+  borderRadius: "30px",
+  backgroundColor: "#ffffff4a",
+  width: "250px",
+  height: "40px", // Increase height slightly if needed
+  position: "relative",
+}));
+
+const Slider = styled("div")(({ activeButton }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  margin: 2,
+  position: "absolute",
+  top: 4,
+  left: activeButton === 0 ? 0 : "50%",
+  width: "47%", // Slightly smaller than 50% to add padding space on the edges
+  height: "80%", // Adjust height to create space for ToggleButton padding
+  backgroundColor: "#ffffff4a",
+  boxShadow: "inset 0 0 6px 1px #5f5a5a",
+  borderRadius: "30px",
+  transition: "left 0.3s ease-in-out",
+}));
+
+const ToggleButton = styled(Button)(({ theme, isActive }) => ({
+  zIndex: 1,
+  backgroundColor: "transparent",
+  color: "white",
+  width: "50%",
+  height: "100%",
+  textTransform: "none",
+  fontFamily: "Source Sans pro",
+  fontWeight: isActive ? 400 : 200,
+  fontSize: "1.3rem",
+  transition: "color 0.3s ease-in-out",
+  padding: theme.spacing(1),
+  "&:hover": {
+    backgroundColor: "transparent",
+  },
+}));
+
+const AssistantNameChangeWrapper = styled(Stack)(({ theme }) => ({
+  gap: theme.spacing(3),
+  padding: theme.spacing(2),
+  justifyContent: "center",
+  alignItems: "center",
+}));
+
+const FormContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  gap: theme.spacing(4),
+}));
+
+const FormBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: 10,
 }));
 
 // const MeetOurAgentContainer = styled(Stack)(({ theme }) => ({
@@ -94,30 +210,14 @@ const MeetOurAgentContainer = styled(Stack)(({ theme }) => ({
 //   alignItems: "center",
 // }));
 
-const AgentImageContainer = styled(Grid)(({ theme, type }) => ({
-  height: "170px",
-  width: "100%",
-  backgroundImage: type === "male" ? `url(${maleAst})` : `url(${femaleAst})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-}));
-
-const CustomizedButton = styled(Button)(({ theme, type }) => ({
-  boxShadow: "none",
-  backgroundColor: "#000000",
-  margin: (2, 0),
-  textTransform: "none",
-  fontSize: "1rem",
-  letterSpacing: "1px",
-}));
-
 const PatnersContainer = styled("div")(({ theme }) => ({
-  padding: theme.spacing(3),
+  // padding: theme.spacing(3),
   display: "flex",
   alignItems: "center",
   flexDirection: "column",
   justifyContent: "space-around",
   gap: theme.spacing(2),
+  marginTop: "50px",
 }));
 
 const TrustedPatnerContainer = styled("div")(({ theme }) => ({
@@ -129,9 +229,10 @@ const TrustedPatnerContainer = styled("div")(({ theme }) => ({
 }));
 
 const PatnerLogoContainer = styled("div")(({ theme }) => ({
-  height: "76px",
+  height: "70px",
   width: "168px",
-  boxShadow: "1px 3px 9px 5px #b9b9b930 ",
+  borderRadius: "10px",
+  boxShadow: "0px 6px 7px 5px #b9b9b930",
   display: "flex",
   justifyContent: "center",
   margin: theme.spacing(3),
@@ -154,107 +255,68 @@ const PatnerLogoWrapper = styled("div")(({ theme }) => ({
   justifyContent: "space-between",
   overflow: "hidden",
   width: "100%",
-  padding: theme.spacing(2),
 }));
 
-const ServiceInfoWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(1),
-  margin: theme.spacing(2, 0),
-}));
-
-const ServiceInfoContainer = styled("div")(({ theme }) => ({
-  padding: theme.spacing(3),
-  // background:
-  //   "linear-gradient(89deg, rgb(21, 74, 189) 0.1%, rgb(26, 138, 211) 51.5%, rgb(72, 177, 234) 100.2%)",
-  backgroundImage: `url("https://img.freepik.com/free-vector/bubbles-blue-background_331749-688.jpg")`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  borderRadius: "10px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  cursor: "pointer",
-  marginBottom: "20px",
-}));
-
-const ServiceInfoSection = styled("div")(({ theme }) => ({
-  width: "70%", // Adjusted width for text section
-  flex: 1,
-}));
-
-const ServiceImageSectionWrapper = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end", // Ensure image is aligned to the right
-  width: "30%", // Allocate proper width for the image section
-}));
-
-const ServiceImageSection = styled("div")(({ theme, type }) => ({
-  height: "100px",
-  width: "100px",
-  backgroundImage: type === "credit" ? `url(${credit})` : `url(${insurance})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-}));
-
-const CreditInsuranceServiceWrapper = styled("div")(({ theme, type }) => ({
-  display: "flex",
-  flexDirection: "column",
-  margin: theme.spacing(3, 0),
-  // backgroundColor: "#f4f4f4",
-}));
+const OuterWrapper = styled("div")({
+  width: "100%",
+  overflow: "hidden",
+  margin: "30px 0px",
+});
 
 const CreditServicesInfoWrapper = styled(Stack)(({ theme }) => ({
-  width: "100%",
   overflowX: "scroll",
   overflowY: "hidden",
   whiteSpace: "nowrap",
   display: "flex",
   flexDirection: "row",
   gap: theme.spacing(2),
-  padding: theme.spacing(1),
-  backgroundImage: `url(${bg1})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-}));
-
-const InsuranceServiceInfoWrapper = styled(Stack)(({ theme }) => ({
-  width: "100%",
-  gap: theme.spacing(2),
-  padding: theme.spacing(1),
+  paddingInline: theme.spacing(4), // Padding inside scroll area without extra space
+  boxSizing: "border-box",
 }));
 
 const ServiceCard = styled(Stack)(({ theme }) => ({
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
   justifyContent: "center",
   alignItems: "center",
-  padding: theme.spacing(1),
-  backgroundColor: "white",
+  padding: theme.spacing(3),
+  backgroundColor: "#0054ba2b",
   gap: theme.spacing(1),
-  width: "120px",
+  width: "fit-content",
   border: "2px solid #f4f4f4",
   borderRadius: "5px",
   flexShrink: 0,
 }));
 
-const InsuranceServiceContainer = styled(Stack)(({ theme }) => ({
+const ServiceIconContainer = styled(Stack)(({ theme }) => ({
   display: "flex",
-  flexDirection: "column",
   justifyContent: "center",
-  alignItems: "flex-start",
-  padding: theme.spacing(3),
-  gap: theme.spacing(1),
-  width: "100%",
-  height: "150px",
-  border: "2px solid #f4f4f4",
-  borderRadius: "10px",
-  backgroundImage: `url(${bg2})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
+  alignItems: "center",
+  padding: theme.spacing(1),
+  width: "40px",
+  height: "40px",
+  borderRadius: "50%",
+  backgroundColor: "white",
 }));
 
-const IconContainer = styled(Stack)(({ theme }) => ({
+const EmpowerWrapper = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(4),
+  gap: theme.spacing(3),
+  backgroundColor: "#F8F8F8",
+}));
+
+const EmpowerCardContainer = styled(Stack)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "center",
+  flexDirection: "row",
+  padding: theme.spacing(6),
+  gap: theme.spacing(3),
+  borderRadius: "5px",
+  boxShadow: "0px 6px 7px 5px #b9b9b930",
+  backgroundColor: "white",
+}));
+
+const EmpowerIconContainer = styled(Stack)(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -263,34 +325,64 @@ const IconContainer = styled(Stack)(({ theme }) => ({
   height: "50px",
   borderRadius: "50%",
   backgroundColor: "white",
+  border: "1px solid #f4f4f4",
+  flexShrink: 0,
 }));
 
-const CustomDot = styled("div")(({ isActive }) => ({
-  width: "8px",
-  height: "8px",
-  borderRadius: "50%",
-  background: isActive ? "#1976d2" : "#ccc",
-  border: "2px solid #fff",
-  margin: "5px 5px",
+const EmpowerTextContainer = styled(Stack)(({ theme }) => ({
   display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+  flexDirection: "column",
+  flexGrow: 1,
+  marginLeft: theme.spacing(2),
 }));
 
-const agentList = [
-  {
-    name: "Rajesh",
-    specialist: "Loan / Insurance Specialist",
-    img: "male",
-    navigation: "/service-info",
+const ContactUsWrapper = styled(Stack)(({ theme }) => ({
+  backgroundColor: "#FBFBFB",
+  padding: theme.spacing(4),
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: "40px",
+}));
+
+const ContactUsContainer = styled(Stack)(({ theme }) => ({
+  width: "80%",
+  padding: theme.spacing(6),
+  gap: theme.spacing(2),
+  backgroundImage: `url(${bg4})`,
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
+  backgroundPosition: "center ",
+  borderRadius: "6px",
+  justifyContent: "center",
+  alignItem: "center",
+}));
+
+const ContactButton = styled(Button)(({ theme }) => ({
+  backgroundColor: "white",
+  color: "#0054BA",
+  textTransform: "none",
+  fontFamily: "Source Sans Pro SemiBold",
+  fontSize: "1.3rem",
+  margin: "20px 0",
+  padding: theme.spacing(2),
+  width: "100%",
+  "&:hover": {
+    backgroundColor: "#f0f0f0", // Optional: hover background color
   },
-  {
-    name: "Rani",
-    specialist: "Loan / Insurance Specialist",
-    img: "female",
-    navigation: "/service-info",
+  "&:active": {
+    backgroundColor: "#d0e6ff", // Background color when clicked
   },
-];
+}));
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const partners = [
   { id: 2, image: adityaCapital },
@@ -301,18 +393,26 @@ const partners = [
   { id: 5, image: dmi },
 ];
 
-const serviceInfoCard = [
+const empowerInfoCard = [
   {
-    content:
-      "Start Your Credit Journey Today and Unlock Financial Opportunities with Flexible, Easy-to-Access Solutions!",
-    navigation: "/route-2",
-    type: "credit",
+    title: "24/7 Assistance",
+    body: "Get instant support anytime, anywhere.",
+    src: <HealthLoanIcon />,
   },
   {
-    content:
-      "Secure Your Future Today with Comprehensive Insurance Solutions, Tailored to Protect What Matters Most!",
-    navigation: "/route-2",
-    type: "insurance",
+    title: "Personalized Solutions",
+    body: "Tailored recommendations based on your unique needs.",
+    src: <HealthLoanIcon />,
+  },
+  {
+    title: "Quick Issue Resolution",
+    body: "Solve problems and get answers fast.",
+    src: <HealthLoanIcon />,
+  },
+  {
+    title: "Easy Navigation",
+    body: "Intuitive design for a smooth user experience.",
+    src: <HealthLoanIcon />,
   },
 ];
 
@@ -335,26 +435,14 @@ const creditServicesArr = [
   },
 ];
 
-const insuranceServiceArr = [
+const financialService = [
   {
-    title: "24/7 Assistance",
-    body: "Get instant support anytime, anywhere.",
-    src: financeIcon,
-  },
-  {
-    title: "Personalized Solutions",
-    body: "Tailored recommendations based on your unique needs.",
-    src: repaymentIcon,
-  },
-  {
-    title: "Quick Issue Resolution",
-    body: "Solve problems and get answers fast.",
-    src: hospitalIcon,
-  },
-  {
-    title: "Easy Navigation",
-    body: "Intuitive design for a smooth user experience.",
+    title: "Personal Loan",
     src: handIndexIcon,
+  },
+  {
+    title: "Health Insurance",
+    src: InsuranceIcon,
   },
 ];
 
@@ -362,194 +450,193 @@ const serviceStyling = {
   fontSize: "2rem",
 };
 
+function CustomAccordion({ acordianHeading, acordianContent, expanded }) {
+  return (
+    <Accordion defaultExpanded={expanded}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon sx={{ color: "black", fontSize: 24 }} />}
+        aria-controls="panel1-content"
+        id="panel1-header"
+        sx={{
+          padding: "16px",
+        }}
+      >
+        <Typography
+          fontFamily={"Plus Jakarta Sans SemiBold"}
+          fontSize={18}
+          lineHeight={"110%"}
+        >
+          {acordianHeading}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+          p: "24px 12px",
+        }}
+      >
+        <Typography
+          fontFamily={"Source Sans Pro"}
+          fontSize={16}
+          lineHeight={"150%"}
+          color={"black"}
+        >
+          {acordianContent}
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
 const WelcomePage = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [activeButton, setActiveButton] = useState(0);
+  const [open, setOpen] = React.useState(false);
 
-  const handleAgentClick = (type, navigation) => {
-    console.log(navigation);
-
-    sessionStorage.setItem("serviceType", type);
-    navigate(navigation);
+  const handleClickOpen = () => {
+    setOpen(true);
   };
 
-  var settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    beforeChange: (current, next) => setCurrentSlide(next),
-    customPaging: (i) => <CustomDot isActive={i === currentSlide} />,
+  const handleClose = () => {
+    setOpen(false);
   };
+
+  const [formData, setFormData] = useState({
+    mobile_number: "",
+    email_id: "",
+    first_name: "",
+    last_name: "",
+    role: "",
+    message: "",
+  });
+
+  const handleButtonClick = (index) => {
+    setActiveButton(index);
+    if (index === 0) {
+      sessionStorage.setItem("serviceType", "insurance");
+    } else if (index === 1) {
+      sessionStorage.setItem("serviceType", "credit");
+    }
+  };
+
+  const handleNavigate = () => {
+    if (activeButton === 0) {
+      console.log("navigating to insurance");
+    } else if (activeButton === 1) {
+      console.log("navigating to credit");
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const payload = {
+      ...formData,
+      lead_category: "HIMS",
+    };
+    console.log(payload);
+  };
+
+  const handleFormData = (event) => {
+    const { name, value } = event.target;
+
+    if (name === "mobile_number" && value.length > 10) {
+      return;
+    }
+
+    setFormData((prevValue) => ({
+      ...prevValue,
+      [name]: value,
+    }));
+  };
+
+  const Faq = [
+    {
+      faqQuestion: "What is CliniQ360?",
+      faqAnswer: "abcd answer",
+    },
+    {
+      faqQuestion: "What is ABDM?",
+      faqAnswer: "abcd answer",
+    },
+    {
+      faqQuestion: "What is PRM?",
+      faqAnswer: "abcd answer",
+    },
+    {
+      faqQuestion: "What is connected Health care?",
+      faqAnswer: "abcd answer",
+    },
+    {
+      faqQuestion: "How do I participate?",
+      faqAnswer: "abcd answer",
+    },
+  ];
 
   return (
     <>
       <SahayakHeader />
       <WelcomePageWrapper>
         <WelcomePageContainer>
-          <WelcomeTypography>Welcome To </WelcomeTypography>
-          <WelcomeTypeTypography>
-            {" "}
-            <TypeAnimation
-              sequence={["Sahayak ", 1000, "Sahayak Assistant", 1000, "", 1000]}
-              speed={50}
-              wrapper="span"
-              repeat={Infinity}
-            />{" "}
-          </WelcomeTypeTypography>
-          {/* <FinancialContainer>
+          <FinancialContainer>
             <Typography
               variant="h4"
               sx={{
                 fontFamily: "plus jakarta sans bold",
                 color: "black",
-                fontSize: "2.2rem",
+                fontSize: "1.8rem",
               }}
             >
-              Simplify Your Financial Journey
+              Start your Financial Journey with our{" "}
+              <span
+                style={{
+                  background: "linear-gradient(-75deg, #0054BA, #2888FC)",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Smart Agents.
+              </span>
             </Typography>
             <StyledTypography>
-              Find solutions for your insurance and credit needs quickly and
-              easily. Our smart agent delivers personalized assistance, helping
-              you take action and stay in control of your financial journey.
+              Our smart agent delivers personalized assistance, helping you take
+              action and stay in control of your financial journey.
             </StyledTypography>
-          </FinancialContainer> */}
-          <ServiceInfoWrapper>
-            {serviceInfoCard.map((item, index) => (
-              <ServiceInfoContainer
-                key={index}
-                onClick={() => handleAgentClick(item.type, item.navigation)}
-              >
-                <ServiceInfoSection>
-                  <Typography
-                    sx={{ fontFamily: "plus jakarta sans bold", color: "#fff" }}
+            <ServiceTypesWrapper container>
+              {financialService.map((item, index) => (
+                <ServiceTypesContainer key={index} item xs={5.8} sm={5.8}>
+                  <Stack
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    sx={{ height: "30px" }}
                   >
-                    {item?.content}
+                    <ServiceIcon img={item?.src} index={index}></ServiceIcon>
+                  </Stack>
+                  <Typography sx={{ fontFamily: "plus jakarta sans bold" }}>
+                    {item.title}
                   </Typography>
-                </ServiceInfoSection>
-                <ServiceImageSectionWrapper>
-                  <ServiceImageSection type={item.type} />
-                </ServiceImageSectionWrapper>
-              </ServiceInfoContainer>
-            ))}
-          </ServiceInfoWrapper>
-          <CreditInsuranceServiceWrapper>
-            <Typography
-              variant="h4"
-              sx={{
-                fontFamily: "plus jakarta sans bold",
-                color: "#1976d2",
-                fontSize: "1.8rem",
-                marginBottom: "10px",
-              }}
-            >
-              Innovations That Empower Your Journey
-            </Typography>
-            <Typography
-              variant="h4"
-              sx={{
-                fontFamily: "plus jakarta sans bold",
-                color: "#000000",
-                fontSize: "1.6rem",
-                marginBottom: "10px",
-              }}
-            >
-              Loan{" "}
-            </Typography>
-            <CreditServicesInfoWrapper>
-              {creditServicesArr.map((item, index) => (
-                <ServiceCard key={index}>
-                  <IconButton>{item?.serviceIcon}</IconButton>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontFamily: "plus jakarta sans bold",
-                      fontSize: "1.2rem",
-                      marginBottom: "10px",
-                      color: "#535353",
-                    }}
-                  >
-                    {item?.serviceType}
-                  </Typography>
-                </ServiceCard>
+                </ServiceTypesContainer>
               ))}
-            </CreditServicesInfoWrapper>
-            <Typography
-              variant="h4"
-              sx={{
-                fontFamily: "plus jakarta sans bold",
-                color: "#000000",
-                fontSize: "1.6rem",
-                marginBottom: "10px",
-                marginTop: "10px",
-              }}
-            >
-              Insurance{" "}
-            </Typography>
-            <InsuranceServiceInfoWrapper>
-              <Slider {...settings}>
-                {insuranceServiceArr.map((item, index) => (
-                  <InsuranceServiceContainer>
-                    <IconContainer>
-                      <img src={item?.src} style={{ height: "40px" }} />
-                    </IconContainer>
-                    <Typography
-                      variant="body1"
-                      fontFamily={"plus jakarta sans bold"}
-                      fontSize={"1.4rem"}
-                    >
-                      {item?.title}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      fontSize={"1.2rem"}
-                      fontFamily={"Plus Jakarta Sans"}
-                      fontWeight={700}
-                      color={"#535353"}
-                    >
-                      {item?.body}
-                    </Typography>
-                  </InsuranceServiceContainer>
-                ))}
-              </Slider>
-            </InsuranceServiceInfoWrapper>
-          </CreditInsuranceServiceWrapper>
-          <MeetOurAgentWrapper>
-            <Typography
-              variant="h4"
-              sx={{
-                fontFamily: "plus jakarta sans bold",
-                color: "#1976d2",
-                fontSize: "1.8rem",
-                marginBottom: "10px",
-              }}
-            >
-              Meet Our Agents
-            </Typography>
-            <Grid container gap={2}>
-              {agentList.map((agent, index) => (
-                <AgentImageContainer item xs={5.8} sm={5.8} type={agent.img} />
-              ))}
-            </Grid>
-          </MeetOurAgentWrapper>
+            </ServiceTypesWrapper>
+            <CustomizedButton>Meet Our Agents</CustomizedButton>
+          </FinancialContainer>
+
           <PatnersContainer>
             <TrustedPatnerContainer>
               <Typography
                 variant="h4"
                 sx={{
-                  fontSize: "1.8rem",
-                  color: "#1976d2",
+                  fontSize: "1.4rem",
+                  color: "#000000",
                 }}
                 fontFamily={"Plus Jakarta Sans bold"}
               >
                 Our Trusted Partners
               </Typography>
-              <StyledTypography textAlign={"center"}>
-                We work with top industry leaders to provide you with the best
-                insurance and credit solutions, ensuring exceptional service
-                tailored to your needs.
-              </StyledTypography>
             </TrustedPatnerContainer>
             <PatnerLogoWrapper>
               <Marquee velocity={10}>
@@ -570,50 +657,219 @@ const WelcomePage = () => {
               </Marquee>
             </PatnerLogoWrapper>
           </PatnersContainer>
+          <MeetOurAgentWrapper>
+            <AssistantChangeSectionWrapper>
+              <ActionChangeSectionContainer>
+                <Slider activeButton={activeButton} />
+                <ToggleButton
+                  onClick={() => handleButtonClick(0)}
+                  isActive={activeButton === 0}
+                >
+                  Insurance
+                </ToggleButton>
+                <ToggleButton
+                  onClick={() => handleButtonClick(1)}
+                  isActive={activeButton === 1}
+                >
+                  Credit
+                </ToggleButton>
+              </ActionChangeSectionContainer>
+            </AssistantChangeSectionWrapper>
+            <AssistantNameChangeWrapper>
+              <Typography
+                sx={{
+                  fontFamily: "Source Sans Pro SemiBold",
+                  fontSize: "2rem",
+                  color: "White",
+                }}
+              >
+                Meet Name
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Source Sans Pro ",
+                  fontSize: "1rem",
+                  color: "#D2D2D2",
+                  textAlign: "center",
+                }}
+              >
+                Get personalized credit advice and quick support to find the
+                right coverage effortlessly.
+              </Typography>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  backgroundColor: "#0054BA",
+                  textTransform: "none",
+                  fontFamily: "Source Sans Pro ",
+                  fontSize: "1.1rem",
+                  marginBottom: 3,
+                }}
+                onClick={handleNavigate}
+              >
+                Get {activeButton === 0 ? "Insurance" : "Credit"}
+              </Button>
+            </AssistantNameChangeWrapper>
+          </MeetOurAgentWrapper>
+          <OuterWrapper>
+            <CreditServicesInfoWrapper>
+              {creditServicesArr.map((item, index) => (
+                <ServiceCard key={index}>
+                  <ServiceIconContainer>
+                    <IconButton>{item?.serviceIcon}</IconButton>
+                  </ServiceIconContainer>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontFamily: "Source Sans Pro SemiBold",
+                      fontSize: "1.3rem",
+                      marginLeft: 2,
+                    }}
+                  >
+                    {item?.serviceType}
+                  </Typography>
+                </ServiceCard>
+              ))}
+            </CreditServicesInfoWrapper>
+          </OuterWrapper>
+          <EmpowerWrapper>
+            <Stack mt={6} gap={2}>
+              <Typography
+                sx={{
+                  fontFamily: "plus jakarta sans semibold",
+                  fontSize: "1.8rem",
+                }}
+              >
+                Innovations that Empower Your Journey
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Source Sans pro",
+                  fontSize: "1.2rem",
+                  color: "#535353",
+                }}
+              >
+                Discover the powerful features that make managing your insurance
+                and credit effortless.
+              </Typography>
+            </Stack>
+            <Stack mt={4} gap={4}>
+              {empowerInfoCard.map((item, index) => (
+                <EmpowerCardContainer key={index}>
+                  <EmpowerIconContainer>
+                    <IconButton>{item.src}</IconButton>
+                  </EmpowerIconContainer>
+                  <EmpowerTextContainer>
+                    <Typography
+                      sx={{
+                        fontSize: "1.4rem",
+                        fontFamily: "plus jakarta sans bold",
+                      }}
+                    >
+                      {item.title}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "1rem",
+                        fontFamily: "Source Sans pro",
+                        color: "#535353",
+                      }}
+                    >
+                      {item.body}
+                    </Typography>
+                  </EmpowerTextContainer>
+                </EmpowerCardContainer>
+              ))}
+            </Stack>
+          </EmpowerWrapper>
+          {Faq?.map((faq, index) => (
+            <CustomAccordion
+              acordianHeading={faq.faqQuestion}
+              acordianContent={faq.faqAnswer}
+            />
+          ))}
+          <ContactUsWrapper>
+            <ContactUsContainer>
+              <Typography
+                sx={{
+                  fontFamily: "Source Sans Pro SemiBold",
+                  fontSize: "1.7rem",
+                  color: "White",
+                  textAlign: "center",
+                }}
+              >
+                We're Here to Help{" "}
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Source Sans Pro ",
+                  fontSize: "1rem",
+                  color: "#D2D2D2",
+                  textAlign: "center",
+                }}
+              >
+                Get personalized credit advice and quick support to find the
+                right coverage effortlessly.
+              </Typography>
+              <ContactButton variant="contained">Contact Us</ContactButton>
+            </ContactUsContainer>
+          </ContactUsWrapper>
         </WelcomePageContainer>
       </WelcomePageWrapper>
       <SahayakFooter />
+      <BootstrapDialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={true}
+      >
+        <DialogTitle
+          sx={{ m: 0, p: 2, fontFamily: "plus jakarta sans semibold" }}
+          id="customized-dialog-title"
+        >
+          Contact Us
+        </DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={(theme) => ({
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: theme.palette.grey[500],
+          })}
+        >
+          <CloseIcon />
+        </IconButton>
+        <DialogContent>
+          <FormContainer>
+            <FormBox id="personal-details">
+              <FormControl fullWidth>
+                <FormLabel htmlFor="first_name">
+                  <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                    First Name
+                  </Stack>
+                </FormLabel>
+                <TextField
+                  type="text"
+                  id="first_name"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleFormData}
+                  fullWidth
+                />
+              </FormControl>
+            </FormBox>
+          </FormContainer>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose}>
+            Save changes
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
     </>
   );
 };
 
 export default WelcomePage;
-
-// <MeetOurAgentContainer>
-//   <MeetOurAgentContainerBody key={index}>
-//     <AgentImageContainer type={agent.img} alt={agent.name} />
-//     <Stack justifyContent={"center"} mt={1}>
-//       <Typography
-//         sx={{
-//           fontFamily: "plus jakarta sans bold",
-//           color: "black",
-//           fontSize: "1.4rem",
-//           textAlign: "center",
-//         }}
-//       >
-//         {agent.name}
-//       </Typography>
-//       <Typography
-//         sx={{
-//           color: "#535353",
-//           fontSize: "1.1rem",
-//         }}
-//       >
-//         {agent.specialist}
-//       </Typography>
-//     </Stack>
-//     <Stack width={"90%"}>
-//       <CustomizedButton
-//         variant="contained"
-//         onClick={() =>
-//           handleAgentClick(
-//             agent.name === "Rajesh" ? "male" : "female",
-//             agent.navigation
-//           )
-//         }
-//       >
-//         Let's Get Started
-//       </CustomizedButton>
-//     </Stack>
-//   </MeetOurAgentContainerBody>
-// </MeetOurAgentContainer>
