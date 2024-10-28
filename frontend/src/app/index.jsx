@@ -22,6 +22,7 @@ import BuyerFormPage from "../pages/BuyerFormPage";
 import NomineeFormPage from "../pages/NomineePage";
 import WelcomePage from "../pages/WelcomePage";
 import ServiceInfoPage from "../pages/ServiceInfoPage";
+import InitiateJourneyPage from "../pages/InitiateJourneyPage";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/welcome-page" element={<WelcomePage />} />
         <Route path="/service-info" element={<ServiceInfoPage />} />
-
+        <Route path="/initiate-journey" element={<InitiateJourneyPage />} />
         {/* ASSISTANTROUTING */}
         <Route path="/route-1" element={<AssistantHomepage />} />
         <Route path="/route-2" element={<ChooseAssistant />} />
