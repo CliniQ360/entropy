@@ -28,8 +28,8 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/welcome-page" element={<WelcomePage />} />
+        <Route path="/" element={<WelcomePage />} />
+        {/* <Route path="/welcome-page" element={<WelcomePage />} /> */}
         <Route path="/service-info" element={<ServiceInfoPage />} />
         <Route path="/initiate-journey" element={<InitiateJourneyPage />} />
         {/* ASSISTANTROUTING */}

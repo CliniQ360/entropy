@@ -287,7 +287,7 @@ const ServiceCard = styled(Stack)(({ theme }) => ({
   justifyContent: "center",
   alignItems: "center",
   padding: theme.spacing(3),
-  backgroundColor: "#0054ba2b",
+  backgroundColor: "#0054ba1a",
   gap: theme.spacing(1),
   width: "fit-content",
   border: "2px solid #f4f4f4",
@@ -466,19 +466,23 @@ const empowerInfoCard = [
 const creditServicesArr = [
   {
     serviceType: "Health",
-    serviceIcon: <FavoriteBorderIcon sx={{ fontSize: "2.1rem" }} />,
+    serviceIcon: (
+      <FavoriteBorderIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />
+    ),
   },
   {
     serviceType: "Education",
-    serviceIcon: <SchoolIcon sx={{ fontSize: "2.1rem" }} />,
+    serviceIcon: <SchoolIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
   },
   {
     serviceType: "Travel",
-    serviceIcon: <FlightTakeoffIcon sx={{ fontSize: "2.1rem" }} />,
+    serviceIcon: (
+      <FlightTakeoffIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />
+    ),
   },
   {
     serviceType: "Others",
-    serviceIcon: <AodIcon sx={{ fontSize: "2.1rem" }} />,
+    serviceIcon: <AodIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
   },
 ];
 
