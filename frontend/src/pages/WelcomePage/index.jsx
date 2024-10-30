@@ -50,6 +50,10 @@ import handIndexIcon from "../../assets/v4DesignImages/Icons/1.png";
 import HealthLoanIcon from "../../utils/CustomIcons/healthLoanIcon";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import EducationIcon from "../../utils/CustomIcons/EducationIcon";
+import TravelIcon from "../../utils/CustomIcons/TravelIcon";
+import MedicalEmergencyIcon from "../../utils/CustomIcons/medicalEmergency";
+import MarraigeIcon from "../../utils/CustomIcons/marraigeIcon";
 
 const WelcomePageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -465,24 +469,24 @@ const empowerInfoCard = [
 
 const creditServicesArr = [
   {
-    serviceType: "Health",
-    serviceIcon: (
-      <FavoriteBorderIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />
-    ),
-  },
-  {
     serviceType: "Education",
-    serviceIcon: <SchoolIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
+    serviceIcon: <EducationIcon />,
   },
   {
     serviceType: "Travel",
-    serviceIcon: (
-      <FlightTakeoffIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />
-    ),
+    serviceIcon: <TravelIcon />,
   },
   {
-    serviceType: "Others",
-    serviceIcon: <AodIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
+    serviceType: "Healthcare",
+    serviceIcon: <HealthLoanIcon />,
+  },
+  {
+    serviceType: "Medical Emergency",
+    serviceIcon: <MedicalEmergencyIcon />,
+  },
+  {
+    serviceType: "Marriage",
+    serviceIcon: <MarraigeIcon />,
   },
 ];
 
