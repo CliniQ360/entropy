@@ -1,4 +1,3 @@
-import LandingPage from "../pages/LandingPage";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import CreditPage from "../pages/CreditPage";

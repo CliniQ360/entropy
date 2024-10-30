@@ -50,6 +50,10 @@ import handIndexIcon from "../../assets/v4DesignImages/Icons/1.png";
 import HealthLoanIcon from "../../utils/CustomIcons/healthLoanIcon";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import PersonPinIcon from "@mui/icons-material/PersonPin";
+import SpeedIcon from "@mui/icons-material/Speed";
+import NavigationIcon from "@mui/icons-material/Navigation";
 
 const WelcomePageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -444,22 +448,22 @@ const empowerInfoCard = [
   {
     title: "24/7 Assistance",
     body: "Get instant support anytime, anywhere.",
-    src: <HealthLoanIcon />,
+    src: <SupportAgentIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
   },
   {
     title: "Personalized Solutions",
     body: "Tailored recommendations based on your unique needs.",
-    src: <HealthLoanIcon />,
+    src: <PersonPinIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
   },
   {
     title: "Quick Issue Resolution",
     body: "Solve problems and get answers fast.",
-    src: <HealthLoanIcon />,
+    src: <SpeedIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
   },
   {
     title: "Easy Navigation",
     body: "Intuitive design for a smooth user experience.",
-    src: <HealthLoanIcon />,
+    src: <NavigationIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
   },
 ];
 
