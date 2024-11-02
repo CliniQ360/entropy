@@ -79,6 +79,82 @@ class OpenAIPrompts:
         Try to answer the user_query in brief based on the offer details. If applicable, provide the details from the offer details above. Keep the tone conversational.
         user_query: {user_query}"""
 
+        self.intent_identification_instructions = """You are tasked with identifying the user intent from the customer's response.
+        The user was asked about the insurance plan for self or family.
+        User response: {user_message}.
+        If values are not present, return None."""
+
+        self.intent_identification_instructions_hi = """You are tasked with identifying the user intent from the customer's response.
+        The user was asked about the insurance plan for self or family.
+        User response: {user_message}.
+        If values are not present, return None."""
+
+        self.insurance_collector_instructions = """You are a helpful customer assistant tasked to generate relevant questions to the customer for collecting required customer information.
+        The information you need to collect includes: {required_fields}.
+        The information already collected: {customer_info}.
+        Think step-by-step and carefully verify each piece of information before moving to the next. Generate question only for the missing information 
+        and avoid repeating questions for details that have already been collected.
+        Aim is to generate questions to be asked to the customer to collect the required information.
+        Process this section by section. Generate question to collect all the missing information for a section. Once all required information is collected
+        for a section, move to another section. Aim to get the infomation collected in least possible questions.
+        Keep the generated question simple and easy to understand. Keep the tone conversational without any salutations.
+        If all required information is collected, only generate : "ALL DATA COLLECTED"
+        Do not include any introductory or closing remarks.
+        Now, proceed step-by-step and analyze {customer_info}.
+        """
+
+        self.insurance_collector_instructions_hi = """You are a helpful customer assistant tasked to generate relevant questions to the customer for collecting required customer information.
+        The information you need to collect includes: {required_fields}.
+        The information already collected: {customer_info}.
+        Think step-by-step and carefully verify each piece of information before moving to the next. Generate question only for the missing information 
+        and avoid repeating questions for details that have already been collected.
+        Aim is to generate questions to be asked to the customer to collect the required information.
+        Process this section by section. Generate question to collect all the missing information for a section. Once all required information is collected
+        for a section, move to another section. Aim to get the infomation collected in least possible questions.
+        Generate a question in Hindi. Keep the generated question simple and easy to understand. Keep the tone conversational without any salutations.
+        If all required information is collected, only generate : "ALL DATA COLLECTED"
+        Do not include any introductory or closing remarks.
+        Now, proceed step-by-step and analyze {customer_info}.
+        """
+
+        self.insurance_extractor_instructions = """You are tasked with extracting the user details from the customer's response.
+        Question asked to the user: {agent_question}.
+        User response: {user_answer}.
+        If information is not present in user_answer, return 'NA' for the respective field."""
+
+        self.insurance_summariser_instructions = """Offer details: {offer_list}.
+        Act as a insurance adviser. From the insurance plans provided above, help customer understand each plan in simple paragraph focusing on important information. 
+        Keep the tone conversational and maximum 25 words.
+        Do not include any introductory or closing remarks.
+        While summarising, keep in mind all currency is in Indian Rupees. Convert all the currency values into words."""
+
+        self.insurance_summariser_instructions_hi = """Offer details: {offer_list}.
+        Act as a insurance adviser. From the insurance plans provided above, help customer understand each plan in simple paragraph focusing on important information. 
+        Ouput should be in Hindi. Keep the tone conversational and maximum 25 words.
+        Do not include any introductory or closing remarks.
+        While summarising, keep in mind all currency is in Indian Rupees. Convert all the currency values into words."""
+
+        self.insurance_qna_instructions = """Offer details : {offer_list}. Offer document text : {offer_document_text}.
+        Try to answer the user_query in brief based on the offer details and offer document text. If applicable, provide the details from the offer details above. Keep the tone conversational.
+        While generating answer, keep in mind all currency is in Indian Rupees. Convert all the currency values into words.
+        Output should be in maximum 200 characters.
+        Do not include any introductory or closing remarks.
+        user_query: {user_query}. output: """
+
+        self.insurance_qna_instructions_hi = """Offer details : {offer_list}. Offer document text : {offer_document_text}.
+        Try to answer the user_query in brief based on the offer details and offer document text. If applicable, provide the details from the offer details above. Keep the tone conversational.
+        While generating answer, keep in mind all currency is in Indian Rupees. Convert all the currency values into words.
+        Answer should be generated in Hindi. Output should be in maximum 200 characters.
+        Do not include any introductory or closing remarks.
+        user_query: {user_query}. output: """
+
+        self.add_on_identification_instructions = """You are an intelligent agent. User has been presented with the list of available_add_ons.
+        User has shown interest in adding from the list. The user intent is available in user_message. user_message: {user_message}. 
+        Analyse the user_message and from the list of available_add_ons, identify the add-ons user wishes to add to the plan. 
+        Only return the filtered list of available_add_ons which user is interested in.
+        Do not include any introductory or closing remarks.
+        available_add_ons : {available_add_ons}"""
+
 
 class GeminiPrompts:
     def __init__(self):

@@ -9,7 +9,9 @@ import uuid
 from core.apis.schemas.conversation_input_schema import ConversationResume
 from core.apis.schemas.conversation_output_schema import ConversationOutput
 from core.controllers.text_conversation_controller import TextConversationController
-from core.controllers.audio_conversation_controller import AudioConversationController
+from core.controllers.credit_audio_conversation_controller import (
+    CreditAudioConversationController,
+)
 from core import logger
 
 conversation_router = APIRouter()
@@ -24,7 +26,7 @@ async def start_conversation():
         logging.info(f"Calling /v1/langgraph/start_conversation endpoint")
         thread_id = str(uuid.uuid4())
         logging.debug(f"{thread_id=}")
-        return AudioConversationController().start_conversation(thread_id)
+        return CreditAudioConversationController().start_conversation(thread_id)
     except Exception as error:
         logging.error(f"Error in /v1/langgraph/start_conversation endpoint: {error}")
         raise HTTPException(
@@ -70,7 +72,7 @@ def resume_conversation(request: ConversationResume):
         logging.info(f"Calling /v1/langgraph/resume_conversation endpoint")
         logging.debug(f"{request=}")
         request_dict = request.model_dump()
-        return AudioConversationController().resume_conversation(**request_dict)
+        return CreditAudioConversationController().resume_conversation(**request_dict)
     except Exception as error:
         logging.error(f"Error in /v1/langgraph/resume_conversation endpoint: {error}")
         raise HTTPException(

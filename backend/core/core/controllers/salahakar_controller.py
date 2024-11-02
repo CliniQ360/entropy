@@ -9,8 +9,8 @@ from datetime import datetime
 from core.utils.groq.stt import GroqHelper
 from core.utils.elevenlabs.tts import ElevenLabsHelper
 from core.utils.sarvam_helper import SarvamAPI
-from core.controllers.credit_audio_conversation_controller import (
-    CreditAudioConversationController,
+from core.controllers.insurance_audio_conversation_controller import (
+    InsuranceAudioConversationController,
 )
 from core.utils.vertex_ai_helper.gemini_helper import transcribe, translate
 from core.utils.vertex_ai_helper.gcs_helper import upload_blob_string
@@ -19,7 +19,7 @@ from core.utils.openai_helper import WhisperHelper
 logging = logger(__name__)
 
 
-class SahayakController:
+class SalahakarController:
     def __init__(self):
 
         self.DB_URI = os.getenv("DB_URI")
@@ -42,7 +42,7 @@ class SahayakController:
 
     async def upload_documents(self, thread_id, files):
         try:
-            logging.info(f"SahayakController: upload_documents")
+            logging.info(f"SalahakarController: upload_documents")
             file_path_list = []
             for document in files:
                 document_name = document.filename
@@ -58,14 +58,16 @@ class SahayakController:
                 file_path_list.append(document_key)
             return {"file_path_list": file_path_list}
         except Exception as error:
-            logging.error(f"Error in SahayakController.upload_documents: {error}")
+            logging.error(f"Error in SalahakarController.upload_documents: {error}")
             raise error
 
     def start_audio_conversation(self, language: str):
         thread_id = str(uuid.uuid4())
         logging.debug(f"{thread_id=}")
-        conversation_response = CreditAudioConversationController().start_conversation(
-            thread_id=thread_id, language=language
+        conversation_response = (
+            InsuranceAudioConversationController().start_conversation(
+                thread_id=thread_id, language=language
+            )
         )
         agent_message = conversation_response.get("agent_message")
         output_file_name = f"C360-AUDIO-{str(uuid.uuid1().int)[:6]}-output.mp3"
@@ -86,7 +88,7 @@ class SahayakController:
         try:
             master_start = time.time()
             logging.info(
-                "executing SahayakController.resume_audio_conversation function"
+                "executing SalahakarController.resume_audio_conversation function"
             )
             os.makedirs(self.audio_file_folder_path, exist_ok=True)
             audio_data = request.get("audio_data", None)
@@ -171,7 +173,7 @@ class SahayakController:
             }
             logging.info(f"{workflow_payload=}")
             conversation_response = (
-                CreditAudioConversationController().resume_conversation(
+                InsuranceAudioConversationController().resume_conversation(
                     **workflow_payload
                 )
             )
@@ -182,42 +184,16 @@ class SahayakController:
             language = conversation_response.get("language")
             if modified:
                 agent_message = conversation_response.get("agent_message_modified")
-            if next_state == "submit_form":
-                logging.info(f"Reading default audio message for submit_form")
-                form_submit_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/form_submission_message.txt"
-                audio_base64 = open(form_submit_message_audio_path, "r").read()
-            elif next_state == "resume_after_aa_redirect":
-                logging.info(
-                    f"Reading default audio message for resume_after_aa_redirect"
-                )
-                aa_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/aa_redirect_message.txt"
-                audio_base64 = open(aa_redirect_message_audio_path, "r").read()
-            elif next_state == "resume_after_kyc_redirect":
-                logging.info(
-                    f"Reading default audio message for resume_after_kyc_redirect"
-                )
-                kyc_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/kyc_redirect_message.txt"
-                audio_base64 = open(kyc_redirect_message_audio_path, "r").read()
-            elif next_state == "resume_after_emdt_redirect":
-                logging.info(
-                    f"Reading default audio message for resume_after_emdt_redirect"
-                )
-                eMandate_redirect_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/eMandate_redirect_message.txt"
-                audio_base64 = open(eMandate_redirect_message_audio_path, "r").read()
-            elif next_state == "resume_loan_agreement_signing":
-                logging.info(
-                    f"Reading default audio message for resume_loan_agreement_signing"
-                )
-                sign_loan_agreement_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/sign_loan_agreement_message.txt"
-                audio_base64 = open(sign_loan_agreement_message_audio_path, "r").read()
             # elif next_state == "human_loan_tnc_feedback":
             #     logging.info(
             #         f"Reading default audio message for human_loan_tnc_feedback"
             #     )
             #     congratulations_message_audio_path = f"/app/data/STATIC_AUDIO_DATA/{self.stt_service}/{language}/congratulations_message.txt"
             #     audio_base64 = open(congratulations_message_audio_path, "r").read()
+            logging.info(f"executing text to speech function")
+            if self.local_testing:
+                audio_base64 = ""
             else:
-                logging.info(f"executing text to speech function")
                 if self.stt_service == "11LABS":
                     logging.info(f"executing text to speech with 11LABS")
                     agent_audio_data = ElevenLabsHelper().text_to_speech_generator(
@@ -245,7 +221,7 @@ class SahayakController:
             return conversation_response
         except Exception as error:
             logging.error(
-                f"Error in SahayakController.resume_audio_conversation function: {error}"
+                f"Error in SalahakarController.resume_audio_conversation function: {error}"
             )
             raise error
 

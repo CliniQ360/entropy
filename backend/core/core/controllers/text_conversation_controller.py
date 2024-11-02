@@ -263,8 +263,10 @@ class TextConversationController:
                     checkpointer=checkpointer,
                 )
                 print("Workflow compiled")
+                next_state = workflow.get_state(thread).next[0]
                 return {
                     "state": workflow.get_state(thread).values,
+                    "next_state": next_state,
                 }
         except Exception as error:
             logging.error(f"Error in TextConversationController.get_state: {error}")
