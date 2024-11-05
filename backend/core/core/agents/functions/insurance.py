@@ -567,7 +567,7 @@ def select_insurance(state: SalahakarState):
     select_resp, select_resp_code = APIInterface().post_with_params(
         route=select_url,
         params={"txn_id": txn_id, "offer_item_id": selected_offer_item_id},
-        json=add_on_payload,
+        data=add_on_payload,
     )
 
 

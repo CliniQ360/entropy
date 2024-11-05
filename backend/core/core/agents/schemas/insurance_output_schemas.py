@@ -12,24 +12,26 @@ class UserDetails(BaseModel):
     address: str = Field(description="Customer's full address")
     pincode: str = Field(description="Customer's pincode")
     any_pre_existing_disease: str = Field(
-        description="Check if customer has any pre-existing diseases. Yes or No"
+        description="Check if customer has any pre-existing diseases. Can only take values Yes or No"
     )
-    diabetes: str = Field(description="Is customer suffering with diabetes? Yes or No")
+    diabetes: str = Field(
+        description="Is customer suffering with diabetes? Can only take values Yes or No"
+    )
     bloodPressure: str = Field(
-        description="Is customer suffering with bloodPressure? Yes or No"
+        description="Is customer suffering with bloodPressure? Can only take values Yes or No"
     )
     heartAilments: str = Field(
-        description="Is customer suffering with heartAilments? Yes or No"
+        description="Is customer suffering with heartAilments? Can only take values Yes or No"
     )
     other: str = Field(
-        description="Is customer suffering with any other pre-existing diseases? Yes or No"
+        description="Is customer suffering with any other pre-existing diseases? Can only take values Yes or No"
     )
     amount: int = Field(description="Amount of insurance")
     panIndia: str = Field(
-        description="Check if customer wants pan india insurance. Yes or No"
+        description="Check if customer wants pan india insurance. Can only take values Yes or No"
     )
     politicallyExposedPerson: str = Field(
-        description="Check if customer is politically exposed person. Yes or No"
+        description="Check if customer is politically exposed person. Can only take values Yes or No"
     )
     heightfoot: str = Field(description="Height in foot")
     heightinch: str = Field(description="Height in inch")

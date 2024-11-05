@@ -125,17 +125,7 @@ class InsuranceAudioConversationController:
                     checkpointer=checkpointer,
                 )
                 print("Workflow compiled")
-                if state == "human_intent_feedback":
-                    print(f"{state=}")
-                    workflow.update_state(
-                        thread,
-                        {
-                            "user_message": kwargs.get("user_message"),
-                            "user_message_hindi": kwargs.get("user_message_hindi"),
-                        },
-                        as_node=state,
-                    )
-                elif state == "human_document_upload_feedback":
+                if state == "human_document_upload_feedback":
                     print(f"{state=}")
                     if kwargs.get("document_upload_flag"):
                         print("updating workflow state")
@@ -169,33 +159,25 @@ class InsuranceAudioConversationController:
                         )
                         print("workflow state updated")
                 elif (
-                    state == "human_feedback" or state == "human_verification_feedback"
+                    state == "human_selection"
+                    or state == "human_add_on_selection"
+                    or state == "human_add_on_confirmation"
                 ):
                     workflow.update_state(
                         thread,
                         {
                             "user_message": kwargs.get("user_message"),
                             "user_message_hindi": kwargs.get("user_message_hindi"),
+                            "selected_offer_item_id": kwargs.get("offer_item_id"),
                         },
                         as_node=state,
                     )
-                elif state == "human_selection":
+                else:
                     workflow.update_state(
                         thread,
                         {
                             "user_message": kwargs.get("user_message"),
                             "user_message_hindi": kwargs.get("user_message_hindi"),
-                            "selected_offer_item_id": kwargs.get("offer_item_id"),
-                        },
-                        as_node=state,
-                    )
-                elif state == "human_selection":
-                    workflow.update_state(
-                        thread,
-                        {
-                            "user_message": kwargs.get("user_message"),
-                            "user_message_hindi": kwargs.get("user_message_hindi"),
-                            "selected_offer_item_id": kwargs.get("offer_item_id"),
                         },
                         as_node=state,
                     )
@@ -283,6 +265,9 @@ class InsuranceAudioConversationController:
                 agent_message_modified = workflow.get_state(thread).values.get(
                     "agent_message_modified"
                 )
+                selected_add_ons = workflow.get_state(thread).values.get(
+                    "selected_add_ons"
+                )
                 if modified:
                     agent_message = agent_message_modified
                 if self.stt_service == "11LABS":
@@ -328,6 +313,7 @@ class InsuranceAudioConversationController:
                     ),
                     "agent_audio_data": audio_base64,
                     "language": language,
+                    "selected_add_ons": selected_add_ons if selected_add_ons else []),
                 }
         except Exception as error:
             logging.error(
