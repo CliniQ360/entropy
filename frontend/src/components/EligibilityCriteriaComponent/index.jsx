@@ -3,9 +3,19 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   Dialog,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
   IconButton,
+  Radio,
+  RadioGroup,
+  Slide,
+  Stack,
   styled,
+  TextField,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -18,6 +28,8 @@ import Eli1 from "../../assets/v4DesignImages/EligibilityIcons/Eli1";
 import Doc1 from "../../assets/v4DesignImages/EligibilityIcons/Doc1";
 import Doc2 from "../../assets/v4DesignImages/EligibilityIcons/Doc2";
 import Doc3 from "../../assets/v4DesignImages/EligibilityIcons/Doc3";
+import GlobalIcon from "../../utils/CustomIcons/GlobalIcon";
+import CloseIcon from "@mui/icons-material/Close";
 
 const PageContainer = styled("div")(({ theme }) => ({
   padding: theme.spacing(10, 4),
@@ -69,6 +81,66 @@ const ONDCBoxContainer = styled("div")(({ theme }) => ({
   borderRadius: "4px",
   background:
     "linear-gradient(to right, rgba(40, 136, 252, 0.04), rgba(0, 84, 186, 0.04))",
+}));
+
+const ActionButtonWrapper = styled(Grid)(({ theme }) => ({
+  position: "fixed",
+  bottom: "20px",
+  gap: theme.spacing(1),
+}));
+
+const ActionButtonContainer = styled(Grid)(({ theme }) => ({}));
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialog-paper": {
+    minWidth: "90%", // Ensures the minimum width of the dialog is 80% of the viewport
+    width: "90%", // Sets the initial width to 80%
+    maxWidth: "none",
+    borderRadius: "10px", // Prevents Material-UI's maxWidth from overriding it
+  },
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const FormContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  gap: theme.spacing(4),
+}));
+
+const FormBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  padding: theme.spacing(2),
+}));
+
+const DialogHeaderContent = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(4),
+  justifyContent: "space-between",
+  alignItems: "center",
+  flexDirection: "row",
+}));
+
+const DialogFormContent = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(3),
+  flexDirection: "column",
+}));
+
+const RadioButtonGroupContainer = styled(Stack)(({ theme, isSelected }) => ({
+  padding: theme.spacing(2),
+  flexDirection: "row",
+  borderRadius: "3px",
+  border: `1px solid ${isSelected ? "#0054BA" : "#D2D2D2"}`,
+  alignItems: "center",
 }));
 
 function CustomAccordion({ acordianHeading, acordianContentList, expanded }) {
@@ -138,6 +210,20 @@ function CustomAccordion({ acordianHeading, acordianContentList, expanded }) {
 
 const EligibilityCriteriaComponent = () => {
   const [openDialog, setOpenDialog] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
+
+  const handleChange = (event) => {
+    setSelectedLanguage(event.target.value);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const EligibilityList = [
     {
@@ -171,60 +257,179 @@ const EligibilityCriteriaComponent = () => {
   ];
 
   return (
-    <Dialog fullScreen onClose={() => setOpenDialog(false)} open={openDialog}>
-      <PageContainer>
-        <SahayakHeaderWrapper>
-          <SahayakLogo>Sahayak</SahayakLogo>
-          <IconButton onClick={() => setOpenDialog(false)}>
-            <CloseOutlinedIcon sx={{ color: "black", fontSize: "2rem" }} />
-          </IconButton>
-        </SahayakHeaderWrapper>
-        <ContentContainer>
-          <Heading>
-            <Typography
-              fontFamily={"Plus Jakarta Sans SemiBold"}
-              fontSize={28}
-              lineHeight={"140%"}
-            >
-              HealthTech Financing: Eligibility & Docs
-            </Typography>
+    <>
+      <Dialog fullScreen onClose={() => setOpenDialog(false)} open={openDialog}>
+        <PageContainer>
+          <SahayakHeaderWrapper>
+            <SahayakLogo>Sahayak</SahayakLogo>
+            <IconButton onClick={() => setOpenDialog(false)}>
+              <CloseOutlinedIcon sx={{ color: "black", fontSize: "2rem" }} />
+            </IconButton>
+          </SahayakHeaderWrapper>
+          <ContentContainer>
+            <Heading>
+              <Typography
+                fontFamily={"Plus Jakarta Sans SemiBold"}
+                fontSize={28}
+                lineHeight={"140%"}
+              >
+                HealthTech Financing: Eligibility & Docs
+              </Typography>
 
+              <Typography
+                fontFamily={"Source Sans Pro"}
+                fontSize={18}
+                lineHeight={"150%"}
+                color={"#535353"}
+              >
+                Review eligibility and document requirements for HealthTech
+                financing.
+              </Typography>
+            </Heading>
+            <BodyContainer>
+              <CustomAccordion
+                expanded={true}
+                acordianHeading={"Eligibility Criteria"}
+                acordianContentList={EligibilityList}
+              />
+              <CustomAccordion
+                acordianHeading={"Documents Required"}
+                acordianContentList={DocumentsList}
+              />
+            </BodyContainer>
+          </ContentContainer>
+          <ONDCBoxContainer>
+            <img src={ondcLogo} alt="ondcLogo" height={"25px"} />
             <Typography
               fontFamily={"Source Sans Pro"}
-              fontSize={18}
+              fontSize={14}
               lineHeight={"150%"}
-              color={"#535353"}
+              color={"black"}
             >
-              Review eligibility and document requirements for HealthTech
-              financing.
+              ONDC is a Gov backed project and we are partnered with RBI
+              licensed lenders only!
             </Typography>
-          </Heading>
-          <BodyContainer>
-            <CustomAccordion
-              expanded={true}
-              acordianHeading={"Eligibility Criteria"}
-              acordianContentList={EligibilityList}
-            />
-            <CustomAccordion
-              acordianHeading={"Documents Required"}
-              acordianContentList={DocumentsList}
-            />
-          </BodyContainer>
-        </ContentContainer>
-        <ONDCBoxContainer>
-          <img src={ondcLogo} alt="ondcLogo" height={"25px"} />
-          <Typography
-            fontFamily={"Source Sans Pro"}
-            fontSize={14}
-            lineHeight={"150%"}
-            color={"black"}
-          >
-            ONDC is a Gov backed project and we are partnered with RBI licensed
-            lenders only!
-          </Typography>
-        </ONDCBoxContainer>
-      </PageContainer>
-    </Dialog>
+          </ONDCBoxContainer>
+          <ActionButtonWrapper container>
+            <ActionButtonContainer item xs={5.6}>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={handleClickOpen}
+                sx={{
+                  padding: "10px",
+                  textTransform: "none",
+                  fontSize: "1rem",
+                  fontFamily: "inter semibold",
+                  border: "1.2px solid",
+                  backgroundColor: "white",
+                }}
+              >
+                <GlobalIcon />
+                <span style={{ marginLeft: 3 }}>Language</span>
+              </Button>
+            </ActionButtonContainer>
+            <ActionButtonContainer item xs={5.6}>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{
+                  padding: "10px",
+                  textTransform: "none",
+                  fontSize: "1rem",
+                  fontFamily: "inter semibold",
+                  border: "1.2px solid",
+                  boxShadow: "none",
+                }}
+              >
+                Continue
+              </Button>
+            </ActionButtonContainer>
+          </ActionButtonWrapper>
+        </PageContainer>
+      </Dialog>
+      <BootstrapDialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        TransitionComponent={Transition}
+      >
+        <DialogHeaderContent>
+          <Stack>
+            <Typography
+              sx={{
+                fontFamily: "plus jakarta sans semibold",
+                fontSize: "1.5rem",
+              }}
+            >
+              Choose Language
+            </Typography>
+          </Stack>
+          <Stack>
+            <IconButton aria-label="close" onClick={handleClose}>
+              <CloseIcon sx={{ fontSize: "2rem", color: "#000000" }} />
+            </IconButton>
+          </Stack>
+        </DialogHeaderContent>
+        <DialogFormContent>
+          <FormContainer>
+            <FormBox>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="English"
+                name="radio-buttons-group"
+                sx={{ gap: 3, mb: "10px", color: "red" }}
+                onChange={handleChange}
+              >
+                <RadioButtonGroupContainer
+                  isSelected={selectedLanguage === "English"}
+                >
+                  <FormControlLabel
+                    value="English"
+                    control={<Radio sx={{ color: "#0054BA" }} />}
+                    sx={{
+                      ml: 2,
+                    }}
+                  />
+                  <Typography sx={{ fontSize: "1.2rem" }}>English</Typography>
+                </RadioButtonGroupContainer>
+                <RadioButtonGroupContainer
+                  isSelected={selectedLanguage === "Hindi"}
+                >
+                  <FormControlLabel
+                    value="hindi"
+                    control={<Radio sx={{ color: "#0054BA" }} />}
+                    sx={{
+                      ml: 2,
+                    }}
+                  />
+                  <Typography sx={{ fontSize: "1.2rem" }}>हिन्दी</Typography>
+                </RadioButtonGroupContainer>
+              </RadioGroup>
+
+              <Stack mb={5}>
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    sessionStorage.setItem("activeLanguage", selectedLanguage)
+                  }
+                  sx={{
+                    backgroundColor: "#0054BA",
+                    textTransform: "none",
+                    color: "white",
+                    fontFamily: "source sans pro semibold",
+                    padding: 2,
+                    fontSize: "1.1rem",
+                  }}
+                >
+                  Confirm
+                </Button>
+              </Stack>
+            </FormBox>
+          </FormContainer>
+        </DialogFormContent>
+      </BootstrapDialog>
+    </>
   );
 };
 

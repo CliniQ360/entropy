@@ -20,6 +20,11 @@ body {
 }
 
 @font-face {
+  font-family: "Inter Semibold";
+  src: url("./assets/fonts/Inter/static/Inter-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
   font-family: "Red Hat Display";
   src: url("./assets/fonts/Red_Hat_Display/static/RedHatDisplay-Regular.ttf")
     format("truetype");

@@ -67,7 +67,7 @@ const WelcomePageContainer = styled("div")(({ theme }) => ({
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  fontSize: "1.2rem",
+  fontSize: "1.1rem",
   lineHeight: 1.6,
   fontFamily: "Source Sans Pro",
   color: "#535353",
@@ -89,7 +89,7 @@ const ServiceTypesWrapper = styled(Grid)(({ theme }) => ({
 }));
 
 const ServiceTypesContainer = styled(Grid)(({ theme }) => ({
-  gap: theme.spacing(2),
+  gap: theme.spacing(4),
   padding: theme.spacing(4),
   display: "flex",
   flexDirection: "column",
@@ -117,11 +117,13 @@ const CustomizedButton = styled(Button)(({ theme, type }) => ({
   width: "92%",
   position: "absolute",
   color: "white",
-  padding: theme.spacing(2),
-  bottom: -20,
+  fontFamily: "source sans pro semibold",
+  padding: theme.spacing(3),
+  bottom: -28,
   margin: (2, 0),
   textTransform: "none",
-  fontSize: "1rem",
+  letterSpacing: "0.8px",
+  fontSize: "1.2rem",
   "&:hover": {
     backgroundColor: "#0054BA", // Optional: hover background color
   },
@@ -135,18 +137,18 @@ const MeetOurAgentWrapper = styled(Stack)(({ theme }) => ({
   marginTop: "40px",
   justifyContent: "space-between",
   alignItems: "center",
-  height: "550px",
+  height: "570px",
   width: "100%",
   backgroundImage: `url(${femaleAst})`,
   // backgroundRepeat: "no-repeat",
-  backgroundSize: "100% 550px",
+  backgroundSize: "100% 570px",
 }));
 
 const AssistantChangeSectionWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  marginTop: theme.spacing(5),
+  marginTop: theme.spacing(7),
 }));
 
 const ActionChangeSectionContainer = styled("div")(({ theme }) => ({
@@ -154,9 +156,9 @@ const ActionChangeSectionContainer = styled("div")(({ theme }) => ({
   padding: theme.spacing(3),
   gap: theme.spacing(2),
   borderRadius: "30px",
-  backgroundColor: "#ffffff4a",
+  backgroundColor: "#ffffff26",
   width: "250px",
-  height: "40px", // Increase height slightly if needed
+  height: "35px", // Increase height slightly if needed
   position: "relative",
 }));
 
@@ -171,7 +173,7 @@ const Slider = styled("div")(({ activeButton }) => ({
   width: "47%", // Slightly smaller than 50% to add padding space on the edges
   height: "80%", // Adjust height to create space for ToggleButton padding
   backgroundColor: "#ffffff4a",
-  boxShadow: "inset 0 0 6px 1px #5f5a5a",
+  boxShadow: "inset 0 0 20px 0px #5f5a5a",
   borderRadius: "30px",
   transition: "left 0.3s ease-in-out",
 }));
@@ -253,7 +255,7 @@ const PatnerLogoContainer = styled("div")(({ theme }) => ({
   margin: theme.spacing(3),
   alignItems: "center",
   [theme.breakpoints.down("sm")]: {
-    marginRight: "30px",
+    marginRight: "15px",
   },
 }));
 
@@ -299,7 +301,7 @@ const ServiceCard = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(1),
   width: "fit-content",
   border: "2px solid #f4f4f4",
-  borderRadius: "5px",
+  borderRadius: "10px",
   flexShrink: 0,
 }));
 
@@ -597,6 +599,7 @@ const WelcomePage = () => {
     if (activeButton === 0) {
       console.log("navigating to insurance");
     } else if (activeButton === 1) {
+      navigate("/initiate-journey");
       console.log("navigating to credit");
     }
   };
@@ -708,7 +711,7 @@ const WelcomePage = () => {
                   fontSize: "1.4rem",
                   color: "#000000",
                 }}
-                fontFamily={"Plus Jakarta Sans bold"}
+                fontFamily={"Plus Jakarta Sans semibold"}
               >
                 Our Trusted Partners
               </Typography>
@@ -766,6 +769,7 @@ const WelcomePage = () => {
                   fontSize: "1rem",
                   color: "#D2D2D2",
                   textAlign: "center",
+                  letterSpacing: "1px",
                 }}
               >
                 Get personalized credit advice and quick support to find the
@@ -780,6 +784,8 @@ const WelcomePage = () => {
                   fontFamily: "Source Sans Pro ",
                   fontSize: "1.1rem",
                   marginBottom: 3,
+                  fontWeight: 300,
+                  letterSpacing: "1px",
                 }}
                 onClick={handleNavigate}
               >
@@ -798,7 +804,7 @@ const WelcomePage = () => {
                     variant="h4"
                     sx={{
                       fontFamily: "Source Sans Pro SemiBold",
-                      fontSize: "1.3rem",
+                      fontSize: "1.1rem",
                       marginLeft: 2,
                     }}
                   >
