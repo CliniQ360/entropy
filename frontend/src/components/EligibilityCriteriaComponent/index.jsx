@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import ondcLogo from "../../assets/v4DesignImages/Patners/5.png";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -30,6 +30,10 @@ import Doc2 from "../../assets/v4DesignImages/EligibilityIcons/Doc2";
 import Doc3 from "../../assets/v4DesignImages/EligibilityIcons/Doc3";
 import GlobalIcon from "../../utils/CustomIcons/GlobalIcon";
 import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { MediaContext } from "../../context/mediaContext";
+import { startConversion } from "../../pages/CreditPage/audioAgent.slice";
 
 const PageContainer = styled("div")(({ theme }) => ({
   padding: theme.spacing(10, 4),
@@ -212,6 +216,17 @@ const EligibilityCriteriaComponent = () => {
   const [openDialog, setOpenDialog] = useState(true);
   const [open, setOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const navigate = useNavigate();
+  const {
+    setAudioResponse,
+    setMessageResponse,
+    setNextState,
+    setError,
+    setProgressValue,
+    setUserResponse,
+  } = useContext(MediaContext);
+  const dispatch = useDispatch();
+  const [showLoader, setShowLoader] = useState(false);
 
   const handleChange = (event) => {
     setSelectedLanguage(event.target.value);
@@ -255,6 +270,30 @@ const EligibilityCriteriaComponent = () => {
       content: "Proof of identity: Passport/Aadhar/PAN/Driver’s License",
     },
   ];
+
+  const handleInitiateJourney = () => {
+    setShowLoader(true);
+    const payload = {
+      language: sessionStorage.getItem("activeLanguage"),
+    };
+
+    dispatch(startConversion(payload)).then((res) => {
+      if (res?.error && Object.keys(res?.error)?.length > 0) {
+        setError(true);
+        return;
+      }
+      setShowLoader(false);
+      setError(false);
+      setProgressValue(10);
+      setAudioResponse(res?.payload?.agent_audio_data);
+      setMessageResponse(res?.payload?.agent_message);
+      setUserResponse(res?.payload?.user_message);
+      sessionStorage.setItem("next_state", res?.payload?.next_state);
+      setNextState(res?.payload?.next_state);
+      sessionStorage.setItem("thread_id", res?.payload?.thread_id);
+      navigate("/credit/document-upload");
+    });
+  };
 
   return (
     <>
@@ -332,6 +371,9 @@ const EligibilityCriteriaComponent = () => {
             <ActionButtonContainer item xs={5.6}>
               <Button
                 fullWidth
+                onClick={() => {
+                  handleInitiateJourney();
+                }}
                 variant="contained"
                 sx={{
                   padding: "10px",

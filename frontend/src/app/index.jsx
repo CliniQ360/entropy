@@ -44,7 +44,7 @@ function App() {
           <Route path="selectAA" element={<SelectAAPage />} />
           <Route path="availableOffers" element={<AvailableOffersPage />} />
           <Route path="customize-offers" element={<CustomizeOfferPage />} />
-          <Route path="route-3" element={<DocumentUploadPage />} />
+          <Route path="document-upload" element={<DocumentUploadPage />} />
           <Route path="kyc-page" element={<KYCPage />} />
           <Route path="account-details" element={<BankDetailsPage />} />
           <Route path="emandate-page" element={<EmandatePage />} />
