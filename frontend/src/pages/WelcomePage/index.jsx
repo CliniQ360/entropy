@@ -6,15 +6,9 @@ import {
   Grid,
   IconButton,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   Slide,
   TextField,
-  InputLabel,
   FormControl,
-  MenuItem,
   Box,
   Accordion,
   AccordionSummary,
@@ -22,27 +16,15 @@ import {
   FormLabel,
   FormHelperText,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SahayakHeader from "../../components/SahayakHeader";
-import { TypeAnimation } from "react-type-animation";
 import femaleAst from "../../assets/v4DesignImages/Patners/femalenewAst.png";
 import { useNavigate } from "react-router-dom";
 import adityaCapital from "../../assets/v4DesignImages/Patners/1.png";
-import ADBM from "../../assets/v4DesignImages/Patners/2.png";
-import adityaBirlaInsurance from "../../assets/v4DesignImages/Patners/6.png";
 import Karnataka from "../../assets/v4DesignImages/Patners/4.png";
-import ondc from "../../assets/v4DesignImages/Patners/5.png";
 import dmi from "../../assets/v4DesignImages/Patners/3.png";
 import Marquee from "react-marquee-slider";
 import SahayakFooter from "../../components/SahayakFooter";
-import credit from "../../assets/v4DesignImages/Patners/Credit.png";
-import insurance from "../../assets/v4DesignImages/Patners/insurance.png";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import SchoolIcon from "@mui/icons-material/School";
-import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
-import AodIcon from "@mui/icons-material/Aod";
-import bg1 from "../../assets/v4DesignImages/bg/bgEligibility.png";
-import bg2 from "../../assets/v4DesignImages/bg/loanImg.png";
 import WavesVector from "../../assets/v4DesignImages/bg/wavesVectorPng.png";
 import bg4 from "../../assets/v4DesignImages/bg/bg4.png";
 import InsuranceIcon from "../../assets/v4DesignImages/Icons/insuranceIcon.png";
@@ -58,6 +40,11 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
 import SpeedIcon from "@mui/icons-material/Speed";
 import NavigationIcon from "@mui/icons-material/Navigation";
+import Is1 from "../../assets/v4DesignImages/innovationSectionSVG/1";
+import Is2 from "../../assets/v4DesignImages/innovationSectionSVG/2";
+import Is3 from "../../assets/v4DesignImages/innovationSectionSVG/3";
+import Is4 from "../../assets/v4DesignImages/innovationSectionSVG/4";
+import Is5 from "../../assets/v4DesignImages/innovationSectionSVG/5";
 
 const WelcomePageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -79,18 +66,18 @@ const FinancialContainer = styled(Stack)(({ theme }) => ({
   backgroundImage: `url(${WavesVector})`,
   backgroundRepeat: "no-repeat",
   backgroundSize: "contain",
-  backgroundPosition: "bottom",
+  backgroundPosition: "center bottom 40px",
   position: "relative",
 }));
 
 const ServiceTypesWrapper = styled(Grid)(({ theme }) => ({
   gap: theme.spacing(3),
-  margin: "30px 0",
+  margin: "32px 0 24px",
 }));
 
 const ServiceTypesContainer = styled(Grid)(({ theme }) => ({
   gap: theme.spacing(4),
-  padding: theme.spacing(4),
+  padding: theme.spacing(4.5),
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -114,12 +101,9 @@ const ServiceIcon = styled("div")(({ theme, img, index }) => ({
 const CustomizedButton = styled(Button)(({ theme, type }) => ({
   boxShadow: "none",
   backgroundColor: "#0054BA",
-  width: "92%",
-  position: "absolute",
   color: "white",
   fontFamily: "source sans pro semibold",
   padding: theme.spacing(3),
-  bottom: -28,
   margin: (2, 0),
   textTransform: "none",
   letterSpacing: "0.8px",
@@ -134,7 +118,6 @@ const CustomizedButton = styled(Button)(({ theme, type }) => ({
 
 const MeetOurAgentWrapper = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(1),
-  marginTop: "40px",
   justifyContent: "space-between",
   alignItems: "center",
   height: "570px",
@@ -153,51 +136,47 @@ const AssistantChangeSectionWrapper = styled("div")(({ theme }) => ({
 
 const ActionChangeSectionContainer = styled("div")(({ theme }) => ({
   display: "flex",
-  padding: theme.spacing(3),
-  gap: theme.spacing(2),
-  borderRadius: "30px",
-  backgroundColor: "#ffffff26",
-  width: "250px",
-  height: "35px", // Increase height slightly if needed
   position: "relative",
-}));
-
-const Slider = styled("div")(({ activeButton }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  margin: 2,
-  position: "absolute",
-  top: 4,
-  left: activeButton === 0 ? 0 : "50%",
-  width: "47%", // Slightly smaller than 50% to add padding space on the edges
-  height: "80%", // Adjust height to create space for ToggleButton padding
-  backgroundColor: "#ffffff4a",
-  boxShadow: "inset 0 0 20px 0px #5f5a5a",
+  width: "250px",
+  height: "50px", // Adjust height as needed
   borderRadius: "30px",
-  transition: "left 0.3s ease-in-out",
+  backgroundColor: "rgba(255, 255, 255, 0.14)",
+  padding: 1,
+  gap: theme.spacing(2.5),
 }));
 
-const ToggleButton = styled(Button)(({ theme, isActive }) => ({
+const SlidingBackground = styled("div")(({ theme, activeButton }) => ({
+  position: "absolute",
+  top: 5,
+  left: activeButton === 0 ? 5 : "50%",
+  width: "48%",
+  height: "80%",
+  backgroundColor: "rgba(255, 255, 255, 0.14)",
+  borderRadius: "24px",
+  transition: "left 0.3s ease-in-out",
+  boxShadow: "inset 0 4px 12px 0px rgba(204, 204, 204, 0.24)", // Corrected boxShadow syntax
+  zIndex: 1,
+}));
+
+const ToggleButton = styled(Button)(({ theme }) => ({
+  position: "relative",
   zIndex: 1,
   backgroundColor: "transparent",
   color: "white",
   width: "50%",
   height: "100%",
   textTransform: "none",
-  fontFamily: "Source Sans pro",
-  fontWeight: isActive ? 400 : 200,
+  fontFamily: "Source Sans Pro",
+  fontWeight: 400,
   fontSize: "1.3rem",
-  transition: "color 0.3s ease-in-out",
-  padding: theme.spacing(1),
   "&:hover": {
     backgroundColor: "transparent",
   },
 }));
 
 const AssistantNameChangeWrapper = styled(Stack)(({ theme }) => ({
-  gap: theme.spacing(3),
-  padding: theme.spacing(2),
+  gap: theme.spacing(6),
+  padding: theme.spacing(6, 4),
   justifyContent: "center",
   alignItems: "center",
 }));
@@ -234,7 +213,7 @@ const PatnersContainer = styled("div")(({ theme }) => ({
   flexDirection: "column",
   justifyContent: "space-around",
   gap: theme.spacing(2),
-  marginTop: "50px",
+  margin: "48px 0px",
 }));
 
 const TrustedPatnerContainer = styled("div")(({ theme }) => ({
@@ -452,24 +431,29 @@ const partners = [
 
 const empowerInfoCard = [
   {
-    title: "24/7 Assistance",
-    body: "Get instant support anytime, anywhere.",
-    src: <SupportAgentIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
+    title: "Instant 6 Minute Loans",
+    body: "Get approved and funded in less than 6 minutes!",
+    src: <Is1 />,
   },
   {
-    title: "Personalized Solutions",
-    body: "Tailored recommendations based on your unique needs.",
-    src: <PersonPinIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
+    title: "Collateral-Free Convenience",
+    body: "Borrow with confidence, no collateral needed.",
+    src: <Is2 />,
   },
   {
-    title: "Quick Issue Resolution",
-    body: "Solve problems and get answers fast.",
-    src: <SpeedIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
+    title: "Trusted Lending Partners",
+    body: "Backed by RBI-licensed lenders for secure financing",
+    src: <Is3 />,
   },
   {
-    title: "Easy Navigation",
-    body: "Intuitive design for a smooth user experience.",
-    src: <NavigationIcon sx={{ fontSize: "2.1rem", color: "#0054BA" }} />,
+    title: "Fully Digital, Paper-Free Journey",
+    body: "Apply, approve, and receive funds seamlessly.",
+    src: <Is4 />,
+  },
+  {
+    title: "Your Loan, Your Terms ",
+    body: "Customizable options tailored for every need.",
+    src: <Is5 />,
   },
 ];
 
@@ -665,6 +649,7 @@ const WelcomePage = () => {
                 fontFamily: "plus jakarta sans bold",
                 color: "black",
                 fontSize: "1.8rem",
+                lineHeight: "140%",
               }}
             >
               Start your Financial Journey with our{" "}
@@ -738,7 +723,7 @@ const WelcomePage = () => {
           <MeetOurAgentWrapper>
             <AssistantChangeSectionWrapper>
               <ActionChangeSectionContainer>
-                <Slider activeButton={activeButton} />
+                <SlidingBackground activeButton={activeButton} />
                 <ToggleButton
                   onClick={() => handleButtonClick(0)}
                   isActive={activeButton === 0}
@@ -754,30 +739,34 @@ const WelcomePage = () => {
               </ActionChangeSectionContainer>
             </AssistantChangeSectionWrapper>
             <AssistantNameChangeWrapper>
-              <Typography
-                sx={{
-                  fontFamily: "Source Sans Pro SemiBold",
-                  fontSize: "2rem",
-                  color: "White",
-                }}
-              >
-                Meet Name
-              </Typography>
-              <Typography
-                sx={{
-                  fontFamily: "Source Sans Pro ",
-                  fontSize: "1rem",
-                  color: "#D2D2D2",
-                  textAlign: "center",
-                  letterSpacing: "1px",
-                }}
-              >
-                Get personalized credit advice and quick support to find the
-                right coverage effortlessly.
-              </Typography>
+              <Stack direction={"column"} alignItems={"center"} gap={2}>
+                <Typography
+                  sx={{
+                    fontFamily: "Source Sans Pro SemiBold",
+                    fontSize: "2rem",
+                    color: "White",
+                    lineHeight: "100%",
+                  }}
+                >
+                  Meet Name
+                </Typography>
+                <Typography
+                  sx={{
+                    fontFamily: "Source Sans Pro ",
+                    fontSize: "1rem",
+                    color: "#D2D2D2",
+                    textAlign: "center",
+                    letterSpacing: "1px",
+                  }}
+                >
+                  Get personalized credit advice and quick support to find the
+                  right coverage effortlessly.
+                </Typography>
+              </Stack>
               <Button
                 variant="contained"
                 fullWidth
+                size="large"
                 sx={{
                   backgroundColor: "#0054BA",
                   textTransform: "none",
@@ -820,6 +809,7 @@ const WelcomePage = () => {
                 sx={{
                   fontFamily: "plus jakarta sans semibold",
                   fontSize: "1.8rem",
+                  lineHeight: "120%",
                 }}
               >
                 Innovations that Empower Your Journey
@@ -844,7 +834,7 @@ const WelcomePage = () => {
                   <EmpowerTextContainer>
                     <Typography
                       sx={{
-                        fontSize: "1.4rem",
+                        fontSize: "14px",
                         fontFamily: "plus jakarta sans bold",
                       }}
                     >
@@ -852,7 +842,7 @@ const WelcomePage = () => {
                     </Typography>
                     <Typography
                       sx={{
-                        fontSize: "1rem",
+                        fontSize: "14px",
                         fontFamily: "Source Sans pro",
                         color: "#535353",
                       }}
