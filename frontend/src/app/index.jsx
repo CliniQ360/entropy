@@ -22,13 +22,17 @@ import NomineeFormPage from "../pages/NomineePage";
 import WelcomePage from "../pages/WelcomePage";
 import ServiceInfoPage from "../pages/ServiceInfoPage";
 import InitiateJourneyPage from "../pages/InitiateJourneyPage";
+import EligibilityCriteriaPage from "../pages/EligibilityCriteriaPage";
 
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<WelcomePage />} />
-        {/* <Route path="/welcome-page" element={<WelcomePage />} /> */}
+        <Route
+          path="/eligibility-criteria"
+          element={<EligibilityCriteriaPage />}
+        />
         <Route path="/service-info" element={<ServiceInfoPage />} />
         <Route path="/initiate-journey" element={<InitiateJourneyPage />} />
         {/* ASSISTANTROUTING */}

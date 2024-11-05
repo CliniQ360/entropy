@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import ondcLogo from "../../assets/v4DesignImages/Patners/5.png";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -33,7 +33,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { MediaContext } from "../../context/mediaContext";
-import { startConversion } from "../../pages/CreditPage/audioAgent.slice";
+import { startConversion } from "../CreditPage/audioAgent.slice";
 
 const PageContainer = styled("div")(({ theme }) => ({
   padding: theme.spacing(10, 4),
@@ -85,6 +85,7 @@ const ONDCBoxContainer = styled("div")(({ theme }) => ({
   borderRadius: "4px",
   background:
     "linear-gradient(to right, rgba(40, 136, 252, 0.04), rgba(0, 84, 186, 0.04))",
+  marginBottom: "10%",
 }));
 
 const ActionButtonWrapper = styled(Grid)(({ theme }) => ({
@@ -212,10 +213,10 @@ function CustomAccordion({ acordianHeading, acordianContentList, expanded }) {
   );
 }
 
-const EligibilityCriteriaComponent = () => {
+const EligibilityCriteriaPage = () => {
   const [openDialog, setOpenDialog] = useState(true);
   const [open, setOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
   const navigate = useNavigate();
   const {
     setAudioResponse,
@@ -295,101 +296,100 @@ const EligibilityCriteriaComponent = () => {
     });
   };
 
+  useEffect(() => {
+    sessionStorage.setItem("activeLanguage", selectedLanguage);
+  }, []);
+
   return (
     <>
-      <Dialog fullScreen onClose={() => setOpenDialog(false)} open={openDialog}>
-        <PageContainer>
-          <SahayakHeaderWrapper>
-            <SahayakLogo>Sahayak</SahayakLogo>
-            <IconButton onClick={() => setOpenDialog(false)}>
-              <CloseOutlinedIcon sx={{ color: "black", fontSize: "2rem" }} />
-            </IconButton>
-          </SahayakHeaderWrapper>
-          <ContentContainer>
-            <Heading>
-              <Typography
-                fontFamily={"Plus Jakarta Sans SemiBold"}
-                fontSize={28}
-                lineHeight={"140%"}
-              >
-                HealthTech Financing: Eligibility & Docs
-              </Typography>
+      <PageContainer>
+        <SahayakHeaderWrapper>
+          <SahayakLogo>Sahayak</SahayakLogo>
+        </SahayakHeaderWrapper>
+        <ContentContainer>
+          <Heading>
+            <Typography
+              fontFamily={"Plus Jakarta Sans SemiBold"}
+              fontSize={28}
+              lineHeight={"140%"}
+            >
+              HealthTech Financing: Eligibility & Docs
+            </Typography>
 
-              <Typography
-                fontFamily={"Source Sans Pro"}
-                fontSize={18}
-                lineHeight={"150%"}
-                color={"#535353"}
-              >
-                Review eligibility and document requirements for HealthTech
-                financing.
-              </Typography>
-            </Heading>
-            <BodyContainer>
-              <CustomAccordion
-                expanded={true}
-                acordianHeading={"Eligibility Criteria"}
-                acordianContentList={EligibilityList}
-              />
-              <CustomAccordion
-                acordianHeading={"Documents Required"}
-                acordianContentList={DocumentsList}
-              />
-            </BodyContainer>
-          </ContentContainer>
-          <ONDCBoxContainer>
-            <img src={ondcLogo} alt="ondcLogo" height={"25px"} />
             <Typography
               fontFamily={"Source Sans Pro"}
-              fontSize={14}
+              fontSize={18}
               lineHeight={"150%"}
-              color={"black"}
+              color={"#535353"}
             >
-              ONDC is a Gov backed project and we are partnered with RBI
-              licensed lenders only!
+              Review eligibility and document requirements for HealthTech
+              financing.
             </Typography>
-          </ONDCBoxContainer>
-          <ActionButtonWrapper container>
-            <ActionButtonContainer item xs={5.6}>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={handleClickOpen}
-                sx={{
-                  padding: "10px",
-                  textTransform: "none",
-                  fontSize: "1rem",
-                  fontFamily: "inter semibold",
-                  border: "1.2px solid",
-                  backgroundColor: "white",
-                }}
-              >
-                <GlobalIcon />
-                <span style={{ marginLeft: 3 }}>Language</span>
-              </Button>
-            </ActionButtonContainer>
-            <ActionButtonContainer item xs={5.6}>
-              <Button
-                fullWidth
-                onClick={() => {
-                  handleInitiateJourney();
-                }}
-                variant="contained"
-                sx={{
-                  padding: "10px",
-                  textTransform: "none",
-                  fontSize: "1rem",
-                  fontFamily: "inter semibold",
-                  border: "1.2px solid",
-                  boxShadow: "none",
-                }}
-              >
-                Continue
-              </Button>
-            </ActionButtonContainer>
-          </ActionButtonWrapper>
-        </PageContainer>
-      </Dialog>
+          </Heading>
+          <BodyContainer>
+            <CustomAccordion
+              expanded={true}
+              acordianHeading={"Eligibility Criteria"}
+              acordianContentList={EligibilityList}
+            />
+            <CustomAccordion
+              acordianHeading={"Documents Required"}
+              acordianContentList={DocumentsList}
+            />
+          </BodyContainer>
+        </ContentContainer>
+        <ONDCBoxContainer>
+          <img src={ondcLogo} alt="ondcLogo" height={"25px"} />
+          <Typography
+            fontFamily={"Source Sans Pro"}
+            fontSize={14}
+            lineHeight={"150%"}
+            color={"black"}
+          >
+            ONDC is a Gov backed project and we are partnered with RBI licensed
+            lenders only!
+          </Typography>
+        </ONDCBoxContainer>
+        <ActionButtonWrapper container>
+          <ActionButtonContainer item xs={5.6}>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={handleClickOpen}
+              sx={{
+                padding: "10px",
+                textTransform: "none",
+                fontSize: "1rem",
+                fontFamily: "inter semibold",
+                border: "1.2px solid",
+                backgroundColor: "white",
+              }}
+            >
+              <GlobalIcon />
+              <span style={{ marginLeft: 3 }}>Language</span>
+            </Button>
+          </ActionButtonContainer>
+          <ActionButtonContainer item xs={5.6}>
+            <Button
+              fullWidth
+              onClick={() => {
+                handleInitiateJourney();
+              }}
+              variant="contained"
+              sx={{
+                padding: "10px",
+                textTransform: "none",
+                fontSize: "1rem",
+                fontFamily: "inter semibold",
+                border: "1.2px solid",
+                boxShadow: "none",
+              }}
+            >
+              Continue
+            </Button>
+          </ActionButtonContainer>
+        </ActionButtonWrapper>
+      </PageContainer>
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -418,16 +418,16 @@ const EligibilityCriteriaComponent = () => {
             <FormBox>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="English"
+                defaultValue="en"
                 name="radio-buttons-group"
                 sx={{ gap: 3, mb: "10px", color: "red" }}
                 onChange={handleChange}
               >
                 <RadioButtonGroupContainer
-                  isSelected={selectedLanguage === "English"}
+                  isSelected={selectedLanguage === "en"}
                 >
                   <FormControlLabel
-                    value="English"
+                    value="en"
                     control={<Radio sx={{ color: "#0054BA" }} />}
                     sx={{
                       ml: 2,
@@ -436,10 +436,10 @@ const EligibilityCriteriaComponent = () => {
                   <Typography sx={{ fontSize: "1.2rem" }}>English</Typography>
                 </RadioButtonGroupContainer>
                 <RadioButtonGroupContainer
-                  isSelected={selectedLanguage === "Hindi"}
+                  isSelected={selectedLanguage === "hi"}
                 >
                   <FormControlLabel
-                    value="hindi"
+                    value="hi"
                     control={<Radio sx={{ color: "#0054BA" }} />}
                     sx={{
                       ml: 2,
@@ -452,9 +452,10 @@ const EligibilityCriteriaComponent = () => {
               <Stack mb={5}>
                 <Button
                   variant="contained"
-                  onClick={() =>
-                    sessionStorage.setItem("activeLanguage", selectedLanguage)
-                  }
+                  onClick={() => {
+                    sessionStorage.setItem("activeLanguage", selectedLanguage);
+                    handleClose();
+                  }}
                   sx={{
                     backgroundColor: "#0054BA",
                     textTransform: "none",
@@ -475,4 +476,4 @@ const EligibilityCriteriaComponent = () => {
   );
 };
 
-export default EligibilityCriteriaComponent;
+export default EligibilityCriteriaPage;
