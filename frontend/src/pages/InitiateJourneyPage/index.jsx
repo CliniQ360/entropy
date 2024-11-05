@@ -104,6 +104,10 @@ const InitiateJourneyPage = () => {
     }
   }, [timeLeft]);
 
+  useEffect(() => {
+    sessionStorage.setItem("assistantType", "female");
+  }, []);
+
   const handleMobileNumberChange = (e) => {
     const { value } = e.target;
     if (value.toString().length <= 10) setMobileNumber(value);

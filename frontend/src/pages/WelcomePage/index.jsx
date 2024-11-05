@@ -338,7 +338,7 @@ const ContactUsWrapper = styled(Stack)(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  marginTop: "40px",
+  marginTop: "60px",
 }));
 
 const ContactUsContainer = styled(Stack)(({ theme }) => ({
@@ -408,7 +408,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const FaqWrapper = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(4),
-  backgroundColor: "#F8F8F8",
+  backgroundColor: "white",
 }));
 
 const CustomAccordianContainer = styled(Accordion)(({ theme }) => ({
@@ -811,6 +811,7 @@ const WelcomePage = () => {
                   fontSize: "1.8rem",
                   lineHeight: "120%",
                 }}
+                variant="h1"
               >
                 Innovations that Empower Your Journey
               </Typography>
