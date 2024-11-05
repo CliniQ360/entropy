@@ -334,15 +334,14 @@ const EmpowerTextContainer = styled(Stack)(({ theme }) => ({
 
 const ContactUsWrapper = styled(Stack)(({ theme }) => ({
   backgroundColor: "#FBFBFB",
-  padding: theme.spacing(4),
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  marginTop: "60px",
+  margin: "32px 16px",
 }));
 
 const ContactUsContainer = styled(Stack)(({ theme }) => ({
-  width: "80%",
+  // width: "80%",
   padding: theme.spacing(6),
   gap: theme.spacing(2),
   backgroundImage: `url(${bg4})`,
@@ -407,7 +406,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const FaqWrapper = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(8, 4),
+  gap: theme.spacing(6),
   backgroundColor: "white",
 }));
 
