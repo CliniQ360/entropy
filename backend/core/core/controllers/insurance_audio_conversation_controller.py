@@ -313,7 +313,7 @@ class InsuranceAudioConversationController:
                     ),
                     "agent_audio_data": audio_base64,
                     "language": language,
-                    "selected_add_ons": selected_add_ons if selected_add_ons else []),
+                    "selected_add_ons": selected_add_ons if selected_add_ons else [],
                 }
         except Exception as error:
             logging.error(
