@@ -130,10 +130,7 @@ def generate_questions(state: SalahakarState):
             "bloodPressure": "Is customer suffering with bloodPressure",
             "other": "Is customer suffering with any other pre-existing diseases",
         },
-        "insurance_details": {
-            "amount": "expected sum insured amount",
-            "panIndia": "Requirement for Pan India plan",
-        },
+        "insurance_details": {"amount": "expected sum insured amount"},
         "other_information": {"political_exposure": "Political exposure"},
     }
     section_mapping = {
@@ -153,7 +150,6 @@ def generate_questions(state: SalahakarState):
         "heightinch": "health_markers",
         "weight": "health_markers",
         "amount": "insurance_details",
-        "panIndia": "insurance_details",
         "political_exposure": "other_information",
     }
     if collected_details_list:
@@ -339,9 +335,7 @@ def submit_form(state: SalahakarState):
                 if customer_details.get("heartAilments").lower() == "yes"
                 else False
             ),
-            "panIndia": (
-                True if customer_details.get("panIndia").lower() == "yes" else False
-            ),
+            "panIndia": True,
             "politicallyExposedPerson": (
                 True
                 if customer_details.get("politicallyExposedPerson").lower() == "yes"
@@ -564,10 +558,11 @@ def select_insurance(state: SalahakarState):
         add_on_id = add_on.get("id")
         add_on_list.append({"add_on_id": add_on_id, "add_on_count": 1})
     add_on_payload = {"add_on_obj": add_on_list}
+    add_on_json = json.dumps(add_on_payload)
     select_resp, select_resp_code = APIInterface().post_with_params(
         route=select_url,
         params={"txn_id": txn_id, "offer_item_id": selected_offer_item_id},
-        data=add_on_payload,
+        data=add_on_json,
     )
 
 

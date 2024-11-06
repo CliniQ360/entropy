@@ -268,6 +268,7 @@ class InsuranceAudioConversationController:
                 selected_add_ons = workflow.get_state(thread).values.get(
                     "selected_add_ons"
                 )
+                kyc_url = workflow.get_state(thread).values.get("kyc_url")
                 if modified:
                     agent_message = agent_message_modified
                 if self.stt_service == "11LABS":
@@ -306,6 +307,7 @@ class InsuranceAudioConversationController:
                     "loan_agreement_url": (
                         loan_agreement_url if loan_agreement_url else "None"
                     ),
+                    "kyc_url": (kyc_url if kyc_url else "None"),
                     "final_offer": final_offer if final_offer else [],
                     "modified": modified if modified else False,
                     "agent_message_modified": (
