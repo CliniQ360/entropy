@@ -68,7 +68,7 @@ const InsurancePage = () => {
     const payload = {
       file: formData,
       threadId: thread_id,
-      uploadFlag: uploadFlag,
+      uploadFlag: uploadFlag || "false",
       state: sessionStorage.getItem("next_state"),
       language: sessionStorage.getItem("activeLanguage"),
     };
@@ -94,18 +94,12 @@ const InsurancePage = () => {
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
         setShowLoader(false);
-        if (res?.payload?.data?.next_state === "human_loan_amount_selection") {
-          navigate("/credit/customize-offers");
-          setProgressValue(50);
+        if (res?.payload?.data?.next_state === "human_document_upload") {
+          navigate("/insurance/document-upload");
+          setProgressValue(20);
         } else if (res?.payload?.data?.next_state === "human_selection") {
           setProgressValue(40);
         }
-
-        // else if (
-        //   res?.payload?.data?.next_state === "human_bureau_offer_feedback"
-        // ) {
-        //   navigate("/credit/availableOffers");
-        // }
         clearBlobUrl();
       })
       .catch((error) => {

@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormHelperText,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import SahayakHeader from "../../components/SahayakHeader";
 import femaleAst from "../../assets/v4DesignImages/Patners/femalenewAst.png";
 import { useNavigate } from "react-router-dom";
@@ -45,6 +45,11 @@ import Is2 from "../../assets/v4DesignImages/innovationSectionSVG/2";
 import Is3 from "../../assets/v4DesignImages/innovationSectionSVG/3";
 import Is4 from "../../assets/v4DesignImages/innovationSectionSVG/4";
 import Is5 from "../../assets/v4DesignImages/innovationSectionSVG/5";
+import { useDispatch } from "react-redux";
+import { startConversionforInsurance } from "../InsurancePage/audioAgent.slice";
+import { AudioDataContext } from "../../context/audioDataContext";
+import { MediaContext } from "../../context/mediaContext";
+import CustomLoader from "../../components/CustomLoader";
 
 const WelcomePageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -541,6 +546,25 @@ const WelcomePage = () => {
   const [activeButton, setActiveButton] = useState(0);
   const [open, setOpen] = useState(false);
   const [validateError, setValidateError] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+  const dispatch = useDispatch();
+  const {
+    setError,
+    setAudioResponse,
+    setMessageResponse,
+    setNextState,
+    setProgressValue,
+    setUserResponse,
+    setIsListening,
+    setProcessing,
+    processing,
+  } = useContext(MediaContext);
+  const {
+    setCustomerDetails,
+    setAaRedirectUrl,
+    setKycRedirectUrl,
+    setOfferDetails,
+  } = useContext(AudioDataContext);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -581,7 +605,7 @@ const WelcomePage = () => {
 
   const handleNavigate = () => {
     if (activeButton === 0) {
-      console.log("navigating to insurance");
+      startInsuranceJourney();
     } else if (activeButton === 1) {
       navigate("/initiate-journey");
       console.log("navigating to credit");
@@ -637,8 +661,37 @@ const WelcomePage = () => {
     },
   ];
 
+  const startInsuranceJourney = () => {
+    setShowLoader(true);
+    const payload = {
+      language: "en",
+    };
+    dispatch(startConversionforInsurance(payload)).then((res) => {
+      if (res?.error && Object.keys(res?.error)?.length > 0) {
+        setError(true);
+        setProcessing(false);
+        return;
+      }
+      setError(false);
+      setProcessing(false);
+      setAudioResponse(res?.payload?.agent_audio_data);
+      setMessageResponse(res?.payload?.agent_message);
+      setUserResponse(res?.payload?.user_message);
+      setNextState(res?.payload?.next_state);
+      sessionStorage.setItem("next_state", res?.payload?.next_state);
+      sessionStorage.setItem("thread_id", res?.payload?.thread_id);
+      sessionStorage.setItem("activeLanguage", "en");
+      setShowLoader(false);
+      if (res?.payload?.next_state === "human_intent_feedback") {
+        navigate("/insurance/selection");
+        setProgressValue(10);
+      }
+    });
+  };
+
   return (
     <>
+      <CustomLoader open={showLoader} />
       <SahayakHeader />
       <WelcomePageWrapper>
         <WelcomePageContainer>
