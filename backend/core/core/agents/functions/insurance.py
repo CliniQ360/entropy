@@ -342,7 +342,7 @@ def submit_form(state: SalahakarState):
                 else False
             ),
             "gender": "M" if customer_details.get("gender") == "Male" else "F",
-            "PED": customer_details.get("any_pre_existing_disease"),
+            "PED": customer_details.get("any_pre_existing_disease", "No"),
             "relation": "self",
             "gstin": "ABC",
         }
