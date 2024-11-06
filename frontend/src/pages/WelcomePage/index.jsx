@@ -45,6 +45,7 @@ import Is2 from "../../assets/v4DesignImages/innovationSectionSVG/2";
 import Is3 from "../../assets/v4DesignImages/innovationSectionSVG/3";
 import Is4 from "../../assets/v4DesignImages/innovationSectionSVG/4";
 import Is5 from "../../assets/v4DesignImages/innovationSectionSVG/5";
+import ArrowDownSvg from "../../assets/v4DesignImages/Icons/ArrowDown";
 
 const WelcomePageWrapper = styled("div")(({ theme }) => ({}));
 
@@ -54,8 +55,8 @@ const WelcomePageContainer = styled("div")(({ theme }) => ({
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  fontSize: "1.1rem",
-  lineHeight: 1.6,
+  fontSize: "18px",
+  lineHeight: "150%",
   fontFamily: "Source Sans Pro",
   color: "#535353",
   marginTop: theme.spacing(2),
@@ -137,12 +138,11 @@ const AssistantChangeSectionWrapper = styled("div")(({ theme }) => ({
 const ActionChangeSectionContainer = styled("div")(({ theme }) => ({
   display: "flex",
   position: "relative",
-  width: "250px",
-  height: "50px", // Adjust height as needed
+  width: "248px",
+  height: "43px", // Adjust height as needed
   borderRadius: "30px",
   backgroundColor: "rgba(255, 255, 255, 0.14)",
   padding: 1,
-  gap: theme.spacing(2.5),
 }));
 
 const SlidingBackground = styled("div")(({ theme, activeButton }) => ({
@@ -162,14 +162,20 @@ const ToggleButton = styled(Button)(({ theme }) => ({
   position: "relative",
   zIndex: 1,
   backgroundColor: "transparent",
-  color: "white",
+  color: "#FFFFFF",
   width: "50%",
   height: "100%",
   textTransform: "none",
   fontFamily: "Source Sans Pro",
   fontWeight: 400,
-  fontSize: "1.3rem",
+  fontSize: "18px",
+  lineHeight: "120%",
+  textAlign: "center",
+  padding: theme.spacing(0),
   "&:hover": {
+    backgroundColor: "transparent",
+  },
+  "&:focus": {
     backgroundColor: "transparent",
   },
 }));
@@ -212,7 +218,7 @@ const PatnersContainer = styled("div")(({ theme }) => ({
   alignItems: "center",
   flexDirection: "column",
   justifyContent: "space-around",
-  gap: theme.spacing(2),
+  gap: theme.spacing(8),
   margin: "48px 0px",
 }));
 
@@ -228,13 +234,13 @@ const PatnerLogoContainer = styled("div")(({ theme }) => ({
   height: "60px",
   width: "168px",
   borderRadius: "10px",
-  boxShadow: "0px 6px 7px 5px #b9b9b930",
+  boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.08)",
   display: "flex",
   justifyContent: "center",
-  margin: theme.spacing(3),
+  margin: theme.spacing(4),
   alignItems: "center",
   [theme.breakpoints.down("sm")]: {
-    marginRight: "15px",
+    margin: theme.spacing(1, 2),
   },
 }));
 
@@ -342,8 +348,8 @@ const ContactUsWrapper = styled(Stack)(({ theme }) => ({
 
 const ContactUsContainer = styled(Stack)(({ theme }) => ({
   // width: "80%",
-  padding: theme.spacing(6),
-  gap: theme.spacing(2),
+  padding: theme.spacing(10, 8),
+  gap: theme.spacing(6),
   backgroundImage: `url(${bg4})`,
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
@@ -359,7 +365,6 @@ const ContactButton = styled(Button)(({ theme }) => ({
   textTransform: "none",
   fontFamily: "Source Sans Pro SemiBold",
   fontSize: "1.3rem",
-  margin: "20px 0",
   padding: theme.spacing(2),
   width: "100%",
   "&:hover": {
@@ -417,6 +422,9 @@ const CustomAccordianContainer = styled(Accordion)(({ theme }) => ({
   },
   "&:last-of-type": {
     borderRadius: " 0 0 10px 10px",
+  },
+  "& .MuiAccordionSummary-content": {
+    margin: "4px 0px !important",
   },
 }));
 
@@ -499,17 +507,20 @@ function CustomAccordion({ acordianHeading, acordianContent, expanded }) {
   return (
     <CustomAccordianContainer defaultExpanded={expanded}>
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon sx={{ color: "black", fontSize: 24 }} />}
+        expandIcon={<ArrowDownSvg sx={{ color: "black", fontSize: 24 }} />}
         aria-controls="panel1-content"
         id="panel1-header"
         sx={{
-          padding: "16px",
+          padding: "16px 24px",
+          display: "flex",
+          flexDirection: "row",
+          gap: 6,
         }}
       >
         <Typography
           fontFamily={"Plus Jakarta Sans SemiBold"}
-          fontSize={18}
-          lineHeight={"110%"}
+          fontSize={17}
+          lineHeight={"140%"}
         >
           {acordianHeading}
         </Typography>
@@ -519,7 +530,6 @@ function CustomAccordion({ acordianHeading, acordianContent, expanded }) {
           display: "flex",
           flexDirection: "column",
           gap: "16px",
-          p: "24px 12px",
         }}
       >
         <Typography
@@ -616,23 +626,24 @@ const WelcomePage = () => {
 
   const Faq = [
     {
-      faqQuestion: "What is CliniQ360?",
+      faqQuestion: "What is Sahayak?",
       faqAnswer: "abcd answer",
     },
     {
-      faqQuestion: "What is ABDM?",
+      faqQuestion: " How does it work?",
       faqAnswer: "abcd answer",
     },
     {
-      faqQuestion: "What is PRM?",
+      faqQuestion: "How does Sahayak help users with no credit history?",
       faqAnswer: "abcd answer",
     },
     {
-      faqQuestion: "What is connected Health care?",
+      faqQuestion:
+        "What makes Sahayak different from other financial platforms?",
       faqAnswer: "abcd answer",
     },
     {
-      faqQuestion: "How do I participate?",
+      faqQuestion: "Who are the typical users of Sahayak?",
       faqAnswer: "abcd answer",
     },
   ];
@@ -701,24 +712,30 @@ const WelcomePage = () => {
                 Our Trusted Partners
               </Typography>
             </TrustedPatnerContainer>
-            <PatnerLogoWrapper>
-              <Marquee velocity={10}>
-                {partners.concat(partners).map((item, index) => (
-                  <PatnerLogoContainer key={index}>
-                    <PatnersLogo src={item?.image}></PatnersLogo>
-                  </PatnerLogoContainer>
-                ))}
-              </Marquee>
-            </PatnerLogoWrapper>
-            <PatnerLogoWrapper>
-              <Marquee velocity={10} direction="reverse">
-                {partners.concat(partners).map((item, index) => (
-                  <PatnerLogoContainer key={index}>
-                    <PatnersLogo src={item?.image}></PatnersLogo>
-                  </PatnerLogoContainer>
-                ))}
-              </Marquee>
-            </PatnerLogoWrapper>
+            <Stack
+              width={"-webkit-fill-available"}
+              direction={"column"}
+              gap={4}
+            >
+              <PatnerLogoWrapper>
+                <Marquee velocity={10}>
+                  {partners.concat(partners).map((item, index) => (
+                    <PatnerLogoContainer key={index}>
+                      <PatnersLogo src={item?.image}></PatnersLogo>
+                    </PatnerLogoContainer>
+                  ))}
+                </Marquee>
+              </PatnerLogoWrapper>
+              <PatnerLogoWrapper>
+                <Marquee velocity={10} direction="reverse">
+                  {partners.concat(partners).map((item, index) => (
+                    <PatnerLogoContainer key={index}>
+                      <PatnersLogo src={item?.image}></PatnersLogo>
+                    </PatnerLogoContainer>
+                  ))}
+                </Marquee>
+              </PatnerLogoWrapper>
+            </Stack>
           </PatnersContainer>
           <MeetOurAgentWrapper>
             <AssistantChangeSectionWrapper>
@@ -743,9 +760,9 @@ const WelcomePage = () => {
                 <Typography
                   sx={{
                     fontFamily: "Source Sans Pro SemiBold",
-                    fontSize: "2rem",
-                    color: "White",
-                    lineHeight: "100%",
+                    fontSize: "24px",
+                    color: "#FFFFFF",
+                    lineHeight: "120%",
                   }}
                 >
                   Meet Name
@@ -753,10 +770,10 @@ const WelcomePage = () => {
                 <Typography
                   sx={{
                     fontFamily: "Source Sans Pro ",
-                    fontSize: "1rem",
+                    fontSize: "18px",
                     color: "#D2D2D2",
                     textAlign: "center",
-                    letterSpacing: "1px",
+                    lineHeight: "150%",
                   }}
                 >
                   Get personalized credit advice and quick support to find the
@@ -766,15 +783,14 @@ const WelcomePage = () => {
               <Button
                 variant="contained"
                 fullWidth
-                size="large"
                 sx={{
-                  backgroundColor: "#0054BA",
+                  backgroundColor: "#0054BA !important",
+                  color: "#FFFFFF",
                   textTransform: "none",
-                  fontFamily: "Source Sans Pro ",
-                  fontSize: "1.1rem",
-                  marginBottom: 3,
+                  fontFamily: "Source Sans Pro SemiBold",
+                  fontSize: "20px",
                   fontWeight: 300,
-                  letterSpacing: "1px",
+                  py: 3,
                 }}
                 onClick={handleNavigate}
               >
@@ -808,18 +824,18 @@ const WelcomePage = () => {
               <Typography
                 sx={{
                   fontFamily: "plus jakarta sans semibold",
-                  fontSize: "1.8rem",
+                  fontSize: "24px",
                   lineHeight: "120%",
                 }}
-                variant="h1"
               >
                 Innovations that Empower Your Journey
               </Typography>
               <Typography
                 sx={{
                   fontFamily: "Source Sans pro",
-                  fontSize: "1.2rem",
+                  fontSize: "19px",
                   color: "#535353",
+                  lineHeight: "150%",
                 }}
               >
                 Discover the powerful features that make managing your insurance
@@ -835,17 +851,19 @@ const WelcomePage = () => {
                   <EmpowerTextContainer>
                     <Typography
                       sx={{
-                        fontSize: "14px",
-                        fontFamily: "plus jakarta sans bold",
+                        fontSize: "16px",
+                        fontFamily: "Plus Jakarta Sans Bold",
+                        lineHeight: "150%",
                       }}
                     >
                       {item.title}
                     </Typography>
                     <Typography
                       sx={{
-                        fontSize: "14px",
+                        fontSize: "16px",
                         fontFamily: "Source Sans pro",
                         color: "#535353",
+                        lineHeight: "150%",
                       }}
                     >
                       {item.body}
@@ -859,8 +877,9 @@ const WelcomePage = () => {
             <Stack mt={6} gap={2}>
               <Typography
                 sx={{
-                  fontFamily: "plus jakarta sans semibold",
-                  fontSize: "1.8rem",
+                  fontFamily: "Plus Jakarta Sans SemiBold",
+                  fontSize: "24px",
+                  lineHeight: "120%",
                 }}
               >
                 Frequently asked questions
@@ -883,27 +902,31 @@ const WelcomePage = () => {
           </FaqWrapper>
           <ContactUsWrapper>
             <ContactUsContainer>
-              <Typography
-                sx={{
-                  fontFamily: "Source Sans Pro SemiBold",
-                  fontSize: "1.7rem",
-                  color: "White",
-                  textAlign: "center",
-                }}
-              >
-                We're Here to Help{" "}
-              </Typography>
-              <Typography
-                sx={{
-                  fontFamily: "Source Sans Pro ",
-                  fontSize: "1rem",
-                  color: "#D2D2D2",
-                  textAlign: "center",
-                }}
-              >
-                Get personalized credit advice and quick support to find the
-                right coverage effortlessly.
-              </Typography>
+              <Stack direction={"column"} justifyContent={"center"} gap={2}>
+                <Typography
+                  sx={{
+                    fontFamily: "Source Sans Pro SemiBold",
+                    fontSize: "24px",
+                    color: "White",
+                    textAlign: "center",
+                    lineHeight: "120%",
+                  }}
+                >
+                  We're Here to Help{" "}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontFamily: "Source Sans Pro ",
+                    fontSize: "18px",
+                    color: "#D2D2D2",
+                    textAlign: "center",
+                    lineHeight: "150%",
+                  }}
+                >
+                  Our team is ready to assist you with all your credit and
+                  insurance needs.
+                </Typography>
+              </Stack>
               <ContactButton variant="contained" onClick={handleClickOpen}>
                 Contact Us
               </ContactButton>
