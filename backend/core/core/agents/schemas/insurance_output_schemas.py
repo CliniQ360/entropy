@@ -27,9 +27,6 @@ class UserDetails(BaseModel):
         description="Is customer suffering with any other pre-existing diseases? Can only take values Yes or No"
     )
     amount: int = Field(description="Amount of insurance")
-    panIndia: str = Field(
-        description="Check if customer wants pan india insurance. Can only take values Yes or No"
-    )
     politicallyExposedPerson: str = Field(
         description="Check if customer is politically exposed person. Can only take values Yes or No"
     )
