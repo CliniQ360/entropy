@@ -8,16 +8,15 @@ import BackupTableIcon from "@mui/icons-material/BackupTable";
 import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "../../utils/CustomIcons/UploadIcon";
 import { useDispatch } from "react-redux";
-import {
-  agentConversation,
-  documentUpload,
-} from "../CreditPage/audioAgent.slice";
 import { useNavigate } from "react-router-dom";
 import { MediaContext } from "../../context/mediaContext";
 import { AudioDataContext } from "../../context/audioDataContext";
 import CustomLoader from "../../components/CustomLoader";
 import CorrectIcon from "../../utils/CustomIcons/CorrectIcon";
-import { documentUploadForInsurance } from "../InsurancePage/audioAgent.slice";
+import {
+  agentConversationForInsurance,
+  documentUploadForInsurance,
+} from "../InsurancePage/audioAgent.slice";
 
 const UploadDocumentWrapper = styled("div")(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -138,7 +137,7 @@ const DocumentUploadPageInsurance = () => {
           state: sessionStorage.getItem("next_state"),
           language: sessionStorage.getItem("activeLanguage"),
         };
-        dispatch(agentConversation(secondpayload)).then((res) => {
+        dispatch(agentConversationForInsurance(secondpayload)).then((res) => {
           if (res?.error && Object.keys(res?.error)?.length > 0) {
             setError(true);
             setShowLoader(false);
@@ -153,7 +152,7 @@ const DocumentUploadPageInsurance = () => {
           setAudioResponse(res?.payload?.data?.agent_audio_data);
           setMessageResponse(res?.payload?.data?.agent_message);
           setCustomerDetails(res?.payload?.data?.customer_details);
-          navigate("/credit/personal-Detail");
+          navigate("/insurance/register");
           setShowLoader(false);
         });
       }

@@ -4,7 +4,7 @@ import { apiRequest, BASE_URL } from "../../utils/request";
 
 import axios from "axios";
 
-export const agentConversation = createAsyncThunk(
+export const agentConversationForInsurance = createAsyncThunk(
   "agentConversation",
   async (payload) => {
     try {

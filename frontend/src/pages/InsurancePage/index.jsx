@@ -6,7 +6,10 @@ import CustomNavbar from "../../components/CustomNavbar";
 import { styled } from "@mui/material";
 import { createSilenceDetector } from "../../components/SilenceDetectorComponent";
 import { useDispatch } from "react-redux";
-import { agentConversation } from "./audioAgent.slice";
+import {
+  agentConversation,
+  agentConversationForInsurance,
+} from "./audioAgent.slice";
 import { MediaContext } from "../../context/mediaContext";
 import { AudioDataContext } from "../../context/audioDataContext";
 import { useReactMediaRecorder } from "react-media-recorder-2";
@@ -75,7 +78,7 @@ const InsurancePage = () => {
     if (sessionStorage.getItem("offer_item_id")) {
       payload.offer_item_id = sessionStorage.getItem("offer_item_id");
     }
-    dispatch(agentConversation(payload))
+    dispatch(agentConversationForInsurance(payload))
       .then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {
           setError(true);
@@ -94,7 +97,9 @@ const InsurancePage = () => {
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
         setShowLoader(false);
-        if (res?.payload?.data?.next_state === "human_document_upload") {
+        if (
+          res?.payload?.data?.next_state === "human_document_upload_feedback"
+        ) {
           navigate("/insurance/document-upload");
           setProgressValue(20);
         } else if (res?.payload?.data?.next_state === "human_selection") {
