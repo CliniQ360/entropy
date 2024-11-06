@@ -5,4 +5,6 @@ export const apis = {
   creditStatusCheck: "v1/txn_details",
   bankLoanDataApi: "v1/langgraph/resume_conversation",
   documentUploadApi: "v1/sahayak/upload_documents",
+  generateOTP: "v1/login/generateOTP",
+  loginUsingOtp: "v1/login/verifyOTP",
 };
