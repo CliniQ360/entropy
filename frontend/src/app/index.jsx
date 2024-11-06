@@ -23,6 +23,7 @@ import WelcomePage from "../pages/WelcomePage";
 import ServiceInfoPage from "../pages/ServiceInfoPage";
 import InitiateJourneyPage from "../pages/InitiateJourneyPage";
 import EligibilityCriteriaPage from "../pages/EligibilityCriteriaPage";
+import FamilySelectionPage from "../pages/FamilySelectionPage";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
         </Route>
         <Route path="/insurance" element={<InsurancePage />}>
           <Route path="register" element={<InsuranceRegistration />} />
+          <Route path="selection" element={<FamilySelectionPage />} />
           <Route path="offers" element={<InsuranceOfferPage />} />
           <Route path="buyer-form" element={<BuyerFormPage />} />
           <Route path="nominee-form" element={<NomineeFormPage />} />
