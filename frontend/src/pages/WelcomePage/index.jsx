@@ -225,7 +225,7 @@ const TrustedPatnerContainer = styled("div")(({ theme }) => ({
 }));
 
 const PatnerLogoContainer = styled("div")(({ theme }) => ({
-  height: "70px",
+  height: "60px",
   width: "168px",
   borderRadius: "10px",
   boxShadow: "0px 6px 7px 5px #b9b9b930",
@@ -239,7 +239,7 @@ const PatnerLogoContainer = styled("div")(({ theme }) => ({
 }));
 
 const PatnersLogo = styled("img")(({ theme }) => ({
-  height: "60px",
+  height: "30px",
   width: "100px",
   filter: "saturate(1%)",
   // WebkitFilter: "grayscale(100%)",
