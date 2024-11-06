@@ -4,13 +4,13 @@ import { apiRequest, BASE_URL } from "../../utils/request";
 
 import axios from "axios";
 
-export const agentConversation = createAsyncThunk(
+export const agentConversationForInsurance = createAsyncThunk(
   "agentConversation",
   async (payload) => {
     try {
       const response = await axios.post(
         BASE_URL +
-          `/${apis?.resumeConversionApi}?` +
+          `/${apis?.agentAudioForInsurance}?` +
           `thread_id=${payload?.threadId}&state=${payload?.state}&translate=false&document_upload_flag=${payload?.uploadFlag}&offer_item_id=${payload?.offer_item_id}&selected_loan_amount=${payload?.selected_loan_amount}&language=${payload?.language}`,
         payload?.file,
         {
@@ -29,13 +29,13 @@ export const agentConversation = createAsyncThunk(
     }
   }
 );
-export const documentUpload = createAsyncThunk(
+export const documentUploadForInsurance = createAsyncThunk(
   "agentConversation",
   async (payload) => {
     try {
       const response = await axios.post(
         BASE_URL +
-          `/${apis?.documentUploadApi}?` +
+          `/${apis?.documentUploadForInsurance}?` +
           `thread_id=${payload?.threadId}`,
         payload?.files,
         {
@@ -55,12 +55,12 @@ export const documentUpload = createAsyncThunk(
   }
 );
 
-export const startConversion = createAsyncThunk(
+export const startConversionforInsurance = createAsyncThunk(
   "startConversion",
   async (payload) => {
     const response = await apiRequest(
       "POST",
-      `${apis?.startConversionApi}?language=${payload?.language}`
+      `${apis?.initiateJourney}?language=${payload?.language}`
     );
     return response;
   }

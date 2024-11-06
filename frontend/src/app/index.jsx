@@ -23,6 +23,8 @@ import WelcomePage from "../pages/WelcomePage";
 import ServiceInfoPage from "../pages/ServiceInfoPage";
 import InitiateJourneyPage from "../pages/InitiateJourneyPage";
 import EligibilityCriteriaPage from "../pages/EligibilityCriteriaPage";
+import FamilySelectionPage from "../pages/FamilySelectionPage";
+import DocumentUploadPageInsurance from "../pages/DocumentUploadPageForInsurance";
 
 function App() {
   return (
@@ -56,7 +58,12 @@ function App() {
           <Route path="preview-offer" element={<PreviewDocumentPage />} />
         </Route>
         <Route path="/insurance" element={<InsurancePage />}>
+          <Route
+            path="document-upload"
+            element={<DocumentUploadPageInsurance />}
+          />
           <Route path="register" element={<InsuranceRegistration />} />
+          <Route path="selection" element={<FamilySelectionPage />} />
           <Route path="offers" element={<InsuranceOfferPage />} />
           <Route path="buyer-form" element={<BuyerFormPage />} />
           <Route path="nominee-form" element={<NomineeFormPage />} />
