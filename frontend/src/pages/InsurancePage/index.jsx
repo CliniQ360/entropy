@@ -107,6 +107,7 @@ const InsurancePage = () => {
           navigate("/insurance/document-upload");
           setProgressValue(20);
         } else if (res?.payload?.data?.next_state === "human_selection") {
+          navigate("/insurance/insurance-offer");
           setProgressValue(40);
         }
         clearBlobUrl();

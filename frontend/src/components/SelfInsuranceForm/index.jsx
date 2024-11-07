@@ -161,40 +161,16 @@ const SelfInsuranceForm = () => {
       "संपर्क",
     ];
 
-    const addressKeywords = [
-      "address information",
-      "address Line 1",
-      "address Line 2",
-      "city",
-      "zip",
-      "address",
-      "pan",
-      "पता",
-      "पता लाइन 1",
-      "पता लाइन 2",
-      "शहर",
-      "पिन कोड",
-      "राज्य",
+    const medicalKeyword = [
+      "diabetes",
+      "heartAilments",
+      "bloodPressure",
+      "pre-existing diseases",
     ];
 
-    const professionKeywords = [
-      "professional details",
-      "job",
-      "occupation",
-      "company",
-      "work",
-      "employment type",
-      "income",
-      "official email id",
-      "रोजगार",
-      "कंपनी",
-      "व्यवसाय",
-      "कंपनी",
-      "कार्य",
-      "रोजगार प्रकार",
-      "आय",
-      "आधिकारिक ईमेल आईडी",
-    ];
+    const addressKeywords = ["pincode", "address", "पता", "पिन कोड"];
+    const financialKeywords = ["amount", "sum "];
+    const physicalKeywords = ["height", "weight "];
 
     const includesKeyword = (keywords) =>
       keywords.some((keyword) =>
@@ -203,17 +179,17 @@ const SelfInsuranceForm = () => {
 
     // Scroll logic only when a specific keyword is detected
     if (includesKeyword(personalKeywords)) {
-      console.log("Personal Detected");
       handleScrollToSection("personal-details");
-    } else if (includesKeyword(professionKeywords)) {
-      console.log("Professional Detected");
-      handleScrollToSection("profession-section");
-    } else if (includesKeyword(contactKeywords)) {
-      console.log("Contact Detected");
-      handleScrollToSection("contact-details");
     } else if (includesKeyword(addressKeywords)) {
-      console.log("Address Detected");
       handleScrollToSection("address-info");
+    } else if (includesKeyword(contactKeywords)) {
+      handleScrollToSection("contact-details");
+    } else if (includesKeyword(physicalKeywords)) {
+      handleScrollToSection("physical-info");
+    } else if (includesKeyword(medicalKeyword)) {
+      handleScrollToSection("medical-info");
+    } else if (includesKeyword(financialKeywords)) {
+      handleScrollToSection("financial-info");
     }
   }, [messageResponse]);
 
@@ -224,44 +200,6 @@ const SelfInsuranceForm = () => {
       ...prevData,
       [name]: fieldValue,
     }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setShowLoader(true);
-    // Handle form submission here
-    const payload = {
-      formData: {
-        individualInfo,
-      },
-      txnId: txnId,
-    };
-    sessionStorage.setItem("phone", individualInfo.phone);
-    dispatch(submitInsuranceForm(payload)).then((res) => {
-      if (res?.error && Object.keys(res?.error)?.length > 0) {
-        setShowSnackbar(true);
-        setShowLoader(false);
-        return;
-      }
-      const isSuccess = res?.payload.some(
-        (item) => item.form_status === "Success"
-      );
-      if (isSuccess) {
-        const searchPayload = {
-          environment: environment,
-          txnId: txnId,
-        };
-        dispatch(insuranceSearch(searchPayload)).then((response) => {
-          setTimeout(() => {
-            setShowLoader(false);
-            navigate("/home/insurance-offer");
-          }, 3000);
-        });
-      } else {
-        setShowLoader(false);
-        return;
-      }
-    });
   };
 
   const checkError = (index) => {
