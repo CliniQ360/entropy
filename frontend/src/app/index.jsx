@@ -26,6 +26,7 @@ import EligibilityCriteriaPage from "../pages/EligibilityCriteriaPage";
 import FamilySelectionPage from "../pages/FamilySelectionPage";
 import DocumentUploadPageInsurance from "../pages/DocumentUploadPageForInsurance";
 import CustomizeInsurancePage from "../pages/CustomizeInsurancePage";
+import InsuranceKYCPage from "../pages/InsuranceKYCPage";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
             path="customize-insurance-offer"
             element={<CustomizeInsurancePage />}
           />
+          <Route path="insurance-kyc" element={<InsuranceKYCPage />} />
         </Route>
       </Routes>
     </div>

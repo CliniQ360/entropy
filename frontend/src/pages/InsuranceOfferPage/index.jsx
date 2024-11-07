@@ -661,6 +661,7 @@ import CustomTimer from "../../components/CustomTimer";
 import { MediaContext } from "../../context/mediaContext";
 import { creditStatusCheck } from "../TransactionStatus/transactionStatus.Slice";
 import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
+// import { insuranceOffer } from "../../assets/dump";
 
 const AvailableOffersContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -797,7 +798,7 @@ const InsuranceOfferPage = () => {
     setProcessing,
     setProgressValue,
   } = useContext(MediaContext);
-  const { aaRedirectUrl, offerDetails } = useContext(AudioDataContext);
+  const { aaRedirectUrl, insuranceOfferList } = useContext(AudioDataContext);
   const [offers, setOffers] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
@@ -815,8 +816,10 @@ const InsuranceOfferPage = () => {
   let form_aa_URL;
 
   useEffect(() => {
-    console.log(offerDetails);
-  });
+    // console.log(insuranceOfferList);
+    setOffers(insuranceOfferList);
+    // setOffers(insuranceOffer);
+  }, [insuranceOfferList]);
 
   useEffect(() => {
     if (nextState === "resume_after_aa_redirect") {
@@ -1091,26 +1094,41 @@ const InsuranceOfferPage = () => {
                             avatar={
                               <img
                                 src={offer?.provider_details?.images[0]?.url}
-                                width={70}
+                                width={80}
                                 height="auto"
                                 alt="logo"
                               />
                             }
-                            title={offer?.provider_details?.name}
+                            title={
+                              <Typography
+                                fontFamily={"Plus Jakarta Sans Bold"}
+                                fontSize={20}
+                              >
+                                {offer?.provider_details?.name}
+                              </Typography>
+                            }
                             // action={
                             //     <Button  variant="contained" style={{ backgroundColor: "#20b281" }} onClick={() => handleCheckNow(index)}>Check Now</Button>
                             // }
                           />
                           <CardContent>
-                            <Grid container spacing={1}>
-                              <Grid item xs={6}>
+                            <Grid container justifyContent={"center"}>
+                              <Grid item xs={12}>
                                 <Typography
                                   variant="body2"
                                   color="text.secondary"
+                                  fontSize={20}
+                                  textAlign={"center"}
                                 >
                                   Policy Name
                                 </Typography>
-                                <h4 style={{ marginTop: "10px" }}>
+                                <h4
+                                  style={{
+                                    marginTop: "10px",
+                                    textAlign: "center",
+                                    fontSize: "20px",
+                                  }}
+                                >
                                   {" "}
                                   {offer?.offer_details?.policy_name}{" "}
                                 </h4>
@@ -1119,92 +1137,18 @@ const InsuranceOfferPage = () => {
                                 <Typography
                                   variant="body2"
                                   color="text.secondary"
-                                >
-                                  Add On
-                                </Typography>
-                                <h4 style={{ marginTop: "10px" }}>
-                                  <FormControl fullWidth>
-                                    <Select
-                                      name={offer?.offer_details?.policy_name}
-                                      multiple
-                                      value={
-                                        allAddOns[
-                                          offer?.offer_details?.policy_name
-                                        ] || []
-                                      }
-                                      onChange={(event) =>
-                                        handleAddOnChange(
-                                          event,
-                                          offer?.offer_details?.policy_name
-                                        )
-                                      }
-                                      renderValue={(selected) =>
-                                        // <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                        // selected.join(', ')
-                                        // </Box>
-                                        offer?.offer_details?.available_add_ons
-                                          .filter((option) =>
-                                            selected.includes(option.id)
-                                          )
-                                          .map(
-                                            (option) => option?.descriptor?.name
-                                          )
-                                          .join(", ")
-                                      }
-                                      onBlur={() =>
-                                        handleAddOnBlur(
-                                          offer?.offer_details?.offer_item_id,
-                                          offer?.offer_details?.policy_name
-                                        )
-                                      }
-                                    >
-                                      {offer?.offer_details?.available_add_ons.map(
-                                        (option) => (
-                                          <MenuItem
-                                            key={option?.id}
-                                            value={option?.id}
-                                          >
-                                            <Checkbox
-                                              checked={
-                                                allAddOns[
-                                                  offer?.offer_details
-                                                    ?.policy_name
-                                                ]
-                                                  ? allAddOns[
-                                                      offer?.offer_details
-                                                        ?.policy_name
-                                                    ].indexOf(option?.id) > -1
-                                                  : 0
-                                              }
-                                            />
-                                            {/* indexOf(option?.id) */}
-                                            <ListItemText
-                                              primary={option?.descriptor?.name}
-                                            />
-                                            <ListItemText
-                                              style={{ textAlign: "right" }}
-                                              primary={
-                                                option?.price?.currency +
-                                                " " +
-                                                option?.price?.value
-                                              }
-                                            />
-                                          </MenuItem>
-                                        )
-                                      )}
-                                    </Select>
-                                  </FormControl>
-                                  {/* } */}
-                                </h4>
-                              </Grid>
-                              <Grid item xs={6}>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
+                                  textAlign={"center"}
+                                  fontSize={20}
                                 >
                                   Coverage Amount
                                 </Typography>
-                                <h4 style={{ marginTop: "10px" }}>
+                                <h4
+                                  style={{
+                                    marginTop: "10px",
+                                    fontSize: "20px",
+                                    textAlign: "center",
+                                  }}
+                                >
                                   {offer?.offer_details?.COVERAGE_AMOUNT}
                                 </h4>
                               </Grid>
@@ -1212,10 +1156,18 @@ const InsuranceOfferPage = () => {
                                 <Typography
                                   variant="body2"
                                   color="text.secondary"
+                                  textAlign={"center"}
+                                  fontSize={20}
                                 >
                                   Premium Amount
                                 </Typography>
-                                <h4 style={{ marginTop: "10px" }}>
+                                <h4
+                                  style={{
+                                    marginTop: "10px",
+                                    fontSize: "20px",
+                                    textAlign: "center",
+                                  }}
+                                >
                                   {" "}
                                   {
                                     offer?.offer_details?.premium_amount?.value
