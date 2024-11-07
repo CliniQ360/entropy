@@ -100,7 +100,7 @@ const SelfInsuranceForm = () => {
         firstName: insuranceCustomerRegistration.firstName ?? "",
         lastName: insuranceCustomerRegistration.lastName ?? "",
         gender: insuranceCustomerRegistration.gender ?? "M",
-        dob: formattedDob,
+        dob: insuranceCustomerRegistration.dob ?? "",
         relation: insuranceCustomerRegistration.relation ?? "self",
         email: insuranceCustomerRegistration.email ?? "",
         phone: insuranceCustomerRegistration.phone ?? "",
