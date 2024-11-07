@@ -19,7 +19,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import CustomLoader from "../../components/CustomLoader";
 
-// const steps = ['Self Insurance'];
+const DocumentHeaderSection = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: theme.spacing(4),
+}));
 
 const InsuranceWrapper = styled("div")(({ theme }) => ({
   "&": {
@@ -28,6 +32,7 @@ const InsuranceWrapper = styled("div")(({ theme }) => ({
     alignItems: "center",
     gap: "24px",
     marginBottom: "4px",
+    width: "100%",
     [theme.breakpoints.down("sm")]: {
       gap: "10px",
     },
@@ -69,6 +74,7 @@ function a11yProps(index) {
 
 const InsuranceRegistration = () => {
   const [value, setValue] = useState(0);
+  //change value for self insurance (0) and family insurance (1)
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
   const [proposer, setProposer] = useState("");
@@ -83,6 +89,7 @@ const InsuranceRegistration = () => {
   const [familyFloaterInfo, setFamilyFloaterInfo] = useState({});
   const [isCoverageAmtDisabled, setIsCoverageAmtDisabled] = useState(false);
   const [coverageAmount, setCoverageAmount] = useState("");
+  const activeLanguage = sessionStorage.getItem("activeLanguage");
 
   const [familyFormData, setFamilyFormData] = useState([]);
   // const [formData, setFormData] = useState(Array.from(familyFormData, () => ({})));
@@ -232,19 +239,16 @@ const InsuranceRegistration = () => {
     <InsuranceWrapper>
       <CustomLoader open={showLoader} />
       <Box sx={{ width: "100%" }}>
-        <Box
-          sx={{ borderBottom: 1, borderColor: "divider", alignItems: "center" }}
-        >
-          <Tabs value={value} onChange={handleChange} centered>
-            <Tab
-              icon={<Boy />}
-              label="SELF"
-              {...a11yProps(0)}
-              style={{ marginRight: "50px" }}
-            />
-            <Tab icon={<FamilyRestroom />} label="FAMILY" {...a11yProps(1)} />
-          </Tabs>
-        </Box>
+        <DocumentHeaderSection>
+          <Typography
+            sx={{ fontSize: "1.4rem", fontWeight: 700, textAlign: "center" }}
+          >
+            {activeLanguage === "hi"
+              ? "बीमा पंजीकरण"
+              : "Insurance Registration"}
+          </Typography>
+        </DocumentHeaderSection>
+
         <CustomTabPanel value={value} index={0}>
           <SelfInsuranceForm tabValue={setValue} />
         </CustomTabPanel>

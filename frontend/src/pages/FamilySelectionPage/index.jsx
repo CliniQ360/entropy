@@ -17,9 +17,11 @@ const FamilySectionWrapper = styled(Stack)(({ theme }) => ({
 
 const WelcomeStylingTypography = styled(Typography)(({ theme }) => ({
   padding: theme.spacing(2),
-  fontFamily: "Pacifico",
-  fontSize: "2.5rem",
   textAlign: "center",
+  fontFamily: "plus jakarta sans bold",
+  color: "black",
+  fontSize: "2.4rem",
+  lineHeight: "140%",
 }));
 
 const InsuranceCard = styled(Card)(({ theme }) => ({
@@ -43,14 +45,14 @@ const IconWrapper = styled(Box)(({ theme }) => ({
 
 const CardContentArr = [
   {
-    Icon: FamilyRestroomIcon,
-    title: "Family Insurance",
-    body: "Comprehensive coverage for your entire family under one plan. Protect your loved ones with a single policy.",
-  },
-  {
     Icon: PersonIcon,
     title: "Self Insurance",
     body: "Tailored coverage focused on your individual needs. Get personalized protection for your health and well-being.",
+  },
+  {
+    Icon: FamilyRestroomIcon,
+    title: "Family Insurance",
+    body: "Comprehensive coverage for your entire family under one plan. Protect your loved ones with a single policy.",
   },
 ];
 
@@ -69,9 +71,9 @@ const FamilySelectionPage = () => {
           marginTop: "10px",
         }}
       >
-        Please choose the insurance type that best suits your needs: Family
-        Insurance for covering loved ones under one plan, or Self Insurance for
-        individual coverage focused on your personal health.
+        Select the insurance option that fits your needs Family Insurance to
+        protect your loved ones under a single plan, or Self Insurance for
+        personalized individual coverage.
       </Typography>
       <Grid container spacing={4} justifyContent="center" mt={3}>
         {CardContentArr.map((item, index) => (

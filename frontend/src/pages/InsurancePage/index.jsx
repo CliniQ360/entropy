@@ -46,10 +46,14 @@ const InsurancePage = () => {
     processing,
   } = useContext(MediaContext);
   const {
-    setCustomerDetails,
+    // setCustomerDetails,
     setAaRedirectUrl,
-    setKycRedirectUrl,
-    setOfferDetails,
+    // setKycRedirectUrl,
+    // setOfferDetails,
+    setInsuranceCustomerRegistration,
+    setInsuranceOfferList,
+    setInsuranceBuyerForm,
+    setInsuranceNomineeForm,
   } = useContext(AudioDataContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -89,11 +93,11 @@ const InsurancePage = () => {
         setProcessing(false);
         setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
-        setCustomerDetails(res?.payload?.data?.customer_details);
+        setInsuranceCustomerRegistration(res?.payload?.data?.customer_details);
         setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
         setUserResponse(res?.payload?.data?.user_message);
         setNextState(res?.payload?.data?.next_state);
-        setOfferDetails(res?.payload?.data?.offer_list);
+        setInsuranceOfferList(res?.payload?.data?.offer_list);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
         setShowLoader(false);

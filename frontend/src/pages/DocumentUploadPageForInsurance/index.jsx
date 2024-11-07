@@ -82,7 +82,7 @@ const DocumentUploadPageInsurance = () => {
     progressValue,
     setUploadDocument,
   } = useContext(MediaContext);
-  const { setCustomerDetails } = useContext(AudioDataContext);
+  const { setInsuranceCustomerRegistration } = useContext(AudioDataContext);
   const [showLoader, setShowLoader] = useState(false);
   const [uploadRestriction, setUploadRestriction] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -151,7 +151,9 @@ const DocumentUploadPageInsurance = () => {
           sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
           setAudioResponse(res?.payload?.data?.agent_audio_data);
           setMessageResponse(res?.payload?.data?.agent_message);
-          setCustomerDetails(res?.payload?.data?.customer_details);
+          setInsuranceCustomerRegistration(
+            res?.payload?.data?.customer_details
+          );
           navigate("/insurance/register");
           setShowLoader(false);
         });
