@@ -46,10 +46,8 @@ const InsurancePage = () => {
     processing,
   } = useContext(MediaContext);
   const {
-    // setCustomerDetails,
     setAaRedirectUrl,
-    // setKycRedirectUrl,
-    // setOfferDetails,
+    setKycRedirectUrl,
     setInsuranceCustomerRegistration,
     setInsuranceOfferList,
     setInsuranceBuyerForm,
@@ -94,8 +92,8 @@ const InsurancePage = () => {
         setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setInsuranceCustomerRegistration(res?.payload?.data?.customer_details);
-        setAaRedirectUrl(res?.payload?.data?.aa_redirect_url);
         setUserResponse(res?.payload?.data?.user_message);
+        setKycRedirectUrl(res?.payload?.data?.kyc_url);
         setNextState(res?.payload?.data?.next_state);
         setInsuranceOfferList(res?.payload?.data?.offer_list);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
@@ -108,6 +106,14 @@ const InsurancePage = () => {
           setProgressValue(20);
         } else if (res?.payload?.data?.next_state === "human_selection") {
           navigate("/insurance/insurance-offer");
+          setProgressValue(40);
+        } else if (
+          res?.payload?.data?.next_state === "human_add_on_selection"
+        ) {
+          navigate("/insurance/customize-insurance-offer");
+          setProgressValue(40);
+        } else if (res?.payload?.data?.next_state === "resume_after_kyc") {
+          navigate("/insurance/insurance-kyc");
           setProgressValue(40);
         }
         clearBlobUrl();

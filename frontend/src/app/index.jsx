@@ -69,7 +69,7 @@ function App() {
           <Route path="offers" element={<InsuranceOfferPage />} />
           <Route path="buyer-form" element={<BuyerFormPage />} />
           <Route path="nominee-form" element={<NomineeFormPage />} />
-          <Route path="insurance-offer" element={<NomineeFormPage />} />
+          <Route path="insurance-offer" element={<InsuranceOfferPage />} />
           <Route
             path="customize-insurance-offer"
             element={<CustomizeInsurancePage />}

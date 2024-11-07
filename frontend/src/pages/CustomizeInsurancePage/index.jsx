@@ -50,140 +50,13 @@ const AddOnCard = styled(Card)(({ theme, selected }) => ({
   transition: "background-color 0.3s ease, border-color 0.3s ease",
 }));
 
-const dummyData = [
-  {
-    offer_details: {
-      offer_item_id: "M1730961691644",
-      premium_amount: {
-        currency: "INR",
-        value: "20000", //
-      },
-      available_add_ons: [
-        {
-          id: "A1",
-          quantity: {
-            available: {
-              count: 1,
-            },
-          },
-          descriptor: {
-            name: "No Claim Bonus",
-            code: "NO_CLAIM_BONUS",
-          },
-          price: {
-            value: "100",
-            currency: "INR",
-          },
-        },
-        {
-          id: "A2",
-          quantity: {
-            available: {
-              count: 1,
-            },
-          },
-          descriptor: {
-            name: "Daycare Cover",
-            code: "DAYCARE_COVER",
-          },
-          price: {
-            value: "200",
-            currency: "INR",
-          },
-        },
-        {
-          id: "A3",
-          quantity: {
-            available: {
-              count: 1,
-            },
-          },
-          descriptor: {
-            name: "Daily Cash Allowance",
-            code: "DAILY_CASH_ALLOWANCE",
-          },
-          price: {
-            value: "1000",
-            currency: "INR",
-          },
-        },
-        {
-          id: "A4",
-          quantity: {
-            available: {
-              count: 1,
-            },
-          },
-          descriptor: {
-            name: "Domicialiary Expenses",
-            code: "DOMICILIARY_EXPENSES",
-          },
-          price: {
-            value: "400",
-            currency: "INR",
-          },
-        },
-        {
-          id: "A5",
-          quantity: {
-            available: {
-              count: 1,
-            },
-          },
-          descriptor: {
-            name: "Health Check-ups",
-            code: "HEALTH_CHECK_UPS",
-          },
-          price: {
-            value: "100",
-            currency: "INR",
-          },
-        },
-      ],
-      selected_add_ons: {},
-      policy_name: "Health Gain Plus Individual",
-      error_details: {
-        error_code: null,
-        error_type: null,
-        error_message: null,
-      },
-      COVERAGE_AMOUNT: "1000000", //
-      CO_PAYMENT: "Yes",
-      ROOM_RENT_CAP: "25000",
-      RESTORATION_BENEFIT: "No",
-      CLAIM_SETTLEMENT_RATIO: "0.8",
-      PRE_HOSPITALIZATION_COVERAGE_DAYS: "2",
-      POST_HOSPITALIZATION_COVERAGE_DAYS: "5",
-      MATERNITY_COVERAGE: "Yes", //
-      INITIAL_WAITING_PERIOD: "No",
-      CASHLESS_HOSPITALS: "50",
-      ROOM_CATEGORY: "Deluxe",
-      BASE_PRICE: "20000",
-      CONVIENCE_FEE: "50",
-      PROCESSING_FEE: "10",
-      TAX: "3600",
-      OFFER_VALIDITY: "PT15D",
-    },
-    provider_details: {
-      images: [
-        {
-          size_type: "sm",
-          url: "https://ondc.org/assets/theme/images/ondc_registered_logo.svg?v=399788fda7",
-        },
-      ],
-      long_desc: "ONDC Insurance Ltd",
-      name: "ONDC Insurance Ltd",
-      short_desc: "ONDC Insurance Ltd",
-    },
-    quote_details: null,
-    payment_details: [],
-  },
-];
-
 const CustomizeInsurancePage = () => {
   const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const selectedOffer = JSON.parse(sessionStorage.getItem("selected_offer"));
+  const [insuranceOfferDetails, setInsuranceOfferDetails] =
+    useState(selectedOffer);
   const [finalPrice, setFinalPrice] = useState(
-    parseInt(dummyData[0].offer_details.premium_amount.value)
+    parseInt(insuranceOfferDetails.offer_details.premium_amount.value)
   );
 
   const handleToggleAddOn = (addOnId) => {
@@ -196,13 +69,13 @@ const CustomizeInsurancePage = () => {
 
   useEffect(() => {
     const addOnsPrice = selectedAddOns.reduce((total, addOnId) => {
-      const addOn = dummyData[0].offer_details.available_add_ons.find(
+      const addOn = insuranceOfferDetails.offer_details.available_add_ons.find(
         (item) => item.id === addOnId
       );
       return addOn ? total + parseInt(addOn.price.value) : total;
     }, 0);
     setFinalPrice(
-      parseInt(dummyData[0].offer_details.premium_amount.value) + addOnsPrice
+      parseInt(selectedOffer.offer_details.premium_amount.value) + addOnsPrice
     );
   }, [selectedAddOns]);
 
@@ -252,7 +125,7 @@ const CustomizeInsurancePage = () => {
                   sx={{
                     width: "50px",
                     height: "50px",
-                    backgroundImage: `url(${dummyData[0].provider_details.images[0].url})`,
+                    backgroundImage: `url(${insuranceOfferDetails.provider_details.images[0].url})`,
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
                     backgroundSize: "contain",
@@ -266,7 +139,7 @@ const CustomizeInsurancePage = () => {
                     ml: 1,
                   }}
                 >
-                  {dummyData[0].provider_details.name}
+                  {insuranceOfferDetails.provider_details.name}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem item xs={12} sm={12}>
@@ -282,7 +155,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  {dummyData[0].offer_details.policy_name}
+                  {insuranceOfferDetails.offer_details.policy_name}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem item xs={5.8} sm={5.8}>
@@ -298,7 +171,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  {dummyData[0].offer_details.offer_item_id}
+                  {insuranceOfferDetails.offer_details.offer_item_id}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -314,7 +187,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  {dummyData[0]?.offer_details?.premium_amount?.value}
+                  {insuranceOfferDetails?.offer_details?.premium_amount?.value}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -330,7 +203,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  {dummyData[0]?.offer_details?.COVERAGE_AMOUNT}
+                  {insuranceOfferDetails?.offer_details?.COVERAGE_AMOUNT}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -346,7 +219,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  {dummyData[0]?.offer_details?.CO_PAYMENT}
+                  {insuranceOfferDetails?.offer_details?.CO_PAYMENT}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -362,7 +235,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  {dummyData[0]?.offer_details?.MATERNITY_COVERAGE}
+                  {insuranceOfferDetails?.offer_details?.MATERNITY_COVERAGE}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -378,7 +251,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  Rs {dummyData[0]?.offer_details?.CONVIENCE_FEE}
+                  Rs {insuranceOfferDetails?.offer_details?.CONVIENCE_FEE}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -394,7 +267,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  Rs {dummyData[0]?.offer_details?.PROCESSING_FEE}
+                  Rs {insuranceOfferDetails?.offer_details?.PROCESSING_FEE}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -410,7 +283,7 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  Rs {dummyData[0]?.offer_details?.TAX}
+                  Rs {insuranceOfferDetails?.offer_details?.TAX}
                 </Typography>
               </LoanDetailsItem>
             </LoanDetailsWrapper>
@@ -443,24 +316,26 @@ const CustomizeInsurancePage = () => {
           Select Add-Ons Here !
         </Typography>
         <Grid container spacing={3} mt={1}>
-          {dummyData[0].offer_details.available_add_ons.map((addOn) => (
-            <Grid item xs={5.8} sm={5.8} key={addOn.id}>
-              <AddOnCard
-                selected={selectedAddOns.includes(addOn.id)}
-                onClick={() => handleToggleAddOn(addOn.id)}
-                sx={{ cursor: "pointer" }}
-              >
-                <CardContent>
-                  <Typography fontSize={"1rem"} fontWeight={700}>
-                    {addOn.descriptor.name}
-                  </Typography>
-                  <Typography fontSize={"1rem"} color="text.secondary">
-                    ₹{addOn.price.value}
-                  </Typography>
-                </CardContent>
-              </AddOnCard>
-            </Grid>
-          ))}
+          {insuranceOfferDetails.offer_details.available_add_ons.map(
+            (addOn) => (
+              <Grid item xs={5.8} sm={5.8} key={addOn.id}>
+                <AddOnCard
+                  selected={selectedAddOns.includes(addOn.id)}
+                  onClick={() => handleToggleAddOn(addOn.id)}
+                  sx={{ cursor: "pointer" }}
+                >
+                  <CardContent>
+                    <Typography fontSize={"1rem"} fontWeight={700}>
+                      {addOn.descriptor.name}
+                    </Typography>
+                    <Typography fontSize={"1rem"} color="text.secondary">
+                      ₹{addOn.price.value}
+                    </Typography>
+                  </CardContent>
+                </AddOnCard>
+              </Grid>
+            )
+          )}
         </Grid>
       </CustomizeOfferAccordianContainer>
     </CustomizeOfferPageWrapper>

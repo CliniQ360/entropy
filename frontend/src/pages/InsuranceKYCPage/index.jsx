@@ -20,6 +20,7 @@ import { AudioDataContext } from "../../context/audioDataContext";
 import { useNavigate } from "react-router-dom";
 import { MediaContext } from "../../context/mediaContext";
 import RedirectionDialogComponent from "../../components/RedirectionDialogComponent";
+import { agentConversationForInsurance } from "../InsurancePage/audioAgent.slice";
 
 const KYCWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5),
@@ -69,7 +70,7 @@ const InsuranceKYCPage = () => {
       : "I hereby declare that I am voluntarily sharing my Aadhaar Number and demographic information issued by UIDAI with the concerned authorities for the sole purpose of completing the KYC process. I understand that my information can be used and shared for purposes as may be notified from time to time, including compliance with regulatory requirements.";
 
   useEffect(() => {
-    if (sessionStorage.getItem("next_state") === "resume_after_kyc_redirect") {
+    if (sessionStorage.getItem("next_state") === "resume_after_kyc") {
       setTimeout(() => {
         setConfirmationDialog(true);
       }, 4000);
@@ -119,7 +120,7 @@ const InsuranceKYCPage = () => {
             selected_loan_amount: sessionStorage.getItem("selected_amt"),
             language: sessionStorage.getItem("activeLanguage"),
           };
-          dispatch(agentConversation(secondpayload)).then((res) => {
+          dispatch(agentConversationForInsurance(secondpayload)).then((res) => {
             if (res?.error && Object.keys(res?.error)?.length > 0) {
               setShowLoader(false);
               setError(true);
@@ -141,7 +142,7 @@ const InsuranceKYCPage = () => {
               res?.payload?.data?.next_state ===
               "human_account_details_feedback"
             ) {
-              navigate("/credit/account-details");
+              navigate("/insurance/buyer-form");
             }
           });
         } else {
