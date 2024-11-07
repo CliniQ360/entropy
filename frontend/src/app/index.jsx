@@ -25,6 +25,7 @@ import InitiateJourneyPage from "../pages/InitiateJourneyPage";
 import EligibilityCriteriaPage from "../pages/EligibilityCriteriaPage";
 import FamilySelectionPage from "../pages/FamilySelectionPage";
 import DocumentUploadPageInsurance from "../pages/DocumentUploadPageForInsurance";
+import CustomizeInsurancePage from "../pages/CustomizeInsurancePage";
 
 function App() {
   return (
@@ -68,6 +69,10 @@ function App() {
           <Route path="buyer-form" element={<BuyerFormPage />} />
           <Route path="nominee-form" element={<NomineeFormPage />} />
           <Route path="insurance-offer" element={<NomineeFormPage />} />
+          <Route
+            path="customize-insurance-offer"
+            element={<CustomizeInsurancePage />}
+          />
         </Route>
       </Routes>
     </div>
