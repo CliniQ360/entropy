@@ -56,7 +56,7 @@ const dummyData = [
       offer_item_id: "M1730961691644",
       premium_amount: {
         currency: "INR",
-        value: "20000",
+        value: "20000", //
       },
       available_add_ons: [
         {
@@ -147,14 +147,14 @@ const dummyData = [
         error_type: null,
         error_message: null,
       },
-      COVERAGE_AMOUNT: "1000000",
+      COVERAGE_AMOUNT: "1000000", //
       CO_PAYMENT: "Yes",
       ROOM_RENT_CAP: "25000",
       RESTORATION_BENEFIT: "No",
       CLAIM_SETTLEMENT_RATIO: "0.8",
       PRE_HOSPITALIZATION_COVERAGE_DAYS: "2",
       POST_HOSPITALIZATION_COVERAGE_DAYS: "5",
-      MATERNITY_COVERAGE: "Yes",
+      MATERNITY_COVERAGE: "Yes", //
       INITIAL_WAITING_PERIOD: "No",
       CASHLESS_HOSPITALS: "50",
       ROOM_CATEGORY: "Deluxe",
@@ -261,13 +261,28 @@ const CustomizeInsurancePage = () => {
                 <Typography
                   sx={{
                     fontSize: "1.3rem",
-                    color: "#1976d2",
                     fontWeight: 700,
                     mt: 1,
                     ml: 1,
                   }}
                 >
                   {dummyData[0].provider_details.name}
+                </Typography>
+              </LoanDetailsItem>
+              <LoanDetailsItem item xs={12} sm={12}>
+                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                  Policy Name
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.1rem",
+                    color: "#171717",
+                    fontWeight: 700,
+                    mt: 1,
+                    mb: 1,
+                  }}
+                >
+                  {dummyData[0].offer_details.policy_name}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem item xs={5.8} sm={5.8}>
@@ -336,7 +351,7 @@ const CustomizeInsurancePage = () => {
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
                 <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Final Price
+                  Maternity Coverage
                 </Typography>
                 <Typography
                   sx={{
@@ -347,12 +362,78 @@ const CustomizeInsurancePage = () => {
                     mb: 1,
                   }}
                 >
-                  Rs{finalPrice}
+                  {dummyData[0]?.offer_details?.MATERNITY_COVERAGE}
+                </Typography>
+              </LoanDetailsItem>
+              <LoanDetailsItem xs={5.8} sm={5.8}>
+                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                  Convinience Fee
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.1rem",
+                    color: "#171717",
+                    fontWeight: 700,
+                    mt: 1,
+                    mb: 1,
+                  }}
+                >
+                  Rs {dummyData[0]?.offer_details?.CONVIENCE_FEE}
+                </Typography>
+              </LoanDetailsItem>
+              <LoanDetailsItem xs={5.8} sm={5.8}>
+                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                  Processing Fee
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.1rem",
+                    color: "#171717",
+                    fontWeight: 700,
+                    mt: 1,
+                    mb: 1,
+                  }}
+                >
+                  Rs {dummyData[0]?.offer_details?.PROCESSING_FEE}
+                </Typography>
+              </LoanDetailsItem>
+              <LoanDetailsItem xs={5.8} sm={5.8}>
+                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                  Tax
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.1rem",
+                    color: "#171717",
+                    fontWeight: 700,
+                    mt: 1,
+                    mb: 1,
+                  }}
+                >
+                  Rs {dummyData[0]?.offer_details?.TAX}
                 </Typography>
               </LoanDetailsItem>
             </LoanDetailsWrapper>
           </AccordionDetails>
-        </CustomAccordian>
+        </CustomAccordian>{" "}
+        <LoanDetailsItem xs={12} sm={12}>
+          <Typography sx={{ fontSize: "1.2rem", fontWeight: 700 }}>
+            Final Price
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "1.1rem",
+              color: "#171717",
+              fontWeight: 700,
+              mt: 1,
+              mb: 1,
+              padding: "10px",
+              border: "1px solid #D2D2D2",
+            }}
+          >
+            Rs {finalPrice}
+          </Typography>
+        </LoanDetailsItem>
         <Typography
           fontWeight={700}
           fontSize="1.2rem"

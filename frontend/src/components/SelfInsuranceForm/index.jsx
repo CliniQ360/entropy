@@ -107,7 +107,7 @@ const SelfInsuranceForm = () => {
         address: insuranceCustomerRegistration.address ?? "",
         panIndia: insuranceCustomerRegistration.panIndia ?? false,
         pincode: insuranceCustomerRegistration.pincode ?? "",
-        PED: insuranceCustomerRegistration.PED ?? "No",
+        PED: insuranceCustomerRegistration.any_pre_existing_disease ?? "No",
         diabetes: insuranceCustomerRegistration.diabetes ?? "No",
         bloodPressure: insuranceCustomerRegistration.bloodPressure ?? "No",
         heartAilments: insuranceCustomerRegistration.heartAilments ?? "No",
@@ -261,9 +261,11 @@ const SelfInsuranceForm = () => {
 
       case 5: // Financial Information
         return !(
-          individualInfo.amount &&
-          typeof individualInfo.politicallyExposedPerson &&
-          individualInfo.panIndia
+          (
+            individualInfo.amount &&
+            typeof individualInfo.politicallyExposedPerson
+          )
+          // && individualInfo.panIndia
         );
 
       default:
