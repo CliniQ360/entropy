@@ -860,7 +860,7 @@ export const offersDump = [
 export const insuranceOffer = [
   {
     offer_details: {
-      offer_item_id: "M1730961691644",
+      offer_item_id: "M1730961691641",
       premium_amount: {
         currency: "INR",
         value: "20000",
@@ -987,30 +987,14 @@ export const insuranceOffer = [
   },
   {
     offer_details: {
-      offer_item_id: "M1730961691644",
+      offer_item_id: "M1730961691642",
       premium_amount: {
         currency: "INR",
         value: "20000",
       },
       available_add_ons: [
         {
-          id: "A1",
-          quantity: {
-            available: {
-              count: 1,
-            },
-          },
-          descriptor: {
-            name: "No Claim Bonus",
-            code: "NO_CLAIM_BONUS",
-          },
-          price: {
-            value: "100",
-            currency: "INR",
-          },
-        },
-        {
-          id: "A2",
+          id: "B2",
           quantity: {
             available: {
               count: 1,
@@ -1026,7 +1010,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A3",
+          id: "B3",
           quantity: {
             available: {
               count: 1,
@@ -1042,7 +1026,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A4",
+          id: "B4",
           quantity: {
             available: {
               count: 1,
@@ -1058,7 +1042,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A5",
+          id: "B5",
           quantity: {
             available: {
               count: 1,
@@ -1114,14 +1098,14 @@ export const insuranceOffer = [
   },
   {
     offer_details: {
-      offer_item_id: "M1730961691644",
+      offer_item_id: "M1730961691643",
       premium_amount: {
         currency: "INR",
         value: "20000",
       },
       available_add_ons: [
         {
-          id: "A1",
+          id: "C1",
           quantity: {
             available: {
               count: 1,
@@ -1137,39 +1121,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A2",
-          quantity: {
-            available: {
-              count: 1,
-            },
-          },
-          descriptor: {
-            name: "Daycare Cover",
-            code: "DAYCARE_COVER",
-          },
-          price: {
-            value: "200",
-            currency: "INR",
-          },
-        },
-        {
-          id: "A3",
-          quantity: {
-            available: {
-              count: 1,
-            },
-          },
-          descriptor: {
-            name: "Daily Cash Allowance",
-            code: "DAILY_CASH_ALLOWANCE",
-          },
-          price: {
-            value: "1000",
-            currency: "INR",
-          },
-        },
-        {
-          id: "A4",
+          id: "C4",
           quantity: {
             available: {
               count: 1,
@@ -1185,7 +1137,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A5",
+          id: "C5",
           quantity: {
             available: {
               count: 1,
@@ -1248,7 +1200,7 @@ export const insuranceOffer = [
       },
       available_add_ons: [
         {
-          id: "A1",
+          id: "E1",
           quantity: {
             available: {
               count: 1,
@@ -1264,7 +1216,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A2",
+          id: "E2",
           quantity: {
             available: {
               count: 1,
@@ -1280,7 +1232,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A3",
+          id: "E3",
           quantity: {
             available: {
               count: 1,
@@ -1296,7 +1248,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A4",
+          id: "E4",
           quantity: {
             available: {
               count: 1,
@@ -1312,7 +1264,7 @@ export const insuranceOffer = [
           },
         },
         {
-          id: "A5",
+          id: "E5",
           quantity: {
             available: {
               count: 1,
