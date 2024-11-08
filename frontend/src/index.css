@@ -20,6 +20,11 @@ body {
 }
 
 @font-face {
+  font-family: "Inter Semibold";
+  src: url("./assets/fonts/Inter/static/Inter-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
   font-family: "Red Hat Display";
   src: url("./assets/fonts/Red_Hat_Display/static/RedHatDisplay-Regular.ttf")
     format("truetype");
@@ -46,4 +51,8 @@ body {
 @font-face {
   font-family: "Plus Jakarta Sans SemiBold";
   src: url("./assets/fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf");
+}
+@font-face {
+  font-family: "Pacifico";
+  src: url("./assets/fonts/Pacifico/Pacifico-Regular.ttf");
 }

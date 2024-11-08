@@ -342,12 +342,13 @@ def submit_form(state: SalahakarState):
                 else False
             ),
             "gender": "M" if customer_details.get("gender") == "Male" else "F",
-            "PED": customer_details.get("any_pre_existing_disease"),
+            "PED": customer_details.get("any_pre_existing_disease", "No"),
             "relation": "self",
             "gstin": "ABC",
         }
     )
-    del customer_details["any_pre_existing_disease"]
+    if customer_details.get("any_pre_existing_disease"):
+        del customer_details["any_pre_existing_disease"]
     submit_payload = {"individualInfo": customer_details}
     print(f"{submit_payload=}")
     json_payload = json.dumps(submit_payload)

@@ -9,6 +9,11 @@ const AudioContextProvider = ({ children }) => {
   const [eMandateRedirectUrl, setEMandateRedirectUrl] = useState("");
   const [offerList, setOfferList] = useState([]);
   const [offerDetails, setOfferDetails] = useState([]);
+  const [insuranceCustomerRegistration, setInsuranceCustomerRegistration] =
+    useState({});
+  const [insuranceOfferList, setInsuranceOfferList] = useState([]);
+  const [insuranceBuyerForm, setInsuranceBuyerForm] = useState({});
+  const [insuranceNomineeForm, setInsuranceNomineeForm] = useState({});
 
   return (
     <AudioDataContext.Provider
@@ -25,6 +30,14 @@ const AudioContextProvider = ({ children }) => {
         setOfferList,
         offerDetails,
         setOfferDetails,
+        insuranceCustomerRegistration,
+        setInsuranceCustomerRegistration,
+        insuranceOfferList,
+        setInsuranceOfferList,
+        insuranceBuyerForm,
+        setInsuranceBuyerForm,
+        insuranceNomineeForm,
+        setInsuranceNomineeForm,
       }}
     >
       {children}
