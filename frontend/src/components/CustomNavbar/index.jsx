@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { agentConversation } from "../../pages/CreditPage/audioAgent.slice";
 import { MediaContext } from "../../context/mediaContext";
+import { agentConversationForInsurance } from "../../pages/InsurancePage/audioAgent.slice";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -51,6 +52,7 @@ const CustomNavbar = () => {
   const thread_id = sessionStorage.getItem("thread_id");
   const uploadFlag = sessionStorage.getItem("document_upload_flag");
   const next_state = sessionStorage.getItem("next_state");
+  const serviceType = sessionStorage.getItem("serviceType");
   const handleSkip = () => {
     setShowLoader(true);
     const payload = {
@@ -59,7 +61,11 @@ const CustomNavbar = () => {
       state: sessionStorage.getItem("next_state"),
       language: sessionStorage.getItem("activeLanguage"),
     };
-    dispatch(agentConversation(payload)).then((res) => {
+    dispatch(
+      serviceType === "insurance"
+        ? agentConversationForInsurance(payload)
+        : agentConversation(payload)
+    ).then((res) => {
       if (res?.error && Object.keys(res?.error)?.length > 0) {
         setError(true);
         return;
@@ -70,7 +76,9 @@ const CustomNavbar = () => {
       sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
       setAudioResponse(res?.payload?.data?.agent_audio_data);
       setMessageResponse(res?.payload?.data?.agent_message);
-      navigate("/credit/personal-Detail");
+      serviceType === "insurance"
+        ? navigate("/credit/personal-Detail")
+        : navigate("/insurance/register");
       setShowLoader(false);
     });
   };
@@ -85,7 +93,8 @@ const CustomNavbar = () => {
       <IconButton onClick={() => navigate(+1)}>
         <MultipleFilesIcon color={"#0054BA"} />
       </IconButton>
-      {location.pathname === "/credit/route-3" && (
+      {(location.pathname === "/credit/route-3" ||
+        location.pathname === "/insurance/document-upload") && (
         <Button variant="contained" onClick={handleSkip}>
           Skip
         </Button>

@@ -11,7 +11,7 @@ export const agentConversationForInsurance = createAsyncThunk(
       const response = await axios.post(
         BASE_URL +
           `/${apis?.agentAudioForInsurance}?` +
-          `thread_id=${payload?.threadId}&state=${payload?.state}&translate=false&document_upload_flag=${payload?.uploadFlag}&offer_item_id=${payload?.offer_item_id}&selected_loan_amount=${payload?.selected_loan_amount}&language=${payload?.language}`,
+          `thread_id=${payload?.threadId}&state=${payload?.state}&translate=false&document_upload_flag=${payload?.uploadFlag}&offer_item_id=${payload?.offer_item_id}&language=${payload?.language}`,
         payload?.file,
         {
           headers: {

@@ -106,7 +106,7 @@ const InsuranceKYCPage = () => {
     const id = setInterval(() => {
       dispatch(creditStatusCheck(payload)).then((res) => {
         const selectResponse = res?.payload;
-        if (selectResponse?.redirection_status === "KYC_APPROVED") {
+        if (selectResponse?.redirection_status === "KYC_SUCCESS") {
           kyc_url.close();
           setRedirectionVal(false);
           setShowLoader(true);
@@ -117,7 +117,6 @@ const InsuranceKYCPage = () => {
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
             state: sessionStorage.getItem("next_state"),
             offer_item_id: sessionStorage.getItem("offer_item_id"),
-            selected_loan_amount: sessionStorage.getItem("selected_amt"),
             language: sessionStorage.getItem("activeLanguage"),
           };
           dispatch(agentConversationForInsurance(secondpayload)).then((res) => {
