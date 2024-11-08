@@ -614,13 +614,32 @@ def is_kyc_approved(state: SalahakarState):
     )
     current_action = get_txn_details_resp.get("current_action")
     print(f"{current_action=}")
-    if current_action != "ON_STATUS_KYC":
-        return "send_kyc_ack"
-    return "kyc_approval_pending"
+    if current_action == "ON_STATUS_KYC":
+        redirection_status = get_txn_details_resp.get("redirection_status")
+        if redirection_status == "KYC_SUCCESS" or redirection_status == "KYC_APPROVED":
+            return "send_kyc_ack"
+        elif (
+            redirection_status == "KYC_REJECTED" or redirection_status == "KYC_EXPIRED"
+        ):
+            return "kyc_rejected"
+        else:
+            return "kyc_approval_pending"
+    else:
+        return "kyc_approval_pending"
 
 
 def kyc_approval_pending(state: SalahakarState):
     pass
+
+
+def kyc_rejected(state: SalahakarState):
+    print("Inside kyc_rejected")
+    return {
+        "agent_message": [
+            "We regret to inform you that your KYC verification was not successful. Please try again."
+        ],
+        "modified": False,
+    }
 
 
 def send_kyc_ack(state: SalahakarState):

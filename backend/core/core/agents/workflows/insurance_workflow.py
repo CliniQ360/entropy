@@ -34,6 +34,7 @@ def build_workflow():
     builder.add_node("get_kyc_url", get_kyc_url)
     builder.add_node("resume_after_kyc", resume_after_kyc)
     builder.add_node("kyc_approval_pending", kyc_approval_pending)
+    builder.add_node("kyc_rejected", kyc_rejected)
     builder.add_node("send_kyc_ack", send_kyc_ack)
     builder.add_node("collate_buyer_info", collate_buyer_info)
     builder.add_node("generate_buyer_questions", generate_buyer_questions)
@@ -89,9 +90,9 @@ def build_workflow():
     builder.add_conditional_edges(
         "resume_after_kyc",
         is_kyc_approved,
-        ["send_kyc_ack", "kyc_approval_pending"],
+        ["send_kyc_ack", "kyc_approval_pending", "kyc_rejected"],
     )
-    builder.add_edge("kyc_approval_pending", "resume_after_kyc")
+    builder.add_edge("kyc_rejected", END)
     builder.add_conditional_edges(
         "send_kyc_ack",
         is_buyer_info_present,
