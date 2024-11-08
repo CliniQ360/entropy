@@ -5,7 +5,7 @@ from typing import List
 class UserDetails(BaseModel):
     firstName: str = Field(description="Customer's first name")
     lastName: str = Field(description="Customer's last name")
-    dob: str = Field(description="Customer's date of birth in YYYY-MM-DD format")
+    dob: str = Field(description="Customer's date of birth in DD-MM-YYYY format")
     gender: str = Field(description="Customer's gender in Male, Female or Other format")
     email: str = Field(description="Customer's email address")
     phone: str = Field(description="Customer's phone number")
