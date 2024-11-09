@@ -320,25 +320,25 @@ def submit_form(state: SalahakarState):
             "amount": str(insurance_amount),
             "phone": user_phone_number,
             "other": (
-                True if customer_details.get("other").lower() == "yes" else False
+                True if customer_details.get("other","").lower() == "yes" else False
             ),
             "diabetes": (
-                True if customer_details.get("diabetes").lower() == "yes" else False
+                True if customer_details.get("diabetes","").lower() == "yes" else False
             ),
             "bloodPressure": (
                 True
-                if customer_details.get("bloodPressure").lower() == "yes"
+                if customer_details.get("bloodPressure","").lower() == "yes"
                 else False
             ),
             "heartAilments": (
                 True
-                if customer_details.get("heartAilments").lower() == "yes"
+                if customer_details.get("heartAilments","").lower() == "yes"
                 else False
             ),
             "panIndia": True,
             "politicallyExposedPerson": (
                 True
-                if customer_details.get("politicallyExposedPerson").lower() == "yes"
+                if customer_details.get("politicallyExposedPerson","").lower() == "yes"
                 else False
             ),
             "gender": "M" if customer_details.get("gender") == "Male" else "F",
