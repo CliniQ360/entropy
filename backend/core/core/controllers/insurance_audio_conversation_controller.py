@@ -40,6 +40,7 @@ class InsuranceAudioConversationController:
                         "human_buyer_verification_feedback",
                         "human_nominee_feedback",
                         "human_nominee_verification_feedback",
+                        "human_payment_redirect",
                     ],
                     checkpointer=checkpointer,
                 )
@@ -119,6 +120,7 @@ class InsuranceAudioConversationController:
                         "human_buyer_verification_feedback",
                         "human_nominee_feedback",
                         "human_nominee_verification_feedback",
+                        "human_payment_redirect",
                     ],
                     checkpointer=checkpointer,
                 )
@@ -265,6 +267,7 @@ class InsuranceAudioConversationController:
                     "selected_add_ons"
                 )
                 kyc_url = workflow.get_state(thread).values.get("kyc_url")
+                payment_url = workflow.get_state(thread).values.get("payment_url")
                 if modified:
                     agent_message = agent_message_modified
                 if self.stt_service == "11LABS":
@@ -301,6 +304,7 @@ class InsuranceAudioConversationController:
                     "offer_list": offer_list if offer_list else [],
                     "offer_summary": offer_summary if offer_summary else "None",
                     "kyc_url": (kyc_url if kyc_url else "None"),
+                    "payment_url": payment_url if payment_url else "None",
                     "final_offer": final_offer if final_offer else [],
                     "modified": modified if modified else False,
                     "agent_message_modified": (
@@ -368,6 +372,7 @@ class InsuranceAudioConversationController:
                         "human_buyer_verification_feedback",
                         "human_nominee_feedback",
                         "human_nominee_verification_feedback",
+                        "human_payment_redirect",
                     ],
                     checkpointer=checkpointer,
                 )
@@ -407,6 +412,7 @@ class InsuranceAudioConversationController:
                         "human_buyer_verification_feedback",
                         "human_nominee_feedback",
                         "human_nominee_verification_feedback",
+                        "human_payment_redirect",
                     ],
                     checkpointer=checkpointer,
                 )

@@ -115,7 +115,6 @@ class OpenAIPrompts:
         - Generate one question at a time.
         - Only generate questions for fields that are missing from collected_info
         - Group questions by their categories and ask multiple questions in a single category if needed
-        - Group questions by their categories (personal, contact, health, etc.)
         - Present questions in a natural, conversational way
         - For health and medical questions, use polite and sensitive language
         - For boolean fields (like pre-existing conditions), phrase as yes/no questions
@@ -130,7 +129,9 @@ class OpenAIPrompts:
         - Consider dependencies between fields when ordering questions
         - Handle sensitive information (like medical conditions) with appropriate care
 
-        Based on the provided {required_fields} and {collected_info}, first check if all required data is collected. If it is, return "ALL DATA COLLECTED". Otherwise, generate the most efficient next question following these guidelines. Return exactly one consolidated question addressing the category with the most missing fields.
+        Based on the provided required_fields: {required_fields} and collected_info: {collected_info}, 
+        first check if all required data is collected. If it is, return "ALL DATA COLLECTED". Otherwise, generate the most efficient next question following these guidelines. 
+        Return exactly one consolidated question addressing the category with the most missing fields.
         """
 
         self.insurance_collector_instructions_hi = """You are a helpful customer assistant tasked to generate relevant questions to the customer for collecting required customer information.

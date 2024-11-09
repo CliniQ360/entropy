@@ -748,7 +748,7 @@ def generate_buyer_questions(state: SalahakarState):
         else:
             collector_instructions = OpenAIPrompts().insurance_collector_instructions
     collector_prompt = collector_instructions.format(
-        customer_info=collected_info, required_fields=required_fields
+        collected_info=collected_info, required_fields=required_fields
     )
     structured_llm = llm_4o.with_structured_output(GeneratedQuestion)
     # Generate question
@@ -864,11 +864,7 @@ def submit_buyer_form(state: SalahakarState):
         "address": buyer_details["address"],
         "gender": "M" if buyer_details.get("gender") == "Male" else "F",
         "dob": dob_converted,
-        "politicallyExposedPerson": (
-            True
-            if buyer_details.get("politicallyExposedPerson").lower() == "yes"
-            else False
-        ),
+        "politicallyExposedPerson": buyer_details.get("politicallyExposedPerson"),
         "gstin": "ABC",
     }
     submit_payload = {"buyerInfo": buyer_payload}
@@ -909,24 +905,24 @@ def submit_buyer_form(state: SalahakarState):
 def generate_nominee_questions(state: SalahakarState):
     """Generate questions to collect user details"""
     master_dict, collected_info = {}, {}
-    collected_details_list = state.get("customer_details", None)
+    nominee_details_list = state.get("nominee_details", None)
     language = state.get("language")
     required_fields = {
-        "personal_information": {
-            "firstName": "First Name",
-            "lastName": "Last Name",
-            "phone": "Phone Number",
-            "relation": "Relation with the person insured",
+        "nominee_information": {
+            "firstName": "First Name of the nominee",
+            "lastName": "Last Name of the nominee",
+            "phone": "Phone Number of the nominee",
+            "relation": "Relation of the nominee with the person insured",
         }
     }
     section_mapping = {
-        "firstName": "personal_information",
-        "lastName": "personal_information",
-        "phone": "personal_information",
-        "relation": "personal_information",
+        "firstName": "nominee_information",
+        "lastName": "nominee_information",
+        "phone": "nominee_information",
+        "relation": "nominee_information",
     }
-    if collected_details_list:
-        for item in collected_details_list:
+    if nominee_details_list:
+        for item in nominee_details_list:
             if isinstance(item, dict):
                 collected_details = item
             else:
@@ -959,7 +955,7 @@ def generate_nominee_questions(state: SalahakarState):
         else:
             collector_instructions = OpenAIPrompts().insurance_collector_instructions
     collector_prompt = collector_instructions.format(
-        customer_info=collected_info, required_fields=required_fields
+        collected_info=collected_info, required_fields=required_fields
     )
     structured_llm = llm_4o.with_structured_output(GeneratedQuestion)
     # Generate question
@@ -1073,6 +1069,7 @@ def submit_nominee_form(state: SalahakarState):
         params={"txn_id": txn_id, "offer_item_id": selected_offer_item_id},
         data=json_payload,
     )
+    payment_url = None
     if submit_resp_code == 200:
         get_form_resp, get_form_resp_code = APIInterface().get(
             route=get_form_url,
@@ -1084,11 +1081,42 @@ def submit_nominee_form(state: SalahakarState):
         )
         if get_form_resp_code == 200:
             payment_url = get_form_resp.get("form_url")
-            return {
-                "agent_message": [f"Please click on proceed to complete your payment."],
-                "payment_url": payment_url,
-                "modified": False,
-            }
+    return {
+        "agent_message": [f"Please click on proceed to complete your payment."],
+        "payment_url": payment_url,
+        "modified": False,
+    }
+
+
+def human_payment_redirect(state: SalahakarState):
+    pass
+
+
+def is_payment_done(state: SalahakarState):
+    insurance_base_url = os.environ["INSURANCE_BASE_URL"]
+    get_txn_details_url = f"{insurance_base_url}/v1/txn_details"
+    # making get form url call
+    txn_id = state.get("txn_id")
+    get_txn_details_resp, get_txn_details_resp_code = APIInterface().get(
+        route=get_txn_details_url, params={"txn_id": txn_id}
+    )
+    current_action = get_txn_details_resp.get("current_action")
+    print(f"{current_action=}")
+    if current_action == "FORM_SUBMISSION_2":
+        redirection_status = get_txn_details_resp.get("redirection_status")
+        if redirection_status == "PAYMENT_APPROVED":
+            return "confirm_offer"
+        else:
+            return "payment_pending"
+    else:
+        return "payment_pending"
+
+
+def payment_pending(state: SalahakarState):
+    return {
+        "agent_message": [f"Please complete the payment to proceed."],
+        "modified": False,
+    }
 
 
 def confirm_offer(state: SalahakarState):

@@ -53,6 +53,8 @@ def build_workflow():
         "human_nominee_verification_feedback", human_nominee_verification_feedback
     )
     builder.add_node("submit_nominee_form", submit_nominee_form)
+    builder.add_node("human_payment_redirect", human_payment_redirect)
+    builder.add_node("payment_pending", payment_pending)
     builder.add_node("confirm_offer", confirm_offer)
 
     # Add edges
@@ -124,5 +126,12 @@ def build_workflow():
         should_submit_nominee_details,
         ["submit_nominee_form", "extract_nominee_details"],
     )
-    builder.add_edge("submit_nominee_form", "confirm_offer")
+    builder.add_edge("submit_nominee_form", "human_payment_redirect")
+    builder.add_conditional_edges(
+        "human_payment_redirect",
+        is_payment_done,
+        ["confirm_offer", "payment_pending"],
+    )
+    builder.add_edge("payment_pending", "human_payment_redirect")
+    builder.add_edge("confirm_offer", END)
     return builder
