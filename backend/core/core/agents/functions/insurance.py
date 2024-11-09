@@ -344,7 +344,7 @@ def submit_form(state: SalahakarState):
             "panIndia": True,
             "politicallyExposedPerson": (
                 True
-                if customer_details.get("politicallyExposedPerson").lower() == "yes"
+                if customer_details.get("politicallyExposedPerson", "").lower() == "yes"
                 else False
             ),
             "gender": "M" if customer_details.get("gender") == "Male" else "F",
