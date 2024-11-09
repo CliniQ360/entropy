@@ -34,8 +34,7 @@ class InsuranceAudioConversationController:
                         "human_feedback",
                         "human_verification_feedback",
                         "human_selection",
-                        "human_add_on_selection",
-                        "human_add_on_confirmation",
+                        "human_plan_selection_confirmation",
                         "resume_after_kyc",
                         "human_buyer_feedback",
                         "human_buyer_verification_feedback",
@@ -114,8 +113,7 @@ class InsuranceAudioConversationController:
                         "human_feedback",
                         "human_verification_feedback",
                         "human_selection",
-                        "human_add_on_selection",
-                        "human_add_on_confirmation",
+                        "human_plan_selection_confirmation",
                         "resume_after_kyc",
                         "human_buyer_feedback",
                         "human_buyer_verification_feedback",
@@ -169,6 +167,24 @@ class InsuranceAudioConversationController:
                             "user_message": kwargs.get("user_message"),
                             "user_message_hindi": kwargs.get("user_message_hindi"),
                             "selected_offer_item_id": kwargs.get("offer_item_id"),
+                        },
+                        as_node=state,
+                    )
+                elif state == "human_plan_selection_confirmation":
+                    add_ons = kwargs.get("selected_add_ons")
+                    selected_add_ons_list = add_ons.split(",")
+                    selected_add_ons = []
+                    for add_on in selected_add_ons_list:
+                        selected_add_ons.append(
+                            {"add_on_id": add_on, "add_on_count": 1}
+                        )
+                    workflow.update_state(
+                        thread,
+                        {
+                            "user_message": kwargs.get("user_message"),
+                            "user_message_hindi": kwargs.get("user_message_hindi"),
+                            "selected_offer_item_id": kwargs.get("offer_item_id"),
+                            "selected_add_ons": selected_add_ons,
                         },
                         as_node=state,
                     )
@@ -226,37 +242,17 @@ class InsuranceAudioConversationController:
                                 and value != 0
                             ):
                                 customer_details[key] = value
+                    if (
+                        customer_details.get("diabetes") == "Yes"
+                        or customer_details.get("bloodPressure") == "Yes"
+                        or customer_details.get("heartAilments") == "Yes"
+                        or customer_details.get("other") == "Yes"
+                    ):
+                        customer_details["any_pre_existing_disease"] = "Yes"
+                    else:
+                        customer_details["any_pre_existing_disease"] = "No"
                     print(f"Inside resume_conversation {customer_details=}")
-                customer_account_details_list = workflow.get_state(thread).values.get(
-                    "customer_account_details"
-                )
-                customer_account_details = {}
-                if customer_account_details_list:
-                    for item in customer_account_details_list:
-                        if isinstance(item, dict):
-                            collected_details = item
-                        else:
-                            collected_details = item.dict()
-                        for key, value in collected_details.items():
-                            if (
-                                value != None
-                                and value != " "
-                                and value != "None"
-                                and value != "NA"
-                                and value != 0
-                            ):
-                                customer_account_details[key] = value
-                    print(f"{customer_account_details=}")
                 txn_id = workflow.get_state(thread).values.get("txn_id")
-                aa_redirect_url = workflow.get_state(thread).values.get("aa_url")
-                kyc_redirect_url = workflow.get_state(thread).values.get("kyc_url")
-                emndt_redirect_url = workflow.get_state(thread).values.get("emndt_url")
-                loan_signing_redirect_url = workflow.get_state(thread).values.get(
-                    "loan_signing_redirect_url"
-                )
-                loan_agreement_url = workflow.get_state(thread).values.get(
-                    "loan_agreement_url"
-                )
                 offer_list = workflow.get_state(thread).values.get("offer_list")
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
                 final_offer = workflow.get_state(thread).values.get("final_offer")
@@ -304,9 +300,6 @@ class InsuranceAudioConversationController:
                     "txn_id": txn_id if txn_id else "None",
                     "offer_list": offer_list if offer_list else [],
                     "offer_summary": offer_summary if offer_summary else "None",
-                    "loan_agreement_url": (
-                        loan_agreement_url if loan_agreement_url else "None"
-                    ),
                     "kyc_url": (kyc_url if kyc_url else "None"),
                     "final_offer": final_offer if final_offer else [],
                     "modified": modified if modified else False,
@@ -369,8 +362,7 @@ class InsuranceAudioConversationController:
                         "human_feedback",
                         "human_verification_feedback",
                         "human_selection",
-                        "human_add_on_selection",
-                        "human_add_on_confirmation",
+                        "human_plan_selection_confirmation",
                         "resume_after_kyc",
                         "human_buyer_feedback",
                         "human_buyer_verification_feedback",
@@ -409,8 +401,7 @@ class InsuranceAudioConversationController:
                         "human_feedback",
                         "human_verification_feedback",
                         "human_selection",
-                        "human_add_on_selection",
-                        "human_add_on_confirmation",
+                        "human_plan_selection_confirmation",
                         "resume_after_kyc",
                         "human_buyer_feedback",
                         "human_buyer_verification_feedback",

@@ -27,9 +27,9 @@ def build_workflow():
     builder.add_node("human_selection", human_selection)
     builder.add_node("answer_user_query", answer_user_query)
     builder.add_node("select_offer", select_offer)
-    builder.add_node("human_add_on_selection", human_add_on_selection)
-    builder.add_node("select_add_on", select_add_on)
-    builder.add_node("human_add_on_confirmation", human_add_on_confirmation)
+    builder.add_node(
+        "human_plan_selection_confirmation", human_plan_selection_confirmation
+    )
     builder.add_node("select_insurance", select_insurance)
     builder.add_node("get_kyc_url", get_kyc_url)
     builder.add_node("resume_after_kyc", resume_after_kyc)
@@ -81,10 +81,8 @@ def build_workflow():
         "human_selection", user_intent, ["answer_user_query", "select_offer"]
     )
     builder.add_edge("answer_user_query", "human_selection")
-    builder.add_edge("select_offer", "human_add_on_selection")
-    builder.add_edge("human_add_on_selection", "select_add_on")
-    builder.add_edge("select_add_on", "human_add_on_confirmation")
-    builder.add_edge("human_add_on_confirmation", "select_insurance")
+    builder.add_edge("select_offer", "human_plan_selection_confirmation")
+    builder.add_edge("human_plan_selection_confirmation", "select_insurance")
     builder.add_edge("select_insurance", "get_kyc_url")
     builder.add_edge("get_kyc_url", "resume_after_kyc")
     builder.add_conditional_edges(
