@@ -56,6 +56,7 @@ def build_workflow():
     builder.add_node("human_payment_redirect", human_payment_redirect)
     builder.add_node("payment_pending", payment_pending)
     builder.add_node("confirm_offer", confirm_offer)
+    builder.add_node("end_conversation", end_conversation)
 
     # Add edges
     builder.add_edge(START, "welcome_message")
@@ -92,7 +93,7 @@ def build_workflow():
         is_kyc_approved,
         ["send_kyc_ack", "kyc_approval_pending", "kyc_rejected"],
     )
-    builder.add_edge("kyc_rejected", END)
+    builder.add_edge("kyc_rejected", "end_conversation")
     builder.add_conditional_edges(
         "send_kyc_ack",
         is_buyer_info_present,
@@ -133,5 +134,5 @@ def build_workflow():
         ["confirm_offer", "payment_pending"],
     )
     builder.add_edge("payment_pending", "human_payment_redirect")
-    builder.add_edge("confirm_offer", END)
+    builder.add_edge("confirm_offer", "end_conversation")
     return builder

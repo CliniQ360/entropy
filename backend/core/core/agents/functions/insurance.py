@@ -1128,3 +1128,14 @@ def confirm_offer(state: SalahakarState):
         route=confirm_url,
         params={"txn_id": txn_id, "offer_item_id": selected_offer_item_id},
     )
+    if confirm_resp_code == 200:
+        return {
+            "agent_message": [
+                "Congratulations, your insurance policy has been confirmed. Please check your email for the policy document."
+            ],
+            "modified": False,
+        }
+
+
+def end_conversation(state: SalahakarState):
+    pass
