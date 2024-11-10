@@ -675,11 +675,7 @@ def collate_buyer_info(state: SalahakarState):
         "address": customer_details["address"],
         "gender": "M" if customer_details.get("gender") == "Male" else "F",
         "dob": customer_details["dob"],
-        "politicallyExposedPerson": (
-            True
-            if customer_details.get("politicallyExposedPerson").lower() == "yes"
-            else False
-        ),
+        "politicallyExposedPerson": customer_details["politicallyExposedPerson"],
         "gstin": "ABC",
     }
     return {"buyer_details": [buyer_details]}
@@ -862,9 +858,13 @@ def submit_buyer_form(state: SalahakarState):
         "email": buyer_details["email"],
         "phone": user_phone_number,
         "address": buyer_details["address"],
-        "gender": "M" if buyer_details.get("gender") == "Male" else "F",
+        "gender": buyer_details.get("gender"),
         "dob": dob_converted,
-        "politicallyExposedPerson": buyer_details.get("politicallyExposedPerson"),
+        "politicallyExposedPerson": (
+            True
+            if buyer_details.get("politicallyExposedPerson").lower() == "yes"
+            else False
+        ),
         "gstin": "ABC",
     }
     submit_payload = {"buyerInfo": buyer_payload}
@@ -1102,7 +1102,7 @@ def is_payment_done(state: SalahakarState):
     )
     current_action = get_txn_details_resp.get("current_action")
     print(f"{current_action=}")
-    if current_action == "FORM_SUBMISSION_2":
+    if current_action == "ON_STATUS_PMT":
         redirection_status = get_txn_details_resp.get("redirection_status")
         if redirection_status == "PAYMENT_APPROVED":
             return "confirm_offer"

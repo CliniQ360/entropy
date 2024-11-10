@@ -41,6 +41,7 @@ class InsuranceAudioConversationController:
                         "human_nominee_feedback",
                         "human_nominee_verification_feedback",
                         "human_payment_redirect",
+                        "end_conversation",
                     ],
                     checkpointer=checkpointer,
                 )
@@ -121,6 +122,7 @@ class InsuranceAudioConversationController:
                         "human_nominee_feedback",
                         "human_nominee_verification_feedback",
                         "human_payment_redirect",
+                        "end_conversation",
                     ],
                     checkpointer=checkpointer,
                 )
@@ -373,6 +375,7 @@ class InsuranceAudioConversationController:
                         "human_nominee_feedback",
                         "human_nominee_verification_feedback",
                         "human_payment_redirect",
+                        "end_conversation",
                     ],
                     checkpointer=checkpointer,
                 )
@@ -413,6 +416,7 @@ class InsuranceAudioConversationController:
                         "human_nominee_feedback",
                         "human_nominee_verification_feedback",
                         "human_payment_redirect",
+                        "end_conversation",
                     ],
                     checkpointer=checkpointer,
                 )
