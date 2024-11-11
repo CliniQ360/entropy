@@ -94,7 +94,7 @@ const CustomizeInsurancePage = () => {
           color={"#1976d2"}
           mb={4}
         >
-          Customize Your Insurance Policy
+          Confirm Your Insurance Policy
         </Typography>
         <Typography></Typography>
         <CustomAccordian defaultExpanded>

@@ -711,25 +711,6 @@ const SelfInsuranceForm = () => {
                 onChange={handleChange}
               />
             </FormControl>
-
-            <FormControl fullWidth>
-              <FormLabel htmlFor="gstin">
-                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                  <CheckIcon
-                    fontSize="8px"
-                    color={individualInfo.gstin ? "success" : "disabled"}
-                  />
-                  GSTIN
-                </Stack>
-              </FormLabel>
-              <TextField
-                type="text"
-                id="gstin"
-                name="gstin"
-                value={individualInfo.gstin}
-                onChange={handleChange}
-              />
-            </FormControl>
           </FormBox>
         </Element>
       ),
