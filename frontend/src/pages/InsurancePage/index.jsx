@@ -83,6 +83,14 @@ const InsurancePage = () => {
     if (sessionStorage.getItem("offer_item_id")) {
       payload.offer_item_id = sessionStorage.getItem("offer_item_id");
     }
+
+    if (
+      sessionStorage.getItem("next_state") ===
+      "human_plan_selection_confirmation"
+    ) {
+      payload.selected_add_ons = sessionStorage.getItem("selectedAddOns") || "";
+    }
+
     dispatch(agentConversationForInsurance(payload))
       .then((res) => {
         if (res?.error && Object.keys(res?.error)?.length > 0) {

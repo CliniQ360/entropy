@@ -157,7 +157,7 @@ const InsuranceOfferPage = () => {
   const [isFlying, setIsFlying] = useState(false);
   const [redirectionVal, setRedirectionVal] = useState(false);
   const [allAddOns, setAllAddOns] = useState(
-    JSON.parse(sessionStorage.getItem("selectedAddOns")) || {}
+    sessionStorage.getItem("selectedAddOns") || ""
   );
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [finalPrice, setFinalPrice] = useState(
@@ -167,11 +167,13 @@ const InsuranceOfferPage = () => {
   let form_aa_URL;
 
   const handleToggleAddOn = (addOnId) => {
-    setSelectedAddOns((prevSelected) =>
-      prevSelected.includes(addOnId)
+    setSelectedAddOns((prevSelected) => {
+      const updatedSelected = prevSelected.includes(addOnId)
         ? prevSelected.filter((id) => id !== addOnId)
-        : [...prevSelected, addOnId]
-    );
+        : [...prevSelected, addOnId];
+      sessionStorage.setItem("selectedAddOns", updatedSelected.join(","));
+      return updatedSelected;
+    });
   };
 
   useEffect(() => {
@@ -254,14 +256,19 @@ const InsuranceOfferPage = () => {
         "selected_offer",
         JSON.stringify(offers?.[currentSlide])
       );
+
       sessionStorage.setItem(
         "offer_item_id",
         offers?.[currentSlide]?.offer_details?.offer_item_id
       );
-
       sessionStorage.setItem("final_selected_premium_amt", finalPrice);
     }
   }, [currentSlide, offers, finalPrice]);
+
+  useEffect(() => {
+    sessionStorage.removeItem("selectedAddOns");
+    setSelectedAddOns([]);
+  }, [currentSlide]);
 
   const initialShowTimer =
     sessionStorage.getItem("showTimer") === "true" ? true : false;

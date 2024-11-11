@@ -106,7 +106,7 @@ const InsuranceKYCPage = () => {
     const id = setInterval(() => {
       dispatch(creditStatusCheck(payload)).then((res) => {
         const selectResponse = res?.payload;
-        if (selectResponse?.redirection_status === "KYC_SUCCESS") {
+        if (selectResponse?.redirection_status === "KYC_APPROVED") {
           kyc_url.close();
           setRedirectionVal(false);
           setShowLoader(true);

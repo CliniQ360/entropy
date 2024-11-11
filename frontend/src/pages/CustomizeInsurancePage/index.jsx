@@ -51,20 +51,30 @@ const AddOnCard = styled(Card)(({ theme, selected }) => ({
 }));
 
 const CustomizeInsurancePage = () => {
-  const [selectedAddOns, setSelectedAddOns] = useState([]);
   const selectedOffer = JSON.parse(sessionStorage.getItem("selected_offer"));
+  const final_selected_premium_amt = sessionStorage.getItem(
+    "final_selected_premium_amt"
+  );
   const [insuranceOfferDetails, setInsuranceOfferDetails] =
     useState(selectedOffer);
   const [finalPrice, setFinalPrice] = useState(
-    parseInt(insuranceOfferDetails.offer_details.premium_amount.value)
+    parseInt(final_selected_premium_amt)
   );
 
+  const initialSelectedAddOns = sessionStorage.getItem("selectedAddOns")
+    ? sessionStorage.getItem("selectedAddOns").split(",")
+    : [];
+  const [selectedAddOns, setSelectedAddOns] = useState(initialSelectedAddOns);
+
   const handleToggleAddOn = (addOnId) => {
-    setSelectedAddOns((prevSelected) =>
-      prevSelected.includes(addOnId)
+    setSelectedAddOns((prevSelected) => {
+      const updatedSelected = prevSelected.includes(addOnId)
         ? prevSelected.filter((id) => id !== addOnId)
-        : [...prevSelected, addOnId]
-    );
+        : [...prevSelected, addOnId];
+
+      sessionStorage.setItem("selectedAddOns", updatedSelected.join(","));
+      return updatedSelected;
+    });
   };
 
   useEffect(() => {
@@ -74,14 +84,12 @@ const CustomizeInsurancePage = () => {
       );
       return addOn ? total + parseInt(addOn.price.value) : total;
     }, 0);
-    setFinalPrice(
-      parseInt(selectedOffer.offer_details.premium_amount.value) + addOnsPrice
-    );
+    setFinalPrice(parseInt(final_selected_premium_amt) + addOnsPrice);
   }, [selectedAddOns]);
 
   useEffect(() => {
-    console.log(selectedAddOns);
-    console.log(finalPrice);
+    console.log("Selected Add-Ons:", selectedAddOns);
+    console.log("Final Price:", finalPrice);
   }, [finalPrice, selectedAddOns]);
 
   return (
@@ -322,7 +330,15 @@ const CustomizeInsurancePage = () => {
                 <AddOnCard
                   selected={selectedAddOns.includes(addOn.id)}
                   onClick={() => handleToggleAddOn(addOn.id)}
-                  sx={{ cursor: "pointer" }}
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor: selectedAddOns.includes(addOn.id)
+                      ? "#d9ffd9"
+                      : "white",
+                    color: selectedAddOns.includes(addOn.id)
+                      ? "white"
+                      : "black",
+                  }}
                 >
                   <CardContent>
                     <Typography fontSize={"1rem"} fontWeight={700}>
