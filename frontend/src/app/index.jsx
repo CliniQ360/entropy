@@ -71,7 +71,7 @@ function App() {
           <Route path="nominee-form" element={<NomineeFormPage />} />
           <Route path="insurance-offer" element={<InsuranceOfferPage />} />
           <Route
-            path="customize-insurance-offer"
+            path="confirm-insurance-offer"
             element={<CustomizeInsurancePage />}
           />
           <Route path="insurance-kyc" element={<InsuranceKYCPage />} />
