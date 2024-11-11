@@ -189,8 +189,8 @@ const InsuranceOfferPage = () => {
 
   useEffect(() => {
     // console.log(insuranceOfferList);
-    // setOffers(insuranceOfferList);
-    setOffers(insuranceOffer);
+    setOffers(insuranceOfferList);
+    // setOffers(insuranceOffer);
   }, [insuranceOfferList]);
 
   useEffect(() => {

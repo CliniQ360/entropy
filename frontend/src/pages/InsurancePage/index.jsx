@@ -115,6 +115,11 @@ const InsurancePage = () => {
         } else if (res?.payload?.data?.next_state === "resume_after_kyc") {
           navigate("/insurance/insurance-kyc");
           setProgressValue(40);
+        } else if (
+          res?.payload?.data?.next_state === "human_plan_selection_confirmation"
+        ) {
+          navigate("/insurance/confirm-insurance-offer");
+          setProgressValue(40);
         }
         clearBlobUrl();
       })
