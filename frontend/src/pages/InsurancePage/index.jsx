@@ -53,6 +53,7 @@ const InsurancePage = () => {
     setInsuranceOfferList,
     setInsuranceBuyerForm,
     setInsuranceNomineeForm,
+    setInsurancePaymentUrl,
   } = useContext(AudioDataContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -107,8 +108,11 @@ const InsurancePage = () => {
         setInsuranceCustomerRegistration(res?.payload?.data?.customer_details);
         setUserResponse(res?.payload?.data?.user_message);
         setKycRedirectUrl(res?.payload?.data?.kyc_url);
+        setInsurancePaymentUrl(res?.payload?.data?.payment_url);
         setNextState(res?.payload?.data?.next_state);
         setInsuranceOfferList(res?.payload?.data?.offer_list);
+        setInsuranceBuyerForm(res?.payload?.data?.buyer_details);
+        setInsuranceNomineeForm(res?.payload?.data?.nominee_details);
         sessionStorage.setItem("next_state", res?.payload?.data?.next_state);
         sessionStorage.setItem("txn_id", res?.payload?.data?.txn_id);
         setShowLoader(false);

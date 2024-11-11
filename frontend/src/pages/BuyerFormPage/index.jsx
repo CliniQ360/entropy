@@ -7,8 +7,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
+import { AudioDataContext } from "../../context/audioDataContext";
 
 const BuyerFormWrapper = styled("div")(({ theme }) => ({
   display: "flex",
@@ -40,6 +41,7 @@ const DocumentHeaderSection = styled("div")(({ theme }) => ({
 }));
 
 const BuyerFormPage = () => {
+  const { insuranceBuyerForm } = useContext(AudioDataContext);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -60,6 +62,12 @@ const BuyerFormPage = () => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    if (insuranceBuyerForm) {
+      setFormData(insuranceBuyerForm);
+    }
+  }, [insuranceBuyerForm]);
 
   return (
     <BuyerFormWrapper>

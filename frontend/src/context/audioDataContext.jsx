@@ -6,6 +6,7 @@ const AudioContextProvider = ({ children }) => {
   const [customerDetails, setCustomerDetails] = useState({});
   const [aaRedirectUrl, setAaRedirectUrl] = useState("");
   const [kycRedirectUrl, setKycRedirectUrl] = useState("");
+  const [insurancePaymentUrl, setInsurancePaymentUrl] = useState("");
   const [eMandateRedirectUrl, setEMandateRedirectUrl] = useState("");
   const [offerList, setOfferList] = useState([]);
   const [offerDetails, setOfferDetails] = useState([]);
@@ -38,6 +39,8 @@ const AudioContextProvider = ({ children }) => {
         setInsuranceBuyerForm,
         insuranceNomineeForm,
         setInsuranceNomineeForm,
+        insurancePaymentUrl,
+        setInsurancePaymentUrl,
       }}
     >
       {children}
