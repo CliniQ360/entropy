@@ -61,7 +61,7 @@ const SelfInsuranceForm = () => {
   const [individualInfo, setIndividualInfo] = useState({
     firstName: "",
     lastName: "",
-    gender: "Male",
+    gender: "",
     dob: "",
     relation: "self",
     email: "",
@@ -69,11 +69,11 @@ const SelfInsuranceForm = () => {
     address: "",
     panIndia: false,
     pincode: "",
-    PED: "No",
-    diabetes: "No",
-    bloodPressure: "No",
-    heartAilments: "No",
-    other: "No",
+    PED: "",
+    diabetes: "",
+    bloodPressure: "",
+    heartAilments: "",
+    other: "",
     heightfoot: "",
     heightinch: "",
     weight: "",
@@ -99,8 +99,8 @@ const SelfInsuranceForm = () => {
       setIndividualInfo({
         firstName: insuranceCustomerRegistration.firstName ?? "",
         lastName: insuranceCustomerRegistration.lastName ?? "",
-        gender: insuranceCustomerRegistration.gender ?? "M",
-        dob: insuranceCustomerRegistration.dob ?? "",
+        gender: insuranceCustomerRegistration.gender?.toLowerCase() ?? "",
+        dob: formattedDob,
         relation: insuranceCustomerRegistration.relation ?? "self",
         email: insuranceCustomerRegistration.email ?? "",
         phone: insuranceCustomerRegistration.phone ?? "",
@@ -352,10 +352,10 @@ const SelfInsuranceForm = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={individualInfo.gender === "Male"}
+                      checked={individualInfo.gender === "male"}
                       onChange={handleChange}
                       name="gender"
-                      value="Male"
+                      value="male"
                     />
                   }
                   label="Male"
@@ -363,10 +363,10 @@ const SelfInsuranceForm = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={individualInfo.gender === "Female"}
+                      checked={individualInfo.gender === "female"}
                       onChange={handleChange}
                       name="gender"
-                      value="Female"
+                      value="female"
                     />
                   }
                   label="Female"
@@ -708,25 +708,6 @@ const SelfInsuranceForm = () => {
                 id="politicallyExposedPerson"
                 name="politicallyExposedPerson"
                 value={individualInfo.politicallyExposedPerson}
-                onChange={handleChange}
-              />
-            </FormControl>
-
-            <FormControl fullWidth>
-              <FormLabel htmlFor="gstin">
-                <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                  <CheckIcon
-                    fontSize="8px"
-                    color={individualInfo.gstin ? "success" : "disabled"}
-                  />
-                  GSTIN
-                </Stack>
-              </FormLabel>
-              <TextField
-                type="text"
-                id="gstin"
-                name="gstin"
-                value={individualInfo.gstin}
                 onChange={handleChange}
               />
             </FormControl>
