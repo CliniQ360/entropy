@@ -255,7 +255,25 @@ class InsuranceAudioConversationController:
                         customer_details["any_pre_existing_disease"] = "Yes"
                     else:
                         customer_details["any_pre_existing_disease"] = "No"
-                    print(f"Inside resume_conversation {customer_details=}")
+                nominee_details_list = workflow.get_state(thread).values.get(
+                    "nominee_details"
+                )
+                nominee_details = {}
+                if nominee_details_list:
+                    for item in nominee_details_list:
+                        if isinstance(item, dict):
+                            nominee_details = item
+                        else:
+                            nominee_details = item.dict()
+                        for key, value in nominee_details.items():
+                            if (
+                                value != None
+                                and value != " "
+                                and value != "None"
+                                and value != "NA"
+                                and value != 0
+                            ):
+                                nominee_details[key] = value
                 txn_id = workflow.get_state(thread).values.get("txn_id")
                 offer_list = workflow.get_state(thread).values.get("offer_list")
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
@@ -302,6 +320,7 @@ class InsuranceAudioConversationController:
                     "agent_message": agent_message,
                     "next_state": next_state,
                     "customer_details": customer_details,
+                    "nominee_details": nominee_details,
                     "txn_id": txn_id if txn_id else "None",
                     "offer_list": offer_list if offer_list else [],
                     "offer_summary": offer_summary if offer_summary else "None",
