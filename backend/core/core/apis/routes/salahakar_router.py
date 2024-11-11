@@ -39,7 +39,7 @@ async def resume_conversation(
     document_upload_flag: bool = False,
     file: UploadFile | None = None,
     offer_item_id: str = None,
-    selected_loan_amount: str = None,
+    selected_add_ons: str = None,
 ):
     try:
         logging.info(f"Calling /v1/salahakar/resume_conversation endpoint")
@@ -59,7 +59,7 @@ async def resume_conversation(
             "audio_data": audio_data,
             "audio_file_name": audio_file_name,
             "offer_item_id": offer_item_id,
-            "selected_loan_amount": selected_loan_amount,
+            "selected_add_ons": selected_add_ons,
         }
         return SalahakarController().resume_audio_conversation(request=payload)
     except Exception as error:

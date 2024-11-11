@@ -128,10 +128,12 @@ def generate_questions(state: SalahakarState):
             "diabetes": "Is customer suffering with diabetes",
             "heartAilments": "Is customer suffering with heartAilments",
             "bloodPressure": "Is customer suffering with bloodPressure",
-            "other": "Is customer suffering with any other pre-existing diseases",
+            "other": "Is customer suffering with any other diseases",
         },
         "insurance_details": {"amount": "expected sum insured amount"},
-        "other_information": {"political_exposure": "Political exposure"},
+        "other_information": {
+            "politicallyExposedPerson": "Is customer Politically exposed"
+        },
     }
     section_mapping = {
         "firstName": "personal_information",
@@ -150,7 +152,7 @@ def generate_questions(state: SalahakarState):
         "heightinch": "health_markers",
         "weight": "health_markers",
         "amount": "insurance_details",
-        "political_exposure": "other_information",
+        "politicallyExposedPerson": "other_information",
     }
     if collected_details_list:
         for item in collected_details_list:
@@ -186,10 +188,11 @@ def generate_questions(state: SalahakarState):
         else:
             collector_instructions = OpenAIPrompts().insurance_collector_instructions
     collector_prompt = collector_instructions.format(
-        customer_info=collected_info, required_fields=required_fields
+        collected_info=collected_info, required_fields=required_fields
     )
     structured_llm = llm_4o.with_structured_output(GeneratedQuestion)
     # Generate question
+    print(f"{collected_info=}")
     print(f"{collector_prompt=}")
     generated_data = structured_llm.invoke(collector_prompt)
     print(f"{generated_data.text=}")
@@ -208,8 +211,10 @@ def extract_user_details(state: SalahakarState):
         agent_question=state.get("agent_message")[-1],
         user_answer=state.get("user_message")[-1],
     )
-    structured_llm = llm_4o.with_structured_output(UserDetailsResponse)
+    print(f"{extractor_prompt=}")
+    structured_llm = llm_4omini.with_structured_output(UserDetailsResponse)
     extracted_data = structured_llm.invoke([extractor_prompt])
+    print(f"{extracted_data=}")
     print(f"Inside Extract User Details {extracted_data.userDetails=}")
     dob = extracted_data.userDetails[0].dob
     if dob and dob != "NA" and dob != "None":
@@ -314,41 +319,41 @@ def submit_form(state: SalahakarState):
     dob = customer_details.get("dob")
     dob_datetime = datetime.strptime(dob, "%d-%m-%Y")
     dob_converted = dob_datetime.strftime("%Y-%m-%d")
+    diabetes = True if customer_details.get("diabetes").lower() == "yes" else False
+    other_disease = True if customer_details.get("other").lower() == "yes" else False
+    blood_pressure = (
+        True if customer_details.get("bloodPressure").lower() == "yes" else False
+    )
+    heart_ailments = (
+        True if customer_details.get("heartAilments").lower() == "yes" else False
+    )
+    if blood_pressure or diabetes or heart_ailments or other_disease:
+        customer_ped = "Yes"
+    else:
+        customer_ped = "No"
     customer_details.update(
         {
             "dob": dob_converted,
             "amount": str(insurance_amount),
             "phone": user_phone_number,
-            "other": (
-                True if customer_details.get("other").lower() == "yes" else False
-            ),
-            "diabetes": (
-                True if customer_details.get("diabetes").lower() == "yes" else False
-            ),
-            "bloodPressure": (
-                True
-                if customer_details.get("bloodPressure").lower() == "yes"
-                else False
-            ),
-            "heartAilments": (
-                True
-                if customer_details.get("heartAilments").lower() == "yes"
-                else False
-            ),
+            "other": other_disease,
+            "diabetes": diabetes,
+            "bloodPressure": blood_pressure,
+            "heartAilments": heart_ailments,
+            "PED": customer_ped,
             "panIndia": True,
             "politicallyExposedPerson": (
                 True
-                if customer_details.get("politicallyExposedPerson").lower() == "yes"
+                if customer_details.get("politicallyExposedPerson", "").lower() == "yes"
                 else False
             ),
             "gender": "M" if customer_details.get("gender") == "Male" else "F",
-            "PED": customer_details.get("any_pre_existing_disease", "No"),
             "relation": "self",
             "gstin": "ABC",
         }
     )
-    if customer_details.get("any_pre_existing_disease"):
-        del customer_details["any_pre_existing_disease"]
+    # if customer_details.get("any_pre_existing_disease"):
+    #     del customer_details["any_pre_existing_disease"]
     submit_payload = {"individualInfo": customer_details}
     print(f"{submit_payload=}")
     json_payload = json.dumps(submit_payload)
@@ -497,53 +502,22 @@ def answer_user_query(state: SalahakarState):
 
 def select_offer(state: SalahakarState):
     print("Inside select_offer")
+    offer_list = state.get("offer_list")
+    selected_offer_item_id = state.get("selected_offer_item_id")
+    for offer_item in offer_list:
+        offer_item_id = offer_item.get("offer_details").get("offer_item_id")
+        if offer_item_id == selected_offer_item_id:
+            policy_name = offer_item.get("offer_details").get("policy_name")
     return {
-        "agent_message": ["Do you want to add any add-ons to your insurance plan?"],
+        "agent_message": [
+            f"Thank you for selecting {policy_name}. Plan details are visible on your screen. Please confirm to proceed further."
+        ],
         "modified": False,
     }
 
 
-def human_add_on_selection(state: SalahakarState):
-    print("Inside human_add_on_selection")
-    pass
-
-
-def select_add_on(state: SalahakarState):
-    print("Inside select_add_on")
-    selected_offer_item_id = state.get("selected_offer_item_id")
-    offer_list = state.get("offer_list")
-    available_add_ons = []
-    selected_add_on_list = []
-    for offer_item in offer_list:
-        offer_item_id = offer_item.get("offer_details").get("offer_item_id")
-        if offer_item_id == selected_offer_item_id:
-            available_add_on_list = offer_item.get("offer_details").get(
-                "available_add_ons"
-            )
-            available_add_ons.extend(available_add_on_list)
-    if os.environ.get("LLM_CONFIG") == "GOOGLE":
-        pass
-    else:
-        add_on_identification_instructions = (
-            OpenAIPrompts().add_on_identification_instructions
-        )
-    user_intent_prompt = add_on_identification_instructions.format(
-        user_message=state.get("user_message")[-1], available_add_ons=available_add_ons
-    )
-    structured_llm = llm_4o.with_structured_output(AddOnOfferList)
-    selected_add_ons = structured_llm.invoke(user_intent_prompt)
-    resp_list = selected_add_ons.add_on_list
-    for item in resp_list:
-        selected_add_on_list.append(item.dict())
-    return {
-        "agent_message": [
-            "Selected add-ons are visible on screen. Please confirm to proceed further."
-        ],
-        "selected_add_ons": selected_add_on_list,
-    }
-
-
-def human_add_on_confirmation(state: SalahakarState):
+def human_plan_selection_confirmation(state: SalahakarState):
+    print("Inside human_plan_selection_confirmation")
     pass
 
 
@@ -554,11 +528,7 @@ def select_insurance(state: SalahakarState):
     txn_id = state.get("txn_id")
     selected_offer_item_id = state.get("selected_offer_item_id")
     selected_add_ons = state.get("selected_add_ons")
-    add_on_list = []
-    for add_on in selected_add_ons:
-        add_on_id = add_on.get("id")
-        add_on_list.append({"add_on_id": add_on_id, "add_on_count": 1})
-    add_on_payload = {"add_on_obj": add_on_list}
+    add_on_payload = {"add_on_obj": selected_add_ons}
     add_on_json = json.dumps(add_on_payload)
     select_resp, select_resp_code = APIInterface().post_with_params(
         route=select_url,
@@ -697,9 +667,6 @@ def collate_buyer_info(state: SalahakarState):
         print(customer_details)
     user_phone_number = customer_details.get("phone")
     user_phone_number = re.sub("[^A-Za-z0-9]+", "", user_phone_number)
-    dob = customer_details.get("dob")
-    dob_datetime = datetime.strptime(dob, "%d-%m-%Y")
-    dob_converted = dob_datetime.strftime("%Y-%m-%d")
     buyer_details = {
         "firstName": customer_details["firstName"],
         "lastName": customer_details["lastName"],
@@ -707,12 +674,8 @@ def collate_buyer_info(state: SalahakarState):
         "phone": user_phone_number,
         "address": customer_details["address"],
         "gender": "M" if customer_details.get("gender") == "Male" else "F",
-        "dob": dob_converted,
-        "politicallyExposedPerson": (
-            True
-            if customer_details.get("politicallyExposedPerson").lower() == "yes"
-            else False
-        ),
+        "dob": customer_details["dob"],
+        "politicallyExposedPerson": customer_details["politicallyExposedPerson"],
         "gstin": "ABC",
     }
     return {"buyer_details": [buyer_details]}
@@ -781,7 +744,7 @@ def generate_buyer_questions(state: SalahakarState):
         else:
             collector_instructions = OpenAIPrompts().insurance_collector_instructions
     collector_prompt = collector_instructions.format(
-        customer_info=collected_info, required_fields=required_fields
+        collected_info=collected_info, required_fields=required_fields
     )
     structured_llm = llm_4o.with_structured_output(GeneratedQuestion)
     # Generate question
@@ -895,7 +858,7 @@ def submit_buyer_form(state: SalahakarState):
         "email": buyer_details["email"],
         "phone": user_phone_number,
         "address": buyer_details["address"],
-        "gender": "M" if buyer_details.get("gender") == "Male" else "F",
+        "gender": buyer_details.get("gender"),
         "dob": dob_converted,
         "politicallyExposedPerson": (
             True
@@ -942,24 +905,24 @@ def submit_buyer_form(state: SalahakarState):
 def generate_nominee_questions(state: SalahakarState):
     """Generate questions to collect user details"""
     master_dict, collected_info = {}, {}
-    collected_details_list = state.get("customer_details", None)
+    nominee_details_list = state.get("nominee_details", None)
     language = state.get("language")
     required_fields = {
-        "personal_information": {
-            "firstName": "First Name",
-            "lastName": "Last Name",
-            "phone": "Phone Number",
-            "relation": "Relation with the person insured",
+        "nominee_information": {
+            "firstName": "First Name of the nominee",
+            "lastName": "Last Name of the nominee",
+            "phone": "Phone Number of the nominee",
+            "relation": "Relation of the nominee with the person insured",
         }
     }
     section_mapping = {
-        "firstName": "personal_information",
-        "lastName": "personal_information",
-        "phone": "personal_information",
-        "relation": "personal_information",
+        "firstName": "nominee_information",
+        "lastName": "nominee_information",
+        "phone": "nominee_information",
+        "relation": "nominee_information",
     }
-    if collected_details_list:
-        for item in collected_details_list:
+    if nominee_details_list:
+        for item in nominee_details_list:
             if isinstance(item, dict):
                 collected_details = item
             else:
@@ -992,7 +955,7 @@ def generate_nominee_questions(state: SalahakarState):
         else:
             collector_instructions = OpenAIPrompts().insurance_collector_instructions
     collector_prompt = collector_instructions.format(
-        customer_info=collected_info, required_fields=required_fields
+        collected_info=collected_info, required_fields=required_fields
     )
     structured_llm = llm_4o.with_structured_output(GeneratedQuestion)
     # Generate question
@@ -1106,6 +1069,7 @@ def submit_nominee_form(state: SalahakarState):
         params={"txn_id": txn_id, "offer_item_id": selected_offer_item_id},
         data=json_payload,
     )
+    payment_url = None
     if submit_resp_code == 200:
         get_form_resp, get_form_resp_code = APIInterface().get(
             route=get_form_url,
@@ -1117,11 +1081,42 @@ def submit_nominee_form(state: SalahakarState):
         )
         if get_form_resp_code == 200:
             payment_url = get_form_resp.get("form_url")
-            return {
-                "agent_message": [f"Please click on proceed to complete your payment."],
-                "payment_url": payment_url,
-                "modified": False,
-            }
+    return {
+        "agent_message": [f"Please click on proceed to complete your payment."],
+        "payment_url": payment_url,
+        "modified": False,
+    }
+
+
+def human_payment_redirect(state: SalahakarState):
+    pass
+
+
+def is_payment_done(state: SalahakarState):
+    insurance_base_url = os.environ["INSURANCE_BASE_URL"]
+    get_txn_details_url = f"{insurance_base_url}/v1/txn_details"
+    # making get form url call
+    txn_id = state.get("txn_id")
+    get_txn_details_resp, get_txn_details_resp_code = APIInterface().get(
+        route=get_txn_details_url, params={"txn_id": txn_id}
+    )
+    current_action = get_txn_details_resp.get("current_action")
+    print(f"{current_action=}")
+    if current_action == "ON_STATUS_PMT":
+        redirection_status = get_txn_details_resp.get("redirection_status")
+        if redirection_status == "PAYMENT_APPROVED":
+            return "confirm_offer"
+        else:
+            return "payment_pending"
+    else:
+        return "payment_pending"
+
+
+def payment_pending(state: SalahakarState):
+    return {
+        "agent_message": [f"Please complete the payment to proceed."],
+        "modified": False,
+    }
 
 
 def confirm_offer(state: SalahakarState):
@@ -1133,3 +1128,14 @@ def confirm_offer(state: SalahakarState):
         route=confirm_url,
         params={"txn_id": txn_id, "offer_item_id": selected_offer_item_id},
     )
+    if confirm_resp_code == 200:
+        return {
+            "agent_message": [
+                "Congratulations, your insurance policy has been confirmed. Please check your email for the policy document."
+            ],
+            "modified": False,
+        }
+
+
+def end_conversation(state: SalahakarState):
+    pass

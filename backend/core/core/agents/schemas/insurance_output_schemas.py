@@ -11,28 +11,28 @@ class UserDetails(BaseModel):
     phone: str = Field(description="Customer's phone number")
     address: str = Field(description="Customer's full address")
     pincode: str = Field(description="Customer's pincode")
-    any_pre_existing_disease: str = Field(
-        description="Check if customer has any pre-existing diseases. Can only take values Yes or No"
-    )
+    # any_pre_existing_disease: str = Field(
+    #     description="Check if customer has any pre-existing diseases. Can only take values Yes or No"
+    # )
     diabetes: str = Field(
-        description="Is customer suffering with diabetes? Can only take values Yes or No"
+        description="If customer suffering from diabetes disease Yes else No"
     )
     bloodPressure: str = Field(
-        description="Is customer suffering with bloodPressure? Can only take values Yes or No"
+        description="If customer suffering from hypertension disease Yes else No"
     )
     heartAilments: str = Field(
-        description="Is customer suffering with heartAilments? Can only take values Yes or No"
+        description="If customer suffering from heart disease Yes else No"
     )
     other: str = Field(
-        description="Is customer suffering with any other pre-existing diseases? Can only take values Yes or No"
+        description="If customer suffering from any other disease Yes else No"
     )
     amount: int = Field(description="Amount of insurance")
     politicallyExposedPerson: str = Field(
-        description="Check if customer is politically exposed person. Can only take values Yes or No"
+        description="If customer is politically exposed Yes else No"
     )
-    heightfoot: str = Field(description="Height in foot")
-    heightinch: str = Field(description="Height in inch")
-    weight: str = Field(description="Weight in kg")
+    heightfoot: str = Field(description="Customer Height in foot")
+    heightinch: str = Field(description="Customer Height in inch")
+    weight: str = Field(description="Customer Weight in kg")
 
 
 class UserDetailsResponse(BaseModel):

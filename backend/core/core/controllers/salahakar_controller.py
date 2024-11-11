@@ -169,7 +169,7 @@ class SalahakarController:
                 "user_message_hindi": request.get("user_message_hindi", []),
                 "document_upload_flag": request.get("document_upload_flag"),
                 "offer_item_id": request.get("offer_item_id"),
-                "selected_loan_amount": request.get("selected_loan_amount"),
+                "selected_add_ons": request.get("selected_add_ons"),
             }
             logging.info(f"{workflow_payload=}")
             conversation_response = (

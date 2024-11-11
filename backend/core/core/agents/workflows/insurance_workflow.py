@@ -27,9 +27,9 @@ def build_workflow():
     builder.add_node("human_selection", human_selection)
     builder.add_node("answer_user_query", answer_user_query)
     builder.add_node("select_offer", select_offer)
-    builder.add_node("human_add_on_selection", human_add_on_selection)
-    builder.add_node("select_add_on", select_add_on)
-    builder.add_node("human_add_on_confirmation", human_add_on_confirmation)
+    builder.add_node(
+        "human_plan_selection_confirmation", human_plan_selection_confirmation
+    )
     builder.add_node("select_insurance", select_insurance)
     builder.add_node("get_kyc_url", get_kyc_url)
     builder.add_node("resume_after_kyc", resume_after_kyc)
@@ -53,7 +53,10 @@ def build_workflow():
         "human_nominee_verification_feedback", human_nominee_verification_feedback
     )
     builder.add_node("submit_nominee_form", submit_nominee_form)
+    builder.add_node("human_payment_redirect", human_payment_redirect)
+    builder.add_node("payment_pending", payment_pending)
     builder.add_node("confirm_offer", confirm_offer)
+    builder.add_node("end_conversation", end_conversation)
 
     # Add edges
     builder.add_edge(START, "welcome_message")
@@ -81,10 +84,8 @@ def build_workflow():
         "human_selection", user_intent, ["answer_user_query", "select_offer"]
     )
     builder.add_edge("answer_user_query", "human_selection")
-    builder.add_edge("select_offer", "human_add_on_selection")
-    builder.add_edge("human_add_on_selection", "select_add_on")
-    builder.add_edge("select_add_on", "human_add_on_confirmation")
-    builder.add_edge("human_add_on_confirmation", "select_insurance")
+    builder.add_edge("select_offer", "human_plan_selection_confirmation")
+    builder.add_edge("human_plan_selection_confirmation", "select_insurance")
     builder.add_edge("select_insurance", "get_kyc_url")
     builder.add_edge("get_kyc_url", "resume_after_kyc")
     builder.add_conditional_edges(
@@ -92,7 +93,7 @@ def build_workflow():
         is_kyc_approved,
         ["send_kyc_ack", "kyc_approval_pending", "kyc_rejected"],
     )
-    builder.add_edge("kyc_rejected", END)
+    builder.add_edge("kyc_rejected", "end_conversation")
     builder.add_conditional_edges(
         "send_kyc_ack",
         is_buyer_info_present,
@@ -126,5 +127,12 @@ def build_workflow():
         should_submit_nominee_details,
         ["submit_nominee_form", "extract_nominee_details"],
     )
-    builder.add_edge("submit_nominee_form", "confirm_offer")
+    builder.add_edge("submit_nominee_form", "human_payment_redirect")
+    builder.add_conditional_edges(
+        "human_payment_redirect",
+        is_payment_done,
+        ["confirm_offer", "payment_pending"],
+    )
+    builder.add_edge("payment_pending", "human_payment_redirect")
+    builder.add_edge("confirm_offer", "end_conversation")
     return builder

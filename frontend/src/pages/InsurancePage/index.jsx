@@ -44,6 +44,7 @@ const InsurancePage = () => {
     setIsListening,
     setProcessing,
     processing,
+    nextState,
   } = useContext(MediaContext);
   const {
     setAaRedirectUrl,
@@ -63,7 +64,9 @@ const InsurancePage = () => {
   /* CONFIGURING REACT MEdiA RECORDER COMPONENT */
 
   const handleUploadAudio = async (mediaBlobUrl) => {
-    // setShowLoader(true);
+    if (nextState === "human_verification_feedback") {
+      setShowLoader(true);
+    }
     setProcessing(true);
     const response = await fetch(mediaBlobUrl);
     const audioBlob = await response.blob();
@@ -89,6 +92,8 @@ const InsurancePage = () => {
         }
         setError(false);
         setProcessing(false);
+        setShowLoader(false);
+
         setAudioResponse(res?.payload?.data?.agent_audio_data);
         setMessageResponse(res?.payload?.data?.agent_message);
         setInsuranceCustomerRegistration(res?.payload?.data?.customer_details);
@@ -114,6 +119,11 @@ const InsurancePage = () => {
           setProgressValue(40);
         } else if (res?.payload?.data?.next_state === "resume_after_kyc") {
           navigate("/insurance/insurance-kyc");
+          setProgressValue(40);
+        } else if (
+          res?.payload?.data?.next_state === "human_plan_selection_confirmation"
+        ) {
+          navigate("/insurance/confirm-insurance-offer");
           setProgressValue(40);
         }
         clearBlobUrl();
