@@ -137,9 +137,10 @@ const InsuranceKYCPage = () => {
             setAudioResponse(res?.payload?.data?.agent_audio_data);
             setMessageResponse(res?.payload?.data?.agent_message);
             setUserResponse(res?.payload?.data?.user_message);
-            if (
-              res?.payload?.data?.next_state ===
-              "human_account_details_feedback"
+            if (res?.payload?.data?.next_state === "human_nominee_feedback") {
+              navigate("/insurance/nominee-form");
+            } else if (
+              res?.payload?.data?.next_state === "human_buyer_feedback"
             ) {
               navigate("/insurance/buyer-form");
             }
