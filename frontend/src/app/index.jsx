@@ -27,6 +27,7 @@ import FamilySelectionPage from "../pages/FamilySelectionPage";
 import DocumentUploadPageInsurance from "../pages/DocumentUploadPageForInsurance";
 import CustomizeInsurancePage from "../pages/CustomizeInsurancePage";
 import InsuranceKYCPage from "../pages/InsuranceKYCPage";
+import InsuranceOrderDetail from "../pages/InsuranceOrderDetail";
 
 function App() {
   return (
@@ -75,6 +76,10 @@ function App() {
             element={<CustomizeInsurancePage />}
           />
           <Route path="insurance-kyc" element={<InsuranceKYCPage />} />
+          <Route
+            path="insurance-order-detail"
+            element={<InsuranceOrderDetail />}
+          />
         </Route>
       </Routes>
     </div>

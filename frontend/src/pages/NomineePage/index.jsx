@@ -155,35 +155,33 @@ const NomineeFormPage = () => {
             threadId: sessionStorage.getItem("thread_id"),
             uploadFlag: sessionStorage.getItem("document_upload_flag"),
             state: sessionStorage.getItem("next_state"),
-            offer_item_id: sessionStorage.getItem("offer_item_id"),
-            selected_loan_amount: sessionStorage.getItem("selected_amt"),
             language: sessionStorage.getItem("activeLanguage"),
           };
-          // dispatch(agentConversationForInsurance(secondpayload)).then((res) => {
-          //   if (res?.error && Object.keys(res?.error)?.length > 0) {
-          //     setShowLoader(false);
-          //     setError(true);
-          //     setProcessing(false);
-          //     return;
-          //   }
-          //   setError(false);
-          //   setShowLoader(false);
-          //   setProcessing(false);
-          //   setProgressValue(60);
-          //   sessionStorage.setItem(
-          //     "next_state",
-          //     res?.payload?.data?.next_state
-          //   );
-          //   setAudioResponse(res?.payload?.data?.agent_audio_data);
-          //   setMessageResponse(res?.payload?.data?.agent_message);
-          //   setUserResponse(res?.payload?.data?.user_message);
-          //   if (
-          //     res?.payload?.data?.next_state ===
-          //     "human_account_details_feedback"
-          //   ) {
-          //     navigate("/credit/account-details");
-          //   }
-          // });
+          dispatch(agentConversationForInsurance(secondpayload)).then((res) => {
+            if (res?.error && Object.keys(res?.error)?.length > 0) {
+              setShowLoader(false);
+              setError(true);
+              setProcessing(false);
+              return;
+            }
+            setError(false);
+            setShowLoader(false);
+            setProcessing(false);
+            setProgressValue(60);
+            sessionStorage.setItem(
+              "next_state",
+              res?.payload?.data?.next_state
+            );
+            setAudioResponse(res?.payload?.data?.agent_audio_data);
+            setMessageResponse(res?.payload?.data?.agent_message);
+            setUserResponse(res?.payload?.data?.user_message);
+            if (
+              res?.payload?.data?.next_state ===
+              "human_account_details_feedback"
+            ) {
+              navigate("/credit/account-details");
+            }
+          });
         } else {
           console.log("Error Occured");
         }
