@@ -175,12 +175,8 @@ const NomineeFormPage = () => {
             setAudioResponse(res?.payload?.data?.agent_audio_data);
             setMessageResponse(res?.payload?.data?.agent_message);
             setUserResponse(res?.payload?.data?.user_message);
-            if (
-              res?.payload?.data?.next_state ===
-              "human_account_details_feedback"
-            ) {
-              navigate("/credit/account-details");
-            }
+
+            navigate("/insurance/insurance-order-detail");
           });
         } else {
           console.log("Error Occured");
