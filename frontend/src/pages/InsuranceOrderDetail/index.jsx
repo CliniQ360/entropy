@@ -88,6 +88,7 @@ const InsuranceOrderDetail = () => {
   const [offerDetails, setOfferDetails] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [quoteDetails, setQuoteDetails] = useState([]);
+  const [providerDetails, setProviderDetails] = useState({});
   const [customerDetails, setCustomerdetails] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -124,237 +125,6 @@ const InsuranceOrderDetail = () => {
     const handleLastPageButtonClick = (event) => {
       onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
     };
-
-    const offerList = [
-      {
-        offer_details: {
-          offer_item_id: "3b55859a-0d94-427e-b1ef-9deab8cb6928",
-          offer_row_id: 14822,
-          order_id: "3136adf2-e5bf-4333-a9dc-08d7a9dc9566",
-          loan_status: "INITIATED",
-          item_price: "442300",
-          INTEREST_RATE: "12%",
-          TERM: "5 months",
-          INTEREST_RATE_TYPE: "FIXED",
-          APPLICATION_FEE: "0",
-          FORECLOSURE_FEE: "0.5%",
-          INTEREST_RATE_CONVERSION_CHARGE: "0",
-          DELAY_PENALTY_FEE: "5%",
-          OTHER_PENALTY_FEE: "1%",
-          ANNUAL_PERCENTAGE_RATE: "5%",
-          REPAYMENT_FREQUENCY: "MONTHLY",
-          NUMBER_OF_INSTALLMENTS_OF_REPAYMENT: "5",
-          TNC_LINK:
-            "https://pramaan.ondc.org/beta/preprod/mock/seller/document/tnc.pdf",
-          COOL_OFF_PERIOD: "PT5M",
-          INSTALLMENT_AMOUNT: "88460.00",
-          CONSENT_HANDLER: "8c90274a-530b-4520-acc1-e028c2ca818d",
-          MIN_INTEREST_RATE: "9%",
-          MAX_INTEREST_RATE: "15%",
-          MIN_TENURE: "5 months",
-          MAX_TENURE: "5 years",
-          MIN_LOAN_AMOUNT: "50000",
-          MAX_LOAN_AMOUNT: "5000000",
-        },
-        provider_details: {
-          images: [
-            {
-              size_type: "sm",
-              url: "https://ondc.org/assets/theme/images/ondc_registered_logo.svg?v=399788fda7",
-            },
-          ],
-          long_desc: "ONDC Bank Ltd, India.",
-          name: "ONDC Bank",
-          short_desc: "Ondc Bank Ltd",
-          GRO_NAME: "ONDC",
-          GRO_EMAIL: "lifeline@ondc.com",
-          GRO_CONTACT_NUMBER: "1860 266 7766",
-          GRO_DESIGNATION: "Nodal Grievance Redressal Officer",
-          GRO_ADDRESS:
-            "One Indiabulls centre, Tower 1, 18th Floor Jupiter mill compound 841, Senapati Bapat Marg, Elphinstone Road, Mumbai 400013",
-          CUSTOMER_SUPPORT_LINK:
-            "https://buy.ondc.org/buy/GrievanceRedStep.htm?execution=e1s1",
-          CUSTOMER_SUPPORT_CONTACT_NUMBER: "1800 1080",
-          CUSTOMER_SUPPORT_EMAIL: "customer.care@ondc.com",
-          LSP_NAME: "ONDC_BANK_LSP",
-          LSP_EMAIL: "lsp@ondcbank.com",
-          LSP_CONTACT_NUMBER: "1860 266 7766",
-          LSP_ADDRESS:
-            "One Indiabulls centre, Tower 1, 18th Floor Jupiter mill compound 841, Senapati Bapat Marg, Elphinstone Road, Mumbai 400013",
-        },
-        quote_details: {
-          PRINCIPAL: "400000",
-          INTEREST: "40000",
-          PROCESSING_FEE: "1800",
-          OTHER_UPFRONT_CHARGES: "0",
-          INSURANCE_CHARGES: "500",
-          NET_DISBURSED_AMOUNT: "397700",
-          OTHER_CHARGES: "0",
-          quote_price: "442300",
-        },
-        payment_details: [
-          {
-            id: "8b71b2c7-38fe-471b-8f82-f9c8dc30a272",
-            type: "ON_ORDER",
-            status: "NOT-PAID",
-            collected_by: "BPP",
-            tags: [
-              {
-                descriptor: {
-                  code: "BUYER_FINDER_FEES",
-                },
-                display: false,
-                list: [
-                  {
-                    descriptor: {
-                      code: "BUYER_FINDER_FEES_TYPE",
-                    },
-                    value: "percent-annualized",
-                  },
-                  {
-                    descriptor: {
-                      code: "BUYER_FINDER_FEES_PERCENTAGE",
-                    },
-                    value: "1",
-                  },
-                ],
-              },
-              {
-                descriptor: {
-                  code: "SETTLEMENT_TERMS",
-                },
-                display: false,
-                list: [
-                  {
-                    descriptor: {
-                      code: "SETTLEMENT_WINDOW",
-                    },
-                    value: "PT60M",
-                  },
-                  {
-                    descriptor: {
-                      code: "SETTLEMENT_BASIS",
-                    },
-                    value: "INVOICE_RECEIPT",
-                  },
-                  {
-                    descriptor: {
-                      code: "MANDATORY_ARBITRATION",
-                    },
-                    value: "TRUE",
-                  },
-                  {
-                    descriptor: {
-                      code: "COURT_JURISDICTION",
-                    },
-                    value: "New Delhi",
-                  },
-                  {
-                    descriptor: {
-                      code: "STATIC_TERMS",
-                    },
-                    value:
-                      "https://bpp.credit.becknprotocol.org/personal-banking/loans/personal-loan",
-                  },
-                  {
-                    descriptor: {
-                      code: "OFFLINE_CONTRACT",
-                    },
-                    value: "true",
-                  },
-                  {
-                    descriptor: {
-                      code: "SETTLEMENT_AMOUNT",
-                    },
-                    value: "1666.67",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            id: "1",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2024-11-01T08:26:28.115Z",
-                end: "2024-11-30T08:26:28.115Z",
-              },
-            },
-          },
-          {
-            id: "2",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2024-12-01T08:26:28.115Z",
-                end: "2024-12-31T08:26:28.115Z",
-              },
-            },
-          },
-          {
-            id: "3",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2025-01-01T08:26:28.115Z",
-                end: "2025-01-31T08:26:28.115Z",
-              },
-            },
-          },
-          {
-            id: "4",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2025-02-01T08:26:28.115Z",
-                end: "2025-02-28T08:26:28.115Z",
-              },
-            },
-          },
-          {
-            id: "5",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2025-03-01T08:26:28.115Z",
-                end: "2025-03-31T08:26:28.115Z",
-              },
-            },
-          },
-        ],
-      },
-    ];
 
     return (
       <Box sx={{ flexShrink: 0, ml: 2.5 }}>
@@ -406,33 +176,242 @@ const InsuranceOrderDetail = () => {
     const offerList = [
       {
         offer_details: {
-          offer_item_id: "3b55859a-0d94-427e-b1ef-9deab8cb6928",
-          offer_row_id: 14822,
-          order_id: "3136adf2-e5bf-4333-a9dc-08d7a9dc9566",
-          loan_status: "INITIATED",
-          item_price: "442300",
-          INTEREST_RATE: "12%",
-          TERM: "5 months",
-          INTEREST_RATE_TYPE: "FIXED",
-          APPLICATION_FEE: "0",
-          FORECLOSURE_FEE: "0.5%",
-          INTEREST_RATE_CONVERSION_CHARGE: "0",
-          DELAY_PENALTY_FEE: "5%",
-          OTHER_PENALTY_FEE: "1%",
-          ANNUAL_PERCENTAGE_RATE: "5%",
-          REPAYMENT_FREQUENCY: "MONTHLY",
-          NUMBER_OF_INSTALLMENTS_OF_REPAYMENT: "5",
-          TNC_LINK:
-            "https://pramaan.ondc.org/beta/preprod/mock/seller/document/tnc.pdf",
-          COOL_OFF_PERIOD: "PT5M",
-          INSTALLMENT_AMOUNT: "88460.00",
-          CONSENT_HANDLER: "8c90274a-530b-4520-acc1-e028c2ca818d",
-          MIN_INTEREST_RATE: "9%",
-          MAX_INTEREST_RATE: "15%",
-          MIN_TENURE: "5 months",
-          MAX_TENURE: "5 years",
-          MIN_LOAN_AMOUNT: "50000",
-          MAX_LOAN_AMOUNT: "5000000",
+          offer_item_id: "M1731560351950",
+          premium_amount: {
+            currency: "INR",
+            value: "25460.00",
+          },
+          available_add_ons: [
+            {
+              id: "A1",
+              quantity: {
+                available: {
+                  count: 1,
+                },
+              },
+              descriptor: {
+                name: "No Claim Bonus",
+                code: "NO_CLAIM_BONUS",
+              },
+              price: {
+                value: "100",
+                currency: "INR",
+              },
+            },
+            {
+              id: "A2",
+              quantity: {
+                available: {
+                  count: 1,
+                },
+              },
+              descriptor: {
+                name: "Daycare Cover",
+                code: "DAYCARE_COVER",
+              },
+              price: {
+                value: "200",
+                currency: "INR",
+              },
+            },
+            {
+              id: "A3",
+              quantity: {
+                available: {
+                  count: 1,
+                },
+              },
+              descriptor: {
+                name: "Daily Cash Allowance",
+                code: "DAILY_CASH_ALLOWANCE",
+              },
+              price: {
+                value: "1000",
+                currency: "INR",
+              },
+            },
+            {
+              id: "A4",
+              quantity: {
+                available: {
+                  count: 1,
+                },
+              },
+              descriptor: {
+                name: "Domicialiary Expenses",
+                code: "DOMICILIARY_EXPENSES",
+              },
+              price: {
+                value: "400",
+                currency: "INR",
+              },
+            },
+            {
+              id: "A5",
+              quantity: {
+                available: {
+                  count: 1,
+                },
+              },
+              descriptor: {
+                name: "Health Check-ups",
+                code: "HEALTH_CHECK_UPS",
+              },
+              price: {
+                value: "100",
+                currency: "INR",
+              },
+            },
+          ],
+          selected_add_ons: [
+            {
+              id: "A1",
+              descriptor: {
+                name: "No Claim Bonus",
+                code: "NO_CLAIM_BONUS",
+              },
+              price: {
+                value: "100",
+                currency: "INR",
+              },
+              quantity: {
+                selected: {
+                  count: 1,
+                },
+              },
+            },
+            {
+              id: "A2",
+              descriptor: {
+                name: "Daycare Cover",
+                code: "DAYCARE_COVER",
+              },
+              price: {
+                value: "200",
+                currency: "INR",
+              },
+              quantity: {
+                selected: {
+                  count: 1,
+                },
+              },
+            },
+            {
+              id: "A3",
+              descriptor: {
+                name: "Daily Cash Allowance",
+                code: "DAILY_CASH_ALLOWANCE",
+              },
+              price: {
+                value: "1000",
+                currency: "INR",
+              },
+              quantity: {
+                selected: {
+                  count: 1,
+                },
+              },
+            },
+            {
+              id: "A4",
+              descriptor: {
+                name: "Domicialiary Expenses",
+                code: "DOMICILIARY_EXPENSES",
+              },
+              price: {
+                value: "400",
+                currency: "INR",
+              },
+              quantity: {
+                selected: {
+                  count: 1,
+                },
+              },
+            },
+            {
+              id: "A5",
+              descriptor: {
+                name: "Health Check-ups",
+                code: "HEALTH_CHECK_UPS",
+              },
+              price: {
+                value: "100",
+                currency: "INR",
+              },
+              quantity: {
+                selected: {
+                  count: 1,
+                },
+              },
+            },
+          ],
+          policy_name: "Health Gain Plus Individual",
+          error_details: {
+            error_code: null,
+            error_type: null,
+            error_message: null,
+          },
+          order_id: "66cdc340-1f5e-48d6-8349-84d85113aa9f",
+          order_status: "ACTIVE",
+          documents: [
+            {
+              descriptor: {
+                code: "POLICY_DOC",
+                name: "Insurance Policy Document",
+                short_desc:
+                  "Download your digitally signed policy document here",
+                long_desc:
+                  "Download you digitally signed policy document here. This document is password protected. To open this document, please type in your password in DDMMMYYYYXXXX format where DDMMMYYYY represents your date of birth, and XXXX represents the first four letters of your name",
+              },
+              mime_type: "application/pdf",
+              url: "https://pramaan.ondc.org/beta/preprod/mock/seller/document/tnc.pdf",
+            },
+            {
+              descriptor: {
+                code: "CLAIM_DOC",
+                name: "Claim Insurance Policy",
+                short_desc:
+                  "Buyer can claim their insurance by visiting the below url",
+                long_desc:
+                  "Buyer can claim their insurance by visiting the below url",
+              },
+              mime_type: "application/html",
+              url: "https://pramaan.ondc.org/beta/preprod/mock/seller/form/f7924764-26a4-4434-937b-177d6d326afb",
+            },
+            {
+              descriptor: {
+                code: "RENEW_DOC",
+                name: "Renew Insurance Policy",
+                short_desc:
+                  "Buyer can renew their insurance by visiting the below url",
+                long_desc:
+                  "Buyer can easily renew their insurance policies by visiting the following URL",
+              },
+              mime_type: "application/html",
+              url: "https://pramaan.ondc.org/beta/preprod/mock/seller/form/277e1821-e7d4-4427-ae17-01b54f445adf",
+            },
+          ],
+          fulfillment_status: {
+            claim_status: "N/A",
+            renewal_status: "N/A",
+            order_status: "GRANTED",
+          },
+          COVERAGE_AMOUNT: "1000000",
+          CO_PAYMENT: "Yes",
+          ROOM_RENT_CAP: "25000",
+          RESTORATION_BENEFIT: "No",
+          CLAIM_SETTLEMENT_RATIO: "0.8",
+          PRE_HOSPITALIZATION_COVERAGE_DAYS: "2",
+          POST_HOSPITALIZATION_COVERAGE_DAYS: "5",
+          MATERNITY_COVERAGE: "Yes",
+          INITIAL_WAITING_PERIOD: "No",
+          CASHLESS_HOSPITALS: "50",
+          ROOM_CATEGORY: "Deluxe",
+          BASE_PRICE: "20000",
+          CONVIENCE_FEE: "50",
+          PROCESSING_FEE: "10",
+          TAX: "3600",
+          OFFER_VALIDITY: "PT15D",
         },
         provider_details: {
           images: [
@@ -441,202 +420,131 @@ const InsuranceOrderDetail = () => {
               url: "https://ondc.org/assets/theme/images/ondc_registered_logo.svg?v=399788fda7",
             },
           ],
-          long_desc: "ONDC Bank Ltd, India.",
-          name: "ONDC Bank",
-          short_desc: "Ondc Bank Ltd",
-          GRO_NAME: "ONDC",
-          GRO_EMAIL: "lifeline@ondc.com",
-          GRO_CONTACT_NUMBER: "1860 266 7766",
-          GRO_DESIGNATION: "Nodal Grievance Redressal Officer",
-          GRO_ADDRESS:
-            "One Indiabulls centre, Tower 1, 18th Floor Jupiter mill compound 841, Senapati Bapat Marg, Elphinstone Road, Mumbai 400013",
-          CUSTOMER_SUPPORT_LINK:
-            "https://buy.ondc.org/buy/GrievanceRedStep.htm?execution=e1s1",
-          CUSTOMER_SUPPORT_CONTACT_NUMBER: "1800 1080",
-          CUSTOMER_SUPPORT_EMAIL: "customer.care@ondc.com",
-          LSP_NAME: "ONDC_BANK_LSP",
-          LSP_EMAIL: "lsp@ondcbank.com",
-          LSP_CONTACT_NUMBER: "1860 266 7766",
-          LSP_ADDRESS:
-            "One Indiabulls centre, Tower 1, 18th Floor Jupiter mill compound 841, Senapati Bapat Marg, Elphinstone Road, Mumbai 400013",
+          long_desc: "ONDC Insurance Ltd",
+          name: "ONDC Insurance Ltd",
+          short_desc: "ONDC Insurance Ltd",
         },
         quote_details: {
-          PRINCIPAL: "400000",
-          INTEREST: "40000",
-          PROCESSING_FEE: "1800",
-          OTHER_UPFRONT_CHARGES: "0",
-          INSURANCE_CHARGES: "500",
-          NET_DISBURSED_AMOUNT: "397700",
-          OTHER_CHARGES: "0",
-          quote_price: "442300",
+          id: "8b73b544-2e6d-4ef6-857c-e6d7ba653df2",
+          breakup: [
+            {
+              price: {
+                value: "20000",
+                currency: "INR",
+              },
+              title: "BASE_PRICE",
+            },
+            {
+              price: {
+                value: "50",
+                currency: "INR",
+              },
+              title: "CONVIENCE_FEE",
+            },
+            {
+              price: {
+                value: "10",
+                currency: "INR",
+              },
+              title: "PROCESSING_FEE",
+            },
+            {
+              price: {
+                value: "3600",
+                currency: "INR",
+              },
+              title: "TAX",
+            },
+            {
+              title: "ADD_ONS",
+              item: {
+                id: "I1",
+                add_ons: [
+                  {
+                    id: "A1",
+                  },
+                ],
+              },
+              price: {
+                value: "100",
+                currency: "INR",
+              },
+            },
+            {
+              title: "ADD_ONS",
+              item: {
+                id: "I1",
+                add_ons: [
+                  {
+                    id: "A2",
+                  },
+                ],
+              },
+              price: {
+                value: "200",
+                currency: "INR",
+              },
+            },
+            {
+              title: "ADD_ONS",
+              item: {
+                id: "I1",
+                add_ons: [
+                  {
+                    id: "A3",
+                  },
+                ],
+              },
+              price: {
+                value: "1000",
+                currency: "INR",
+              },
+            },
+            {
+              title: "ADD_ONS",
+              item: {
+                id: "I1",
+                add_ons: [
+                  {
+                    id: "A4",
+                  },
+                ],
+              },
+              price: {
+                value: "400",
+                currency: "INR",
+              },
+            },
+            {
+              title: "ADD_ONS",
+              item: {
+                id: "I1",
+                add_ons: [
+                  {
+                    id: "A5",
+                  },
+                ],
+              },
+              price: {
+                value: "100",
+                currency: "INR",
+              },
+            },
+          ],
+          price: {
+            currency: "INR",
+            value: "25460.00",
+          },
+          ttl: "PT15D",
         },
-        payment_details: [
-          {
-            id: "8b71b2c7-38fe-471b-8f82-f9c8dc30a272",
-            type: "ON_ORDER",
-            status: "NOT-PAID",
-            collected_by: "BPP",
-            tags: [
-              {
-                descriptor: {
-                  code: "BUYER_FINDER_FEES",
-                },
-                display: false,
-                list: [
-                  {
-                    descriptor: {
-                      code: "BUYER_FINDER_FEES_TYPE",
-                    },
-                    value: "percent-annualized",
-                  },
-                  {
-                    descriptor: {
-                      code: "BUYER_FINDER_FEES_PERCENTAGE",
-                    },
-                    value: "1",
-                  },
-                ],
-              },
-              {
-                descriptor: {
-                  code: "SETTLEMENT_TERMS",
-                },
-                display: false,
-                list: [
-                  {
-                    descriptor: {
-                      code: "SETTLEMENT_WINDOW",
-                    },
-                    value: "PT60M",
-                  },
-                  {
-                    descriptor: {
-                      code: "SETTLEMENT_BASIS",
-                    },
-                    value: "INVOICE_RECEIPT",
-                  },
-                  {
-                    descriptor: {
-                      code: "MANDATORY_ARBITRATION",
-                    },
-                    value: "TRUE",
-                  },
-                  {
-                    descriptor: {
-                      code: "COURT_JURISDICTION",
-                    },
-                    value: "New Delhi",
-                  },
-                  {
-                    descriptor: {
-                      code: "STATIC_TERMS",
-                    },
-                    value:
-                      "https://bpp.credit.becknprotocol.org/personal-banking/loans/personal-loan",
-                  },
-                  {
-                    descriptor: {
-                      code: "OFFLINE_CONTRACT",
-                    },
-                    value: "true",
-                  },
-                  {
-                    descriptor: {
-                      code: "SETTLEMENT_AMOUNT",
-                    },
-                    value: "1666.67",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            id: "1",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2024-11-01T08:26:28.115Z",
-                end: "2024-11-30T08:26:28.115Z",
-              },
-            },
-          },
-          {
-            id: "2",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2024-12-01T08:26:28.115Z",
-                end: "2024-12-31T08:26:28.115Z",
-              },
-            },
-          },
-          {
-            id: "3",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2025-01-01T08:26:28.115Z",
-                end: "2025-01-31T08:26:28.115Z",
-              },
-            },
-          },
-          {
-            id: "4",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2025-02-01T08:26:28.115Z",
-                end: "2025-02-28T08:26:28.115Z",
-              },
-            },
-          },
-          {
-            id: "5",
-            type: "POST_FULFILLMENT",
-            params: {
-              amount: "88460.00",
-              currency: "INR",
-            },
-            status: "NOT-PAID",
-            time: {
-              label: "INSTALLMENT",
-              range: {
-                start: "2025-03-01T08:26:28.115Z",
-                end: "2025-03-31T08:26:28.115Z",
-              },
-            },
-          },
-        ],
+        payment_details: [],
       },
     ];
     if (offerList) {
       setOfferDetails(offerList[0]?.offer_details);
       setPaymentDetails(offerList[0]?.payment_details);
       setQuoteDetails(offerList[0]?.quote_details);
+      setProviderDetails(offerList[0]?.provider_details);
       setCustomerdetails(
         JSON.parse(sessionStorage.getItem("customer_details"))
       );
@@ -799,56 +707,6 @@ const InsuranceOrderDetail = () => {
                 {customerDetails?.email}
               </Typography>
             </LoanDetailsItem>
-            <LoanDetailsItem xs={5.8} sm={5.8}>
-              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Order ID{" "}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.1rem",
-                  color: "#171717",
-                  fontWeight: 700,
-                  mt: 1,
-                  mb: 1,
-                  wordBreak: "break-all",
-                  overflowWrap: "break-word",
-                }}
-              >
-                {offerDetails?.order_id}{" "}
-              </Typography>
-            </LoanDetailsItem>
-            <LoanDetailsItem xs={5.8} sm={5.8}>
-              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Principal{" "}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.1rem",
-                  color: "#171717",
-                  fontWeight: 700,
-                  mt: 1,
-                  mb: 1,
-                }}
-              >
-                {quoteDetails?.PRINCIPAL}
-              </Typography>
-            </LoanDetailsItem>
-            <LoanDetailsItem xs={5.8} sm={5.8}>
-              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Interest
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.1rem",
-                  color: "#171717",
-                  fontWeight: 700,
-                  mt: 1,
-                  mb: 1,
-                }}
-              >
-                {quoteDetails?.INTEREST}
-              </Typography>
-            </LoanDetailsItem>
           </LoanDetailsWrapper>
         </AccordionDetails>
       </CustomAccordian>
@@ -864,7 +722,7 @@ const InsuranceOrderDetail = () => {
             fontSize={"0.9rem"}
             fontFamily={"plus jakarta sans"}
           >
-            Order Details
+            Policy Details
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -887,7 +745,7 @@ const InsuranceOrderDetail = () => {
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Principal
+                Status
               </Typography>
               <Typography
                 sx={{
@@ -898,12 +756,12 @@ const InsuranceOrderDetail = () => {
                   mb: 1,
                 }}
               >
-                {quoteDetails?.PRINCIPAL}
+                {offerDetails?.order_status}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Interest
+                Premium Amount
               </Typography>
               <Typography
                 sx={{
@@ -914,12 +772,12 @@ const InsuranceOrderDetail = () => {
                   mb: 1,
                 }}
               >
-                {quoteDetails?.INTEREST}
+                {offerDetails?.premium_amount?.value}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Net Disbursed Amount
+                Coverage Amount
               </Typography>
               <Typography
                 sx={{
@@ -930,12 +788,12 @@ const InsuranceOrderDetail = () => {
                   mb: 1,
                 }}
               >
-                {quoteDetails?.NET_DISBURSED_AMOUNT}
+                {offerDetails?.COVERAGE_AMOUNT}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Other Upfront Charges
+                Co Payment
               </Typography>
               <Typography
                 sx={{
@@ -946,12 +804,12 @@ const InsuranceOrderDetail = () => {
                   mb: 1,
                 }}
               >
-                {quoteDetails?.OTHER_UPFRONT_CHARGES}
+                {offerDetails?.CO_PAYMENT}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Insurance Charges
+                Room Rent Cap
               </Typography>
               <Typography
                 sx={{
@@ -962,12 +820,12 @@ const InsuranceOrderDetail = () => {
                   mb: 1,
                 }}
               >
-                {quoteDetails?.INSURANCE_CHARGES}
+                {offerDetails?.ROOM_RENT_CAP}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Other Charges
+                Room Category
               </Typography>
               <Typography
                 sx={{
@@ -978,7 +836,167 @@ const InsuranceOrderDetail = () => {
                   mb: 1,
                 }}
               >
-                {quoteDetails?.OTHER_CHARGES}
+                {offerDetails?.ROOM_CATEGORY}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Restoration Benifit
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.RESTORATION_BENEFIT}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Claim Settlement Ratio
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.CLAIM_SETTLEMENT_RATIO}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Pre Hospitalization Coverage Days
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.PRE_HOSPITALIZATION_COVERAGE_DAYS}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Claim Settlement Ratio
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.CLAIM_SETTLEMENT_RATIO}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Post Hospitalization Coverage Days
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.POST_HOSPITALIZATION_COVERAGE_DAYS}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Maternity Coverage
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.MATERNITY_COVERAGE}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Initial Waiting Period
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.INITIAL_WAITING_PERIOD}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Cashless Hospitals
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.CASHLESS_HOSPITALS}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Base Price
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.BASE_PRICE}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Convience Fee
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.CONVIENCE_FEE}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
@@ -994,12 +1012,12 @@ const InsuranceOrderDetail = () => {
                   mb: 1,
                 }}
               >
-                {quoteDetails?.PROCESSING_FEE}
+                {offerDetails?.PROCESSING_FEE}
               </Typography>
             </LoanDetailsItem>
             <LoanDetailsItem xs={5.8} sm={5.8}>
               <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                Final Price
+                Tax{" "}
               </Typography>
               <Typography
                 sx={{
@@ -1010,13 +1028,83 @@ const InsuranceOrderDetail = () => {
                   mb: 1,
                 }}
               >
-                {quoteDetails?.quote_price}
+                {offerDetails?.TAX}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Offer Validity
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.OFFER_VALIDITY}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Claim Status
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.fulfillment_status?.claim_status
+                  ? offerDetails?.fulfillment_status?.claim_status
+                  : "N/A"}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Renewal Status
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.fulfillment_status?.renewal_status
+                  ? offerDetails?.fulfillment_status?.renewal_status
+                  : "N/A"}
+              </Typography>
+            </LoanDetailsItem>
+            <LoanDetailsItem xs={5.8} sm={5.8}>
+              <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                Order Status
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "#171717",
+                  fontWeight: 700,
+                  mt: 1,
+                  mb: 1,
+                }}
+              >
+                {offerDetails?.fulfillment_status?.order_status
+                  ? offerDetails?.fulfillment_status?.order_status
+                  : "N/A"}
               </Typography>
             </LoanDetailsItem>
           </LoanDetailsWrapper>
         </AccordionDetails>
       </CustomAccordian>
-      {offerDetails && (
+      {providerDetails && (
         <CustomAccordian>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -1029,14 +1117,14 @@ const InsuranceOrderDetail = () => {
               fontSize={"0.9rem"}
               fontFamily={"plus jakarta sans"}
             >
-              Loan Details
+              Insurer Details
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <LoanDetailsWrapper container>
               <LoanDetailsItem xs={5.8} sm={5.8}>
                 <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Annual Percentage Rate
+                  Name{" "}
                 </Typography>
                 <Typography
                   sx={{
@@ -1047,12 +1135,12 @@ const InsuranceOrderDetail = () => {
                     mb: 1,
                   }}
                 >
-                  {offerDetails?.ANNUAL_PERCENTAGE_RATE || ""}
+                  {providerDetails?.name || ""}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
                 <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Application Fee
+                  Long Description
                 </Typography>
                 <Typography
                   sx={{
@@ -1063,12 +1151,12 @@ const InsuranceOrderDetail = () => {
                     mb: 1,
                   }}
                 >
-                  {offerDetails?.APPLICATION_FEE || ""}
+                  {providerDetails?.long_desc || ""}
                 </Typography>
               </LoanDetailsItem>
               <LoanDetailsItem xs={5.8} sm={5.8}>
                 <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Cool Off Period
+                  Short Description
                 </Typography>
                 <Typography
                   sx={{
@@ -1079,135 +1167,7 @@ const InsuranceOrderDetail = () => {
                     mb: 1,
                   }}
                 >
-                  {offerDetails?.COOL_OFF_PERIOD || ""}
-                </Typography>
-              </LoanDetailsItem>
-              <LoanDetailsItem xs={5.8} sm={5.8}>
-                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Delay Penalty Fee
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    color: "#171717",
-                    fontWeight: 700,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  {offerDetails?.DELAY_PENALTY_FEE || ""}
-                </Typography>
-              </LoanDetailsItem>
-              <LoanDetailsItem xs={5.8} sm={5.8}>
-                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Foreclouser Fee
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    color: "#171717",
-                    fontWeight: 700,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  {offerDetails?.FORECLOSURE_FEE || ""}
-                </Typography>
-              </LoanDetailsItem>
-              <LoanDetailsItem xs={5.8} sm={5.8}>
-                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Installment Amount
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    color: "#171717",
-                    fontWeight: 700,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  {offerDetails?.INSTALLMENT_AMOUNT || ""}
-                </Typography>
-              </LoanDetailsItem>
-              <LoanDetailsItem xs={5.8} sm={5.8}>
-                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Interest Rate
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    color: "#171717",
-                    fontWeight: 700,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  {offerDetails?.INTEREST_RATE || ""}
-                </Typography>
-              </LoanDetailsItem>
-              <LoanDetailsItem xs={5.8} sm={5.8}>
-                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Interest Rate Conversion Charge
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    color: "#171717",
-                    fontWeight: 700,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  {offerDetails?.INTEREST_RATE_CONVERSION_CHARGE || ""}
-                </Typography>
-              </LoanDetailsItem>
-              <LoanDetailsItem xs={5.8} sm={5.8}>
-                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Interest Rate Type
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    color: "#171717",
-                    fontWeight: 700,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  {offerDetails?.INTEREST_RATE_TYPE || ""}
-                </Typography>
-              </LoanDetailsItem>
-              <LoanDetailsItem xs={5.8} sm={5.8}>
-                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Number of Installments of Repayment
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    color: "#171717",
-                    fontWeight: 700,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  {offerDetails?.NUMBER_OF_INSTALLMENTS_OF_REPAYMENT || ""}
-                </Typography>
-              </LoanDetailsItem>
-              <LoanDetailsItem xs={5.8} sm={5.8}>
-                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
-                  Loan Status
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    color: "#171717",
-                    fontWeight: 700,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  {offerDetails?.loan_status || ""}
+                  {providerDetails?.short_desc || ""}
                 </Typography>
               </LoanDetailsItem>
             </LoanDetailsWrapper>
@@ -1226,81 +1186,51 @@ const InsuranceOrderDetail = () => {
             fontSize={"0.9rem"}
             fontFamily={"plus jakarta sans"}
           >
-            EMI Details
+            Price Details{" "}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <LoanDetailsWrapper overflow={"auto"} container>
-            {paymentDetails && (
-              <>
-                <CustomTableContainer component={Paper}>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="left">ID</TableCell>
-                        <TableCell>Amount</TableCell>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Type</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(paymentDetails.length > 0 && rowsPerPage > 0
-                        ? paymentDetails.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                        : paymentDetails
-                      )?.map(
-                        (offer, index) =>
-                          offer?.type === "POST_FULFILLMENT" && (
-                            <>
-                              <TableRow key={index}>
-                                <TableCell align="left">{offer?.id}</TableCell>
-                                <TableCell align="left">
-                                  {offer?.params?.amount}
-                                </TableCell>
-
-                                <TableCell align="left">
-                                  {offer?.time?.range
-                                    ? new Date(
-                                        offer?.time?.range?.start
-                                      ).toLocaleDateString()
-                                    : "-"}
-                                </TableCell>
-                                <TableCell align="left">
-                                  {(offer?.status).split("-").join(" ")}
-                                </TableCell>
-                                <TableCell align="left">
-                                  {(offer?.time?.label).split("_").join(" ")}
-                                </TableCell>
-                              </TableRow>
-                            </>
-                          )
-                      )}
-                    </TableBody>
-                  </Table>
-                </CustomTableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  component="div"
-                  colSpan={3}
-                  count={paymentDetails.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
+          {quoteDetails ? (
+            <LoanDetailsWrapper overflow={"auto"} container>
+              {Object.entries(quoteDetails?.breakup).map(([key, value]) => (
+                <LoanDetailsItem xs={5.8} sm={5.8}>
+                  <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                    {value.title.split("_").join(" ")}{" "}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "1.1rem",
+                      color: "#171717",
+                      fontWeight: 700,
+                      mt: 1,
+                      mb: 1,
+                    }}
+                  >
+                    {value.price.currency} {value.price.value}{" "}
+                  </Typography>
+                </LoanDetailsItem>
+              ))}
+              <LoanDetailsItem xs={5.8} sm={5.8}>
+                <Typography sx={{ fontSize: "0.9rem", color: "#5A5A5A" }}>
+                  TOTAL PRICE
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.1rem",
+                    color: "#171717",
+                    fontWeight: 700,
+                    mt: 1,
+                    mb: 1,
                   }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </>
-            )}
-          </LoanDetailsWrapper>
+                >
+                  {" "}
+                  {quoteDetails?.price?.currency} {quoteDetails?.price?.value}{" "}
+                </Typography>
+              </LoanDetailsItem>
+            </LoanDetailsWrapper>
+          ) : (
+            "Not Available"
+          )}
         </AccordionDetails>
       </CustomAccordian>
     </CreditOfferWrapper>
