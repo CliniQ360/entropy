@@ -274,6 +274,25 @@ class InsuranceAudioConversationController:
                                 and value != 0
                             ):
                                 nominee_details[key] = value
+                buyer_details_list = workflow.get_state(thread).values.get(
+                    "buyer_details"
+                )
+                buyer_details = {}
+                if buyer_details_list:
+                    for item in buyer_details_list:
+                        if isinstance(item, dict):
+                            buyer_details = item
+                        else:
+                            buyer_details = item.dict()
+                        for key, value in buyer_details.items():
+                            if (
+                                value != None
+                                and value != " "
+                                and value != "None"
+                                and value != "NA"
+                                and value != 0
+                            ):
+                                buyer_details[key] = value
                 txn_id = workflow.get_state(thread).values.get("txn_id")
                 offer_list = workflow.get_state(thread).values.get("offer_list")
                 offer_summary = workflow.get_state(thread).values.get("offer_summary")
@@ -320,6 +339,7 @@ class InsuranceAudioConversationController:
                     "agent_message": agent_message,
                     "next_state": next_state,
                     "customer_details": customer_details,
+                    "buyer_details": buyer_details,
                     "nominee_details": nominee_details,
                     "txn_id": txn_id if txn_id else "None",
                     "offer_list": offer_list if offer_list else [],
